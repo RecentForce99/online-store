@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  php:
+    image: php:8.3-fpm
+    container_name: online-store
+    volumes:
+      - .:/var/www/html
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      - XDEBUG_MODE=develop,debug
+      - XDEBUG_CONFIG=remote_host=host.docker.internal
+      - PHP_IDE_CONFIG=serverName=online-store
+    depends_on:
+      - db
+      - kafka
+    networks:
+      - online-store
+
+  nginx:
+    image: nginx:latest
+    container_name: online-store-nginx
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+    networks:
+      - online-store
+
+  db:
+    image: postgres:latest
+    container_name: online-store-db
+    environment:
+      POSTGRES_USER: online-store
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: online-store_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - online-store
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: online-store-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - online-store
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: online-store-kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - online-store
+
+volumes:
+  db-data:
+
+networks:
+  online-store:
+    driver: bridge

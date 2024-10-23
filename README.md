@@ -1,46 +1,67 @@
-## Развёртывание проекта
+## Project stack
+* Nginx latest
+* Postgresql latest
+* PHP 8.3
+* Symfony 7.1.*
+* Kafka latest
+* Swagger (OpenAPI 3.1)
 
+## Project deployment
+1. make init
+2. make up
 
-1. sudo docker run --rm -v $(pwd):/app composer install --ignore-platform-req=ext-pcntl
+You can add a domain to /etc/hosts for convenience
 
+[//]: # (Наша зона ответственности - корзина, заказ, статус доставки этого заказа, пользователи)
 
-Наша зона ответственности - корзина, заказ, статус доставки этого заказа, пользователи
+[//]: # ()
+[//]: # ()
+[//]: # (Сущности:)
 
+[//]: # (cart)
 
-Сущности:
-cart
+[//]: # ()
+[//]: # (orders)
 
-orders
-order_statuses
+[//]: # (order_statuses)
 
-deliveries
-delivery_statuses
+[//]: # ()
+[//]: # (deliveries)
 
-users
+[//]: # (delivery_statuses)
 
-roles (admin, user)
-role_user
+[//]: # ()
+[//]: # (users)
 
-Данные тянутся из внешнего сервиса
+[//]: # ()
+[//]: # (roles &#40;admin, user&#41;)
 
-## Роли и права
-Неавторизованный пользователь может только лишь просматривать список товаров
-Авторизованный пользователь может заполнять корзину и делать заказ
-Администратор - имеет все возможные доступы
+[//]: # (role_user)
 
+[//]: # ()
+[//]: # (Данные тянутся из внешнего сервиса)
 
+[//]: # ()
+[//]: # (## Роли и права)
 
-## ENDPOINTS
+[//]: # (Неавторизованный пользователь может только лишь просматривать список товаров)
 
-POST /api/users
+[//]: # (Авторизованный пользователь может заполнять корзину и делать заказ)
 
-POST /api/orders
-GET /api/orders
-GET /api/reports/
+[//]: # (Администратор - имеет все возможные доступы)
 
-Stack:
-Orchid 16
-Postgresql 16
-PHP 8.3
-Kafka
-Swagger (OpenAPI 3.1)
+[//]: # ()
+[//]: # ()
+[//]: # ()
+[//]: # (## ENDPOINTS)
+
+[//]: # ()
+[//]: # (POST /api/users)
+
+[//]: # ()
+[//]: # (POST /api/orders)
+
+[//]: # (GET /api/orders)
+
+[//]: # (GET /api/reports/)
+

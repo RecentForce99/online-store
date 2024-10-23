@@ -1,6 +1,8 @@
 .idea
 .vscode
 /docker/log
+# A folder for secret data like passwords for docker
+/docker/secrets
 
 ###> symfony/framework-bundle ###
 /.env.local

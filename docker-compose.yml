@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   php:
     image: php:8.3-fpm
@@ -34,13 +32,18 @@ services:
     image: postgres:latest
     container_name: online-store-db
     environment:
-      POSTGRES_USER: online-store
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: online-store_db
+      DEBUG: ${APP_DEBUG:-false}
+      POSTGRES_DB: ${POSTGRES_DB:-online-store}
+      POSTGRES_USER: ${POSTGRES_USER:-online-store}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
       - online-store
+    secrets:
+      - db_password
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -69,3 +72,8 @@ volumes:
 networks:
   online-store:
     driver: bridge
+
+secrets:
+  db_password:
+    file: docker/secrets/db_password.txt
+

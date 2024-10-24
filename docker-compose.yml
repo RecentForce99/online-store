@@ -1,10 +1,21 @@
+volumes:
+  db-data:
+
+networks:
+  online-store:
+    driver: bridge
+
+secrets:
+  db_password:
+    file: docker/secrets/db_password.txt
+
 services:
   php:
     image: php:8.3-fpm
     container_name: online-store
     volumes:
       - .:/var/www/html
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
     environment:
       - XDEBUG_MODE=develop,debug
       - XDEBUG_CONFIG=remote_host=host.docker.internal
@@ -65,15 +76,4 @@ services:
       - zookeeper
     networks:
       - online-store
-
-volumes:
-  db-data:
-
-networks:
-  online-store:
-    driver: bridge
-
-secrets:
-  db_password:
-    file: docker/secrets/db_password.txt
 

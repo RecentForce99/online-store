@@ -1,13 +1,33 @@
+###> Composer ###
 init: # Сделать полную инициализацию приложения
 	composer install --ansi --prefer-dist
+###< Composer ###
 
 #test: # Выполнить тесты приложения
 #	@echo test
 
-up: # Создать и запустить контейнеры
-	sudo docker compose --env-file .env.local up -d
+###> Docker compose v2 (screw v1) ###
+dc_ps:
+	docker compose -f ./docker/docker-compose.yml ps
+dc_logs:
+	docker compose -f ./docker/docker-compose.yml logs -f
+dc_link_env:
+	ln -s ./../.env ./docker/.env
 
-down: # остановить контейнеры
-	sudo docker compose --env-file .env.local stop
+dc_build:
+	docker compose -f ./docker/docker-compose.yml build
 
-restart: down up # Рестарт всех контейнеров
+dc_start:
+	docker compose -f ./docker/docker-compose.yml start
+dc_stop:
+	docker compose -f ./docker/docker-compose.yml stop
+
+dc_up:
+	docker compose -f ./docker/docker-compose.yml up -d --remove-orphans
+dc_down:
+	docker compose -f ./docker/docker-compose.yml down --remove-orphans
+
+dc_drop:
+	@echo "WARNING: This command will remove all containers, volumes, and images! Proceed? (y/n)"
+	@read answer && [ $$answer = y ] && docker compose -f ./docker/docker-compose.yml down -v --rmi=all --remove-orphans || echo "Aborted."
+###< Docker compose ###

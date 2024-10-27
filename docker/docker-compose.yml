@@ -1,0 +1,76 @@
+#volumes:
+#  db-data:
+
+networks:
+  online-store:
+    driver: bridge
+
+#secrets:
+#  pgsql_password:
+#    file: ./secrets/pgsql_password.txt
+
+services:
+  php-fpm:
+    container_name: online-store_php-fpm
+    build:
+      context: ./../
+      dockerfile: ./docker/php-fpm/Dockerfile
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
+    volumes:
+      - ./../:/var/www/
+    networks:
+      - online-store
+
+  nginx:
+    container_name: online-store_nginx
+    build:
+      context: ./nginx
+    ports:
+      - ${NGINX_PORT}:80
+    volumes:
+      - ./../:/var/www:rw
+    depends_on:
+      - php-fpm
+    networks:
+      - online-store
+
+#  db:
+#    image: postgres:latest
+#    container_name: online-store-db
+#    environment:
+#      DEBUG: ${APP_DEBUG:-false}
+#      POSTGRES_DB: ${POSTGRES_DB:?online-store}
+#      POSTGRES_USER: ${POSTGRES_USER:-online-store}
+#      POSTGRES_PASSWORD_FILE: /run/secrets/pgsql_password
+#    ports:
+#      - '${POSTGRES_PORT:-5432}:5432'
+#    volumes:
+#      - ./db/volumes/:/var/lib/postgresql/data
+#    networks:
+#      - online-store
+#    secrets:
+#      - pgsql_password
+
+#  zookeeper:
+#    image: confluentinc/cp-zookeeper:latest
+#    container_name: online-store-zookeeper
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#    networks:
+#      - online-store
+#
+#  kafka:
+#    image: confluentinc/cp-kafka:latest
+#    container_name: online-store-kafka
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#    depends_on:
+#      - zookeeper
+#    networks:
+#      - online-store
+

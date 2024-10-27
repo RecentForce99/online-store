@@ -1,15 +1,15 @@
 .idea
 .vscode
-/docker/log
-# A folder for secret data like passwords for docker
-/docker/secrets
+
+###> Docker ###
+docker/logs
+# A secret folder for sensitvie data (like passwords) that will be used in docker
+docker/secrets
+docker/.env
+###< Docker ###
 
 ###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
+.env
+var/
+vendor/
 ###< symfony/framework-bundle ###

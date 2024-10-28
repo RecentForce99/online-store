@@ -18,6 +18,8 @@ services:
       args:
         - PUID=${PUID}
         - PGID=${PGID}
+    environment:
+      PHP_IDE_CONFIG: "serverName=Xdebug"
     volumes:
       - ./../:/var/www/
     networks:

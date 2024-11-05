@@ -1,13 +1,13 @@
-#volumes:
-#  db-data:
+volumes:
+  db-data:
 
 networks:
   online-store:
     driver: bridge
 
-#secrets:
-#  pgsql_password:
-#    file: ./secrets/pgsql_password.txt
+secrets:
+  pgsql_password:
+    file: ./secrets/pgsql_password.txt
 
 services:
   php-fpm:
@@ -19,11 +19,14 @@ services:
         - PUID=${PUID}
         - PGID=${PGID}
     environment:
-      PHP_IDE_CONFIG: "serverName=Xdebug"
+      PHP_IDE_CONFIG: "serverName=Docker"
     volumes:
       - ./../:/var/www/
     networks:
       - online-store
+    ports:
+      - "9000:9000"
+      - "9003:9003"
 
   nginx:
     container_name: online-store_nginx
@@ -38,22 +41,22 @@ services:
     networks:
       - online-store
 
-#  db:
-#    image: postgres:latest
-#    container_name: online-store-db
-#    environment:
-#      DEBUG: ${APP_DEBUG:-false}
-#      POSTGRES_DB: ${POSTGRES_DB:?online-store}
-#      POSTGRES_USER: ${POSTGRES_USER:-online-store}
-#      POSTGRES_PASSWORD_FILE: /run/secrets/pgsql_password
-#    ports:
-#      - '${POSTGRES_PORT:-5432}:5432'
-#    volumes:
-#      - ./db/volumes/:/var/lib/postgresql/data
-#    networks:
-#      - online-store
-#    secrets:
-#      - pgsql_password
+  db:
+    image: postgres:latest
+    container_name: online-store-db
+    environment:
+      DEBUG: ${APP_DEBUG:-false}
+      POSTGRES_DB: ${POSTGRES_DB:?online-store}
+      POSTGRES_USER: ${POSTGRES_USER:-online-store}
+      POSTGRES_PASSWORD_FILE: /run/secrets/pgsql_password
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - ./db/volumes/:/var/lib/postgresql/data
+    networks:
+      - online-store
+    secrets:
+      - pgsql_password
 
 #  zookeeper:
 #    image: confluentinc/cp-zookeeper:latest

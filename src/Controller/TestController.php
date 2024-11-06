@@ -14,7 +14,7 @@ final class TestController extends AbstractController
 {
     #[Route('/healthcheck')]
     public function index(EntityManagerInterface $entityManager): Response
-    {echo 123;
+    {
         try {
             $entityManager->getConnection()->connect();
 

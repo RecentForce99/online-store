@@ -3,15 +3,12 @@
 * Postgresql latest
 * PHP 8.3
 * Symfony 7.1.*
-* Kafka latest
 * Swagger (OpenAPI 3.1)
 
 ## Project deployment
 1. make init
-2. make up
 
 You can add a domain to /etc/hosts for convenience <br>
-**Xdebug doesn't work**
 
 [//]: # (Наша зона ответственности - корзина, заказ, статус доставки этого заказа, пользователи)
 

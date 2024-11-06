@@ -1,6 +1,8 @@
 ###> Composer ###
 init: # Сделать полную инициализацию приложения
-	composer install --ansi --prefer-dist
+	make dc_build;
+	make dc_up;
+
 ###< Composer ###
 
 #test: # Выполнить тесты приложения
@@ -13,6 +15,11 @@ dc_logs:
 	docker compose -f ./docker/docker-compose.yml logs -f
 dc_link_env:
 	ln -s ./../.env ./docker/.env
+
+dc_restart:
+	make dc_down
+	make dc_build
+	make dc_up
 
 dc_build:
 	docker compose -f ./docker/docker-compose.yml build

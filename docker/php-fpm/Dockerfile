@@ -1,12 +1,18 @@
 FROM php:8.3-fpm-alpine
 
-# Install necessary packages including linux-headers
-RUN apk add --no-cache linux-headers curl git build-base zlib-dev oniguruma-dev autoconf bash
+# PHP packages
+RUN apk add --no-cache \
+    linux-headers \
+    curl \
+    git \
+    build-base \
+    zlib-dev \
+    oniguruma-dev \
+    autoconf \
+    bash
 
-# Install Xdebug and enable it
-RUN pecl install xdebug && docker-php-ext-enable xdebug
-#TODO Check out the context of path. Look at ./docker and current directory
-COPY ./docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+# Postgresql packages
+RUN apk add libpq-dev && docker-php-ext-install pdo_pgsql
 
 # Configure non-root user
 ARG PUID=1000
@@ -26,5 +32,4 @@ RUN composer install --no-interaction
 # Start PHP-FPM
 CMD php-fpm
 
-# Expose ports for PHP-FPM and Xdebug
-EXPOSE 9000 9003
+EXPOSE 9000

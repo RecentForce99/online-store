@@ -8,15 +8,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 final class TestController extends AbstractController
 {
     #[Route('/healthcheck')]
-    public function index(EntityManagerInterface $em): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
-        $em->getConnection()->connect();
-        return $em->getConnection()->isConnected()
-            ? new Response(null, Response::HTTP_OK)
-            : new Response(null, Response::HTTP_BAD_REQUEST);
+        try {
+            $entityManager->getConnection()->connect();
+
+            if ($entityManager->getConnection()->isConnected()) {
+                return new Response(status: Response::HTTP_OK);
+            }
+        } catch (Throwable) {
+        }
+
+        return new Response(status: Response::HTTP_BAD_REQUEST);
     }
 }

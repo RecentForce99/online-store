@@ -5,6 +5,15 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
+imports:
+    - { resource: application/*/*.yaml }
+    - { resource: application/*.yaml }
+    - { resource: domain/*.yaml }
+    - { resource: infrastructure/*/*.yaml }
+    - { resource: infrastructure/*.yaml }
+    - { resource: presentation/*.yaml }
+    - { resource: test/*/*.yaml }
+
 services:
     # default configuration for services in *this* file
     _defaults:

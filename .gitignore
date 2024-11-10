@@ -6,6 +6,7 @@ docker/logs
 # A secret folder for sensitvie data (like passwords) that will be used in docker
 docker/secrets
 docker/.env
+db-data
 ###< Docker ###
 
 ###> symfony/framework-bundle ###

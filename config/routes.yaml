@@ -1,5 +1,5 @@
 api_users:
-    resource: ../src/Common/Infrastructure/Controller/Api
+    resource: ../src/User/Infrastructure/Controller/Api
     type: attribute
     stateless: false
     prefix: /api

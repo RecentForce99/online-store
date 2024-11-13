@@ -1,8 +1,10 @@
-###> Composer ###
 init: # Сделать полную инициализацию приложения
 	make dc_build;
 	make dc_up;
 
+###> Composer ###
+c_tests:
+	docker exec online-store_php-fpm ./vendor/bin/phpunit tests
 ###< Composer ###
 
 #test: # Выполнить тесты приложения

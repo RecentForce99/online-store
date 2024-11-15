@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Domain\Entity;
+namespace App\Common\Domain\Entity;
 
 interface EntityInterface
 {

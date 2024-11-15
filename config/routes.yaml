@@ -5,7 +5,7 @@ api_users:
     prefix: /api
 
 api_common:
-    resource: ../src/Common/Infrastructure/Controller/Api
+    resource: ../src/Common/Presentation/Api
     type: attribute
     stateless: false
     prefix: /api

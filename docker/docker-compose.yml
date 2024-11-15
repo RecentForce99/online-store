@@ -62,7 +62,7 @@ services:
     environment:
       SWAGGER_JSON: /app/swagger.yaml
     volumes:
-      - ./../public/swagger.yaml:/app/swagger.yaml
+      - ./../swagger/api.yaml:/app/swagger.yaml
     networks:
       - online-store
 

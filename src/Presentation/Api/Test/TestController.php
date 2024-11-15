@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Common\Presentation\Api\Test;
+namespace App\Presentation\Api\Test;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

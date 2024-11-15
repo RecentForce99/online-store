@@ -1,11 +1,5 @@
-api_users:
-    resource: ../src/User/Presentation/Api
-    type: attribute
-    stateless: false
-    prefix: /api
-
-api_common:
-    resource: ../src/Common/Presentation/Api
+api:
+    resource: ../src/Presentation/Api
     type: attribute
     stateless: false
     prefix: /api

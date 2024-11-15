@@ -1,0 +1,74 @@
+components:
+    schemas:
+        SuccessfulResponseBodyScheme:
+            type: object
+            properties:
+                status:
+                    description: Результат выполнения запроса
+                    type: string
+                    example: success
+                data:
+                    description: Полезная нагрузка ответа
+            required:
+                - status
+                - data
+            additionalProperties: false
+
+        FailedResponseBodyScheme:
+            type: object
+            properties:
+                status:
+                    description: Результат выполнения запроса
+                    type: string
+                    example: error
+
+                errors:
+                    description: Информация об ошибке при выполнении запроса
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            code:
+                                description: Код ошибки
+                                type: integer
+                                minimum: 1
+                            message:
+                                description: Описание ошибки
+                                type: string
+                            line:
+                                description: Строка ошибки
+                                type: string
+                            file:
+                                description: В каком файле ошибка
+                                type: string
+                            trace:
+                                description: Трассировка ошибки
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        file:
+                                            type: string
+                                            minLength: 1
+                                        line:
+                                            type: integer
+                                            minimum: 1
+                                        function:
+                                            type: string
+                                            minLength: 1
+                                        class:
+                                            type: string
+                                        type:
+                                            type: string
+                                    required:
+                                        - file
+                                        - line
+                                        - function
+
+                        required:
+                            - code
+                        additionalProperties: false
+            required:
+                - status
+                - error
+            additionalProperties: false

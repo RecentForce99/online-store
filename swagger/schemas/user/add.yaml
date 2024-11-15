@@ -1,0 +1,22 @@
+post:
+  tags: [ User ]
+  summary: An endpoint to add a new user
+  responses:
+    200:
+      description: Has a user been added
+      content:
+        application/json:
+          schema:
+            $ref: '../defaultResponses.yaml/#/components/schemas/SuccessfulResponseBodyScheme'
+    400:
+      description: A request validation or business logic error has occurred
+      content:
+        application/json:
+          schema:
+            $ref: '../defaultResponses.yaml/#/components/schemas/FailedResponseBodyScheme'
+    500:
+      description: An unexpected server error has occurred
+      content:
+        application/json:
+          schema:
+            $ref: '../defaultResponses.yaml/#/components/schemas/FailedResponseBodyScheme'

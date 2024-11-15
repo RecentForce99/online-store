@@ -16,6 +16,10 @@ dc_logs:
 dc_link_env:
 	ln -s ./../.env ./docker/.env
 
+dc_reload:
+	make dc_down
+	make dc_up
+
 dc_restart:
 	make dc_down
 	make dc_build

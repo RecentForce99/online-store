@@ -2,8 +2,10 @@
 
 namespace App\Tests\Unit\Common\Domain\ValueObject;
 
+use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
+use App\Common\Domain\Exception\Validation\InvalidEmailException;
+use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
 use App\Common\Domain\ValueObject\Email;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class EmailTest extends TestCase
@@ -18,28 +20,28 @@ final class EmailTest extends TestCase
 
     public function testEmailTooShort(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(LessThanMinLengthException::class);
         $this->expectExceptionMessage('The email [te] is too short, it must be minimum [3] characters.');
 
-        Email::fromString('te'); // Email too short
+        Email::fromString('te');
     }
 
     public function testEmailTooLong(): void
     {
         $longEmail = str_repeat('a', 256) . '@example.com';
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(GreaterThanMaxLengthException::class);
         $this->expectExceptionMessage('The email [' . $longEmail . '] is too long, it must be maximum [255] characters.');
 
-        Email::fromString($longEmail); // Email too long
+        Email::fromString($longEmail);
     }
 
     public function testInvalidEmailFormat(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidEmailException::class);
         $this->expectExceptionMessage('The email [invalid-email] is invalid.');
 
-        Email::fromString('invalid-email'); // Invalid email format
+        Email::fromString('invalid-email');
     }
 
     public function testEmailEqualComparison(): void
@@ -62,6 +64,6 @@ final class EmailTest extends TestCase
     {
         $email = Email::fromString('test@example.com');
 
-        $this->assertEquals('test@example.com', (string) $email);
+        $this->assertEquals('test@example.com', (string)$email);
     }
 }

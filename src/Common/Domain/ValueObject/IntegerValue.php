@@ -20,6 +20,11 @@ abstract class IntegerValue
         return $this->value;
     }
 
+    public function __toString(): string
+    {
+        return (string)$this->value();
+    }
+
     public function isEqualTo(self $other): bool
     {
         return $this->value() === $other->value();

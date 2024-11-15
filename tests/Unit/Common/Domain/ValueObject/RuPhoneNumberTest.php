@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Common\Domain\ValueObject;
 
+use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class RuPhoneNumberTest extends TestCase
@@ -18,7 +18,7 @@ final class RuPhoneNumberTest extends TestCase
 
     public function testPhoneNumberTooShort(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(WrongLengthOfPhoneNumberException::class);
         $this->expectExceptionMessage('The length of the phone number [12345] is [5], whereas it must be [10].');
 
         RuPhoneNumber::fromInt(12345);
@@ -26,7 +26,7 @@ final class RuPhoneNumberTest extends TestCase
 
     public function testPhoneNumberTooLong(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(WrongLengthOfPhoneNumberException::class);
         $this->expectExceptionMessage('The length of the phone number [' . str_repeat('1', 11) . '] is [11], whereas it must be [10].');
 
         RuPhoneNumber::fromInt(11111111111);

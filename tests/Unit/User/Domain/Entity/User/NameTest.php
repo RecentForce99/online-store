@@ -2,8 +2,9 @@
 
 namespace App\Tests\Unit\User\Domain\Entity\User;
 
+use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
+use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
 use App\User\Domain\ValueObject\Name;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class NameTest extends TestCase
@@ -18,7 +19,7 @@ final class NameTest extends TestCase
 
     public function testNameTooShort(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(LessThanMinLengthException::class);
         $this->expectExceptionMessage('The name [J] is too short, it must be minimum [2] characters.');
 
         Name::fromString('J');
@@ -26,7 +27,7 @@ final class NameTest extends TestCase
 
     public function testNameTooLong(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(GreaterThanMaxLengthException::class);
         $this->expectExceptionMessage('The name [' . str_repeat('A', 101) . '] is too long, it must be maximum [100] characters.');
 
         Name::fromString(str_repeat('A', 101));

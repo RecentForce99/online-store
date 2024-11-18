@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/user')]
 final class UserController extends AbstractController
 {
-    #[Route(path: '/crud/add', methods: 'POST')]
+    #[Route(methods: 'POST')]
     public function signUp(
         #[MapRequestPayload]
         SignUpUserCommand        $signUpUserCommand,

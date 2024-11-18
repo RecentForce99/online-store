@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\User\Application\UseCase\SignUp;
+namespace App\User\Application\UseCase\Add;
 
 use App\Common\Domain\ValueObject\Email;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SignUpUserCommand
+final class AddUserCommand
 {
     public function __construct(
         #[Assert\NotBlank]

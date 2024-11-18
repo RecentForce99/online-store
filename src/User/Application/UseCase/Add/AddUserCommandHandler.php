@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Application\UseCase\SignUp;
+namespace App\User\Application\UseCase\Add;
 
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\InvalidEmailException;
@@ -15,7 +15,7 @@ use App\User\Domain\ValueObject\Name;
 use App\User\Infrastructure\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class SignUpUserCommandHandler
+final class AddUserCommandHandler
 {
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -23,12 +23,12 @@ final class SignUpUserCommandHandler
     {
     }
 
-    public function __invoke(SignUpUserCommand $signUpUserCommand): JsonResponse
+    public function __invoke(AddUserCommand $addUserCommand): JsonResponse
     {
         $user = User::add(
-            name: Name::fromString($signUpUserCommand->name),
-            email: Email::fromString($signUpUserCommand->email),
-            phone: RuPhoneNumber::fromInt($signUpUserCommand->phone),
+            name: Name::fromString($addUserCommand->name),
+            email: Email::fromString($addUserCommand->email),
+            phone: RuPhoneNumber::fromInt($addUserCommand->phone),
         );
 
         $this->userRepository->add($user);

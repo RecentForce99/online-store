@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Presentation\Api;
 
-use App\User\Application\UseCase\SignUp\SignUpUserCommand;
-use App\User\Application\UseCase\SignUp\SignUpUserCommandHandler;
+use App\User\Application\UseCase\Add\AddUserCommand;
+use App\User\Application\UseCase\Add\AddUserCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -15,12 +15,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     #[Route(methods: 'POST')]
-    public function signUp(
+    public function add(
         #[MapRequestPayload]
-        SignUpUserCommand        $signUpUserCommand,
-        SignUpUserCommandHandler $signUpUserCommandHandler,
+        AddUserCommand        $addUserCommand,
+        AddUserCommandHandler $addUserCommandHandler,
     ): JsonResponse
     {
-        return $signUpUserCommandHandler($signUpUserCommand);
+        return $addUserCommandHandler($addUserCommand);
     }
 }

@@ -7,7 +7,7 @@ namespace App\User\Application\UseCase\Add;
 use App\Common\Domain\ValueObject\Email;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class AddUserCommand
+final class CreateUserCommand
 {
     public function __construct(
         #[Assert\NotBlank]

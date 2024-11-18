@@ -37,7 +37,7 @@ class User extends AbstractBaseEntity
         $this->phone = $phone;
     }
 
-    public static function add(
+    public static function create(
         Name          $name,
         Email         $email,
         RuPhoneNumber $phone,

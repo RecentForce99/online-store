@@ -8,5 +8,5 @@ use App\User\Domain\Entity\User;
 
 interface UserRepositoryInterface
 {
-    public function add(User $user): void;
+    public function create(User $user): void;
 }

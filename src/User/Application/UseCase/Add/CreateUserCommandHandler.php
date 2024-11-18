@@ -15,7 +15,7 @@ use App\User\Domain\ValueObject\Name;
 use App\User\Infrastructure\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class AddUserCommandHandler
+final class CreateUserCommandHandler
 {
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -23,15 +23,15 @@ final class AddUserCommandHandler
     {
     }
 
-    public function __invoke(AddUserCommand $addUserCommand): JsonResponse
+    public function __invoke(CreateUserCommand $createUserCommand): JsonResponse
     {
-        $user = User::add(
-            name: Name::fromString($addUserCommand->name),
-            email: Email::fromString($addUserCommand->email),
-            phone: RuPhoneNumber::fromInt($addUserCommand->phone),
+        $user = User::create(
+            name: Name::fromString($createUserCommand->name),
+            email: Email::fromString($createUserCommand->email),
+            phone: RuPhoneNumber::fromInt($createUserCommand->phone),
         );
 
-        $this->userRepository->add($user);
+        $this->userRepository->create($user);
 
         return new JsonResponse();
     }

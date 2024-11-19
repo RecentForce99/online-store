@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\Api;
+namespace App\User\Infrastructure\Controller\Api;
 
 use App\User\Application\UseCase\Add\CreateUserCommand;
 use App\User\Application\UseCase\Add\CreateUserCommandHandler;

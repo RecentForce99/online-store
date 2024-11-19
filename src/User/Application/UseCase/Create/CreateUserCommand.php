@@ -29,6 +29,7 @@ final class CreateUserCommand
             type: 'integer',
             message: 'Номер телефона должен соответствовать формату +7 (XXX) XXX XX-XX',
         )]
+        #[Assert\GreaterThan(0)]
         public int $phone,
     )
     {

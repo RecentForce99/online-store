@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Application\UseCase\Add;
+namespace App\User\Application\UseCase\Create;
 
 use App\Common\Domain\ValueObject\Email;
 use Symfony\Component\Validator\Constraints as Assert;

@@ -10,7 +10,7 @@ use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\UuidV4;
 
 #[ORM\HasLifecycleCallbacks]
-abstract class AbstractBaseEntity implements EntityInterface
+abstract class AbstractBaseEntity
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]

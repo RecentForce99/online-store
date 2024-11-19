@@ -4,21 +4,29 @@ declare(strict_types=1);
 
 namespace App\Common\Infrastructure\EventSubscriber;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * This class <MUST NOT> work for the production environment
+ */
 final class GlobalApiEventSubscriber implements EventSubscriberInterface
 {
     private const PRODUCTION_ENVIRONMENT = 'prod';
 
+    public function __construct(
+        private ParameterBagInterface $params,
+    )
+    {
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::RESPONSE => ['onKernelResponse'],
             KernelEvents::EXCEPTION => ['onKernelException'],
         ];
     }
@@ -31,7 +39,7 @@ final class GlobalApiEventSubscriber implements EventSubscriberInterface
             'status' => 'error',
             'errors' => [
                 [
-                    'code' => method_exists($exception, 'getCode') ? $exception->getCode() : 0,
+                    'code' => $exception->getCode(),
                     'message' => $exception->getMessage(),
                     'line' => $exception->getLine(),
                     'file' => $exception->getFile(),
@@ -40,49 +48,28 @@ final class GlobalApiEventSubscriber implements EventSubscriberInterface
             ],
         ];
 
-        if (self::PRODUCTION_ENVIRONMENT === getenv('APP_ENV')) {
-            $errorDetails['errors'][0]['message'] = 'Возникло неожиданное исключение.';
-            unset(
-                $errorDetails['errors'][0]['line'],
-                $errorDetails['errors'][0]['file'],
-                $errorDetails['errors'][0]['trace']
-            );
+        if (self::PRODUCTION_ENVIRONMENT === $this->params->get('app.env')) {
+            $errorDetails['errors'] = [
+                'message' => 'Возникло неожиданное исключение.',
+            ];
         }
 
-        $response = new JsonResponse($errorDetails, Response::HTTP_BAD_REQUEST);
+        $response = new JsonResponse(
+            data: $errorDetails,
+            status: $this->getHttpExceptionCode($exception->getCode()),
+        );
 
         $event->setResponse($response);
     }
 
-    public function onKernelResponse(ResponseEvent $event): void
+    private function getHttpExceptionCode(int $passedCode): int
     {
-        if (false === $event->isMainRequest()) {
-            return;
+        $code = $passedCode;
+        if (false === isset(Response::$statusTexts[$passedCode])) {
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
-        $request = $event->getRequest();
-        $response = $event->getResponse();
-
-        if (false === str_starts_with($request->getPathInfo(), '/api')) {
-            return;
-        }
-
-        if (false === ($response instanceof JsonResponse)) {
-            return;
-        }
-
-        $originalData = json_decode($response->getContent(), true);
-
-        if (isset($originalData['status']) && 'error' === $originalData['status']) {
-            return;
-        }
-
-        $successData = [
-            'status' => 'success',
-            'data' => $originalData,
-        ];
-
-        $response->setData($successData);
+        return $code;
     }
 
     private function formatTrace(array $trace): array

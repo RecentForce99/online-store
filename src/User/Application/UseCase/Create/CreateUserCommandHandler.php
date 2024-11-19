@@ -2,18 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\User\Application\UseCase\Add;
+namespace App\User\Application\UseCase\Create;
 
-use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
-use App\Common\Domain\Exception\Validation\InvalidEmailException;
-use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
-use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
 use App\User\Domain\Entity\User;
 use App\User\Domain\ValueObject\Name;
 use App\User\Infrastructure\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class CreateUserCommandHandler
 {
@@ -23,7 +18,7 @@ final class CreateUserCommandHandler
     {
     }
 
-    public function __invoke(CreateUserCommand $createUserCommand): JsonResponse
+    public function __invoke(CreateUserCommand $createUserCommand): void
     {
         $user = User::create(
             name: Name::fromString($createUserCommand->name),
@@ -32,7 +27,6 @@ final class CreateUserCommandHandler
         );
 
         $this->userRepository->create($user);
-
-        return new JsonResponse();
+        $this->userRepository->flush();
     }
 }

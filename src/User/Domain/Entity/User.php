@@ -26,30 +26,36 @@ class User extends AbstractBaseEntity
     private RuPhoneNumber $phone;
 
     protected function __construct(
-        Name          $name,
-        Email         $email,
-        RuPhoneNumber $phone,
+        Name              $name,
+        Email             $email,
+        RuPhoneNumber     $phone,
+        DateTimeImmutable $createdAt,
+        DateTimeImmutable $updatedAt,
     )
     {
         $this->id = new UuidV4();
         $this->name = $name;
         $this->email = $email;
         $this->phone = $phone;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
     }
 
     public static function create(
-        Name          $name,
-        Email         $email,
-        RuPhoneNumber $phone,
+        Name              $name,
+        Email             $email,
+        RuPhoneNumber     $phone,
+        DateTimeImmutable $createdAt = new DateTimeImmutable(),
+        DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): User
     {
         return (new self(
             name: $name,
             email: $email,
             phone: $phone,
-        ))
-            ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(new DateTimeImmutable());
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+        ));
     }
 
     public function getName(): Name

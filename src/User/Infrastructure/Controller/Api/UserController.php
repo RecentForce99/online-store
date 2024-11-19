@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Controller\Api;
 
-use App\User\Application\UseCase\Add\CreateUserCommand;
-use App\User\Application\UseCase\Add\CreateUserCommandHandler;
+use App\User\Application\UseCase\Create\CreateUserCommand;
+use App\User\Application\UseCase\Create\CreateUserCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -21,6 +21,7 @@ final class UserController extends AbstractController
         CreateUserCommandHandler $createUserCommandHandler,
     ): JsonResponse
     {
-        return $createUserCommandHandler($createUserCommand);
+        $createUserCommandHandler($createUserCommand);
+        return new JsonResponse();
     }
 }

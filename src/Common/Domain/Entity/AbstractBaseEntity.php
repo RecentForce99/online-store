@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\UuidV4;
 
-#[ORM\HasLifecycleCallbacks]
 abstract class AbstractBaseEntity
 {
     #[ORM\Id]
@@ -32,20 +31,8 @@ abstract class AbstractBaseEntity
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?DateTimeImmutable $createdAt): AbstractBaseEntity
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): AbstractBaseEntity
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
     }
 }

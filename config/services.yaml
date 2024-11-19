@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.env: '%env(APP_ENV)%'
+    app.domain: '%env(APP_DOMAIN)%'
+    app.scheme: '%env(APP_SCHEME)%'
 
 imports:
     - { resource: application/*/*.yaml }

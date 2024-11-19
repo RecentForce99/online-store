@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Common\Infrastructure\EventSubscriber;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +21,7 @@ final class GlobalApiEventSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private ParameterBagInterface $params,
+        private LoggerInterface       $logger,
     )
     {
     }
@@ -53,6 +55,8 @@ final class GlobalApiEventSubscriber implements EventSubscriberInterface
                 'message' => 'Возникло неожиданное исключение.',
             ];
         }
+
+        $this->logger->error(json_encode($errorDetails, JSON_THROW_ON_ERROR));
 
         $response = new JsonResponse(
             data: $errorDetails,

@@ -1,6 +1,6 @@
 FROM php:8.3-fpm-alpine
 
-# PHP packages
+# PHP and system packages
 RUN apk add --no-cache \
     linux-headers \
     curl \
@@ -9,21 +9,25 @@ RUN apk add --no-cache \
     zlib-dev \
     oniguruma-dev \
     autoconf \
-    bash
+    bash \
+    librdkafka-dev \
+    shadow \
+    libpq-dev
 
-# Postgresql packages
-RUN apk add libpq-dev && docker-php-ext-install pdo_pgsql
+RUN docker-php-ext-install pdo_pgsql
+
+# Install and enable Kafka extension
+RUN pecl install rdkafka \
+    && docker-php-ext-enable rdkafka
 
 # Configure non-root user
 ARG PUID=1000
 ARG PGID=1000
-RUN apk --no-cache add shadow && \
-    groupmod -o -g ${PGID} www-data && \
-    usermod -o -u ${PUID} -g www-data www-data
+RUN groupmod -o -g ${PGID} www-data \
+    && usermod -o -u ${PUID} -g www-data www-data
 
-# Copy application source code
-COPY ./ /var/www
 WORKDIR /var/www
+COPY ./ /var/www
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -12,8 +12,8 @@ services:
       context: ./../
       dockerfile: ./docker/php-fpm/Dockerfile
       args:
-        - PUID=${PUID}
-        - PGID=${PGID}
+        PUID: ${PUID}
+        PGID: ${PGID}
     environment:
       PHP_IDE_CONFIG: "serverName=Docker"
     volumes:
@@ -29,7 +29,7 @@ services:
     build:
       context: ./nginx
     ports:
-      - ${NGINX_PORT}:80
+      - "${NGINX_PORT}:80"
     volumes:
       - ./../:/var/www:rw
     depends_on:
@@ -40,15 +40,13 @@ services:
   db:
     image: postgres:latest
     container_name: online-store-db
-    build:
-      context: ./db
     environment:
       DEBUG: ${APP_DEBUG:-false}
       POSTGRES_DB: ${POSTGRES_DB:-online-store}
       POSTGRES_USER: ${POSTGRES_USER:-online-store}
-      POSTGRES_PASSWORD: ${POSTGRES_USER:?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
     ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - db-data:/var/lib/postgresql/data:rw
     networks:
@@ -58,7 +56,7 @@ services:
     image: swaggerapi/swagger-ui
     container_name: online-store-swagger_ui
     ports:
-      - '8080:8080'
+      - "8080:8080"
     environment:
       SWAGGER_JSON: /app/swagger.yaml
     volumes:
@@ -66,24 +64,46 @@ services:
     networks:
       - online-store
 
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper:latest
-#    container_name: online-store-zookeeper
-#    environment:
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#    networks:
-#      - online-store
-#
-#  kafka:
-#    image: confluentinc/cp-kafka:latest
-#    container_name: online-store-kafka
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#    depends_on:
-#      - zookeeper
-#    networks:
-#      - online-store
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: online-store_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - online-store
 
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: online-store_kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'online-store_zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://online-store_kafka:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    networks:
+      - online-store
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: online-store_kafka_ui
+    depends_on:
+      - kafka
+    ports:
+      - "8082:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: "local"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "online-store_kafka:9092"
+      DYNAMIC_CONFIG_ENABLED: "true"
+    networks:
+      - online-store

@@ -6,13 +6,17 @@ namespace App\User\Application\UseCase\Create;
 
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
+use App\Role\Infrastructure\Repository\RoleRepository;
 use App\User\Domain\Entity\User;
 use App\User\Domain\ValueObject\Name;
 use App\User\Infrastructure\Repository\UserRepository;
 
 final class CreateUserCommandHandler
 {
+    private const string AUTHORIZED_USER_ROLE_SLUG = 'authorized_user';
+
     public function __construct(
+        private readonly RoleRepository $roleRepository,
         private readonly UserRepository $userRepository,
     )
     {
@@ -20,10 +24,13 @@ final class CreateUserCommandHandler
 
     public function __invoke(CreateUserCommand $createUserCommand): void
     {
+        $authorizedUserRole = $this->roleRepository->findBySlug(self::AUTHORIZED_USER_ROLE_SLUG);
+
         $user = User::create(
             name: Name::fromString($createUserCommand->name),
             email: Email::fromString($createUserCommand->email),
             phone: RuPhoneNumber::fromInt($createUserCommand->phone),
+            role: $authorizedUserRole,
         );
 
         $this->userRepository->create($user);

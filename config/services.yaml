@@ -34,5 +34,8 @@ services:
     App\User\Domain\Repository\UserRepositoryInterface:
         class: App\User\Infrastructure\Repository\UserRepository
 
+    App\Role\Domain\Repository\RoleRepositoryInterface:
+        class: App\Role\Infrastructure\Repository\RoleRepository
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -41,7 +41,7 @@ class User extends AbstractBaseEntity
         Name              $name,
         Email             $email,
         RuPhoneNumber     $phone,
-        ?UuidV4           $promoId,
+        ?UuidV4           $promoId, // UuidV4 can be replaced with a service interface to avoid overlapping layers
         Role              $role,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),

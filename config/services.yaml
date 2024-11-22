@@ -8,6 +8,13 @@ parameters:
     app.domain: '%env(APP_DOMAIN)%'
     app.scheme: '%env(APP_SCHEME)%'
 
+    kafka.global:
+        group.id: '%env(string:RD_KAFKA_GROUP_ID)%'
+        metadata.broker.list: '%env(string:RD_KAFKA_BROKER_LIST)%'
+        enable.auto.commit: 'false'
+    kafka.topic:
+        auto.offset.reset: beginning
+
 imports:
     - { resource: application/*/*.yaml }
     - { resource: application/*.yaml }
@@ -36,6 +43,26 @@ services:
 
     App\Role\Domain\Repository\RoleRepositoryInterface:
         class: App\Role\Infrastructure\Repository\RoleRepository
+
+    App\Common\Domain\Message\MessageBusInterface:
+        class: App\Common\Application\Message\MessageBus
+
+    # Dependency Injection Dtos
+    App\Common\Infrastructure\DI\Config\KafkaConfig:
+        arguments:
+            $globalConfig: '%kafka.global%'
+            $topicConfig: '%kafka.topic%'
+
+
+    Interop\Queue\ConnectionFactory:
+        class: Enqueue\RdKafka\RdKafkaConnectionFactory
+        arguments:
+            $config:
+                global: '%kafka.global%'
+                topic: '%kafka.topic%'
+
+    Symfony\Component\Uid\AbstractUid:
+        class: Symfony\Component\Uid\UuidV4
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

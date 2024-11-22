@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Controller\Api;
 
+use App\Common\Infrastructure\Enum\Kafka\KafkaTopicEnum;
 use App\User\Application\UseCase\Create\CreateUserCommand;
 use App\User\Application\UseCase\Create\CreateUserCommandHandler;
+use App\User\Application\UseCase\Create\SendNotificationCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +21,10 @@ final class UserController extends AbstractController
 {
     #[Route(methods: 'POST')]
     public function create(
-        Request                  $request,
-        ValidatorInterface       $validator,
-        CreateUserCommandHandler $createUserCommandHandler,
+        Request                        $request,
+        ValidatorInterface             $validator,
+        CreateUserCommandHandler       $createUserCommandHandler,
+        SendNotificationCommandHandler $sendNotificationToKafkaCommandHandler,
     ): JsonResponse
     {
         $createUserCommand = new CreateUserCommand(
@@ -42,6 +45,7 @@ final class UserController extends AbstractController
         }
 
         $createUserCommandHandler($createUserCommand);
+        $sendNotificationToKafkaCommandHandler($createUserCommand, KafkaTopicEnum::NEW_USER->value);
 
         return new JsonResponse(null, JsonResponse::HTTP_CREATED);
     }

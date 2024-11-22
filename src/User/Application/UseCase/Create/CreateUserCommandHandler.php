@@ -10,6 +10,7 @@ use App\Role\Infrastructure\Repository\RoleRepository;
 use App\User\Domain\Entity\User;
 use App\User\Domain\ValueObject\Name;
 use App\User\Infrastructure\Repository\UserRepository;
+use Symfony\Component\Uid\UuidV4;
 
 final class CreateUserCommandHandler
 {
@@ -30,6 +31,7 @@ final class CreateUserCommandHandler
             name: Name::fromString($createUserCommand->name),
             email: Email::fromString($createUserCommand->email),
             phone: RuPhoneNumber::fromInt($createUserCommand->phone),
+            promoId: is_null($createUserCommand->promoId) ? null : UuidV4::fromString($createUserCommand->promoId),
             role: $authorizedUserRole,
         );
 

@@ -28,6 +28,7 @@ final class UserController extends AbstractController
             name: $request->get('name', ''),
             email: $request->get('email', ''),
             phone: (int)$request->get('phone', 0),
+            promoId: $request->get('promoId'),
         );
 
         $errors = $validator->validate($createUserCommand);

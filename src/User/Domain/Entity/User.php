@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Uid\UuidV4;
 
 #[Entity]
 #[Table(name: 'users')]
@@ -29,6 +30,9 @@ class User extends AbstractBaseEntity
     #[Column(type: 'bigint', unique: true, options: ['unsigned' => true])]
     private RuPhoneNumber $phone;
 
+    #[Column(type: 'uuid', nullable: true)]
+    private ?UuidV4 $promoId;
+
     #[ManyToOne(targetEntity: Role::class)]
     #[JoinColumn(name: 'role_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
     private Role $role;
@@ -37,6 +41,7 @@ class User extends AbstractBaseEntity
         Name              $name,
         Email             $email,
         RuPhoneNumber     $phone,
+        ?UuidV4           $promoId,
         Role              $role,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
@@ -46,6 +51,7 @@ class User extends AbstractBaseEntity
             ->setName($name)
             ->setEmail($email)
             ->setPhone($phone)
+            ->setPromoId($promoId)
             ->setRole($role)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
@@ -56,7 +62,7 @@ class User extends AbstractBaseEntity
         return $this->name;
     }
 
-    public function setName(Name $name): self
+    public function setName(Name $name): User
     {
         $this->name = $name;
         return $this;
@@ -67,7 +73,7 @@ class User extends AbstractBaseEntity
         return $this->email;
     }
 
-    public function setEmail(Email $email): self
+    public function setEmail(Email $email): User
     {
         $this->email = $email;
         return $this;
@@ -78,9 +84,20 @@ class User extends AbstractBaseEntity
         return $this->phone;
     }
 
-    public function setPhone(RuPhoneNumber $phone): self
+    public function setPhone(RuPhoneNumber $phone): User
     {
         $this->phone = $phone;
+        return $this;
+    }
+
+    public function getPromoId(): ?UuidV4
+    {
+        return $this->promoId;
+    }
+
+    public function setPromoId(?UuidV4 $promoId): User
+    {
+        $this->promoId = $promoId;
         return $this;
     }
 
@@ -89,7 +106,7 @@ class User extends AbstractBaseEntity
         return $this->role;
     }
 
-    public function setRole(Role $role): self
+    public function setRole(Role $role): User
     {
         $this->role = $role;
         return $this;

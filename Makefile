@@ -1,6 +1,8 @@
 init: # Сделать полную инициализацию приложения
 	make dc_build;
 	make dc_up;
+	php bin/console doctrine:migrations:migrate;
+	php bin/console doctrine:fixtures:load --append;
 
 ###> Composer ###
 c_tests:

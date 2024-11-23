@@ -9,5 +9,8 @@ services:
     App\Role\Domain\Repository\RoleRepositoryInterface:
         class: App\Role\Infrastructure\Repository\RoleRepository
 
+    App\Product\Domain\Repository\ProductRepositoryInterface:
+        class: App\Product\Infrastructure\Repository\ProductRepository
+
     App\Common\Domain\Message\MessageBusInterface:
         class: App\Common\Application\Message\MessageBus

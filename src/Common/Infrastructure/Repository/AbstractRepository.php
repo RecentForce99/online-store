@@ -17,9 +17,4 @@ class AbstractRepository extends ServiceEntityRepository
         parent::__construct($registry, AbstractRepository::class);
         $this->entityManager = $registry->getManager();
     }
-
-    public function flush(): void
-    {
-        $this->entityManager->flush();
-    }
 }

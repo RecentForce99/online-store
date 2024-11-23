@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Role\Infrastructure\Fixture;
 
+use App\Common\Infrastructure\Repository\Flusher;
 use App\Role\Domain\Entity\Role;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -14,6 +15,7 @@ use Doctrine\Persistence\ObjectManager;
 final class CreateRolesFixture extends Fixture
 {
     public function __construct(
+        private readonly Flusher                 $flusher,
         private readonly RoleRepositoryInterface $roleRepository,
     )
     {
@@ -28,7 +30,7 @@ final class CreateRolesFixture extends Fixture
             }
         }
 
-        $this->roleRepository->flush();
+        $this->flusher->flush();
     }
 
     private function getRolesToCreate(): Collection

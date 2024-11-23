@@ -6,6 +6,7 @@ namespace App\User\Application\UseCase\Create;
 
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
+use App\Common\Infrastructure\Repository\Flusher;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
@@ -20,6 +21,8 @@ final class CreateUserCommandHandler
         private readonly RoleRepositoryInterface $roleRepository,
         private readonly UserRepositoryInterface $userRepository,
         private readonly AbstractUid             $uuid,
+        private readonly Flusher                 $flusher,
+
     )
     {
     }
@@ -37,6 +40,6 @@ final class CreateUserCommandHandler
         );
 
         $this->userRepository->create($user);
-        $this->userRepository->flush();
+        $this->flusher->flush();
     }
 }

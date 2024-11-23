@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Role\Domain\Entity;
+namespace App\Order\Domain\Entity;
 
-use App\User\Domain\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
@@ -14,22 +13,18 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity]
-#[Table(name: 'roles')]
-class Role
+#[Table(name: 'delivery_types')]
+class DeliveryType
 {
-    /**
-     * Better-off to use UUID id to inherit AbstractEntity
-     * But this way is a new possibility to use slug as primary key which I've never done before
-     */
     #[Id]
-    #[Column(type: 'string', length: 255)]
-    private string $slug;
-
-    #[Column(type: 'string', unique: true, length: 255)]
+    #[Column(type: 'string', length: 20)]
     private string $name;
 
-    #[OneToMany(mappedBy: 'role', targetEntity: User::class)]
-    private Collection $users;
+    #[Column(type: 'string', unique: true, length: 20)]
+    private string $slug;
+
+    #[OneToMany(mappedBy: 'deliveryType', targetEntity: Order::class)]
+    private Collection $orders;
 
     #[Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -47,7 +42,7 @@ class Role
         string            $name,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): Role
+    ): DeliveryType
     {
         return (new static($slug))
             ->setName($name)
@@ -55,30 +50,30 @@ class Role
             ->setUpdatedAt($updatedAt);
     }
 
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): Role
+    public function setName(string $name): DeliveryType
     {
         $this->name = $name;
         return $this;
     }
 
-    public function getUsers(): Collection
+    public function getSlug(): string
     {
-        return $this->users;
+        return $this->slug;
     }
 
-    public function setUsers(Collection $users): Role
+    public function getOrders(): Collection
     {
-        $this->users = $users;
+        return $this->orders;
+    }
+
+    public function setOrders(Collection $orders): DeliveryType
+    {
+        $this->orders = $orders;
         return $this;
     }
 
@@ -87,7 +82,7 @@ class Role
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): Role
+    public function setCreatedAt(DateTimeImmutable $createdAt): DeliveryType
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -98,7 +93,7 @@ class Role
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): Role
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): DeliveryType
     {
         $this->updatedAt = $updatedAt;
         return $this;

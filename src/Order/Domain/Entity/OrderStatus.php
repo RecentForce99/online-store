@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Role\Domain\Entity;
+namespace App\Order\Domain\Entity;
 
-use App\User\Domain\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
@@ -14,22 +13,21 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity]
-#[Table(name: 'roles')]
-class Role
+#[Table(name: 'order_statuses')]
+class OrderStatus
 {
-    /**
-     * Better-off to use UUID id to inherit AbstractEntity
-     * But this way is a new possibility to use slug as primary key which I've never done before
-     */
     #[Id]
-    #[Column(type: 'string', length: 255)]
+    #[Column(type: 'string', length: 20)]
     private string $slug;
 
-    #[Column(type: 'string', unique: true, length: 255)]
+    #[Column(type: 'string', unique: true, length: 20)]
     private string $name;
 
-    #[OneToMany(mappedBy: 'role', targetEntity: User::class)]
-    private Collection $users;
+    #[Column(type: 'boolean', options: ['default' => false])]
+    private bool $notifiable;
+
+    #[OneToMany(mappedBy: 'status', targetEntity: Order::class)]
+    private Collection $orders;
 
     #[Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -45,12 +43,14 @@ class Role
     public static function create(
         string            $slug,
         string            $name,
+        bool              $notifiable,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): Role
+    ): OrderStatus
     {
         return (new static($slug))
             ->setName($name)
+            ->setNotifiable($notifiable)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
     }
@@ -65,20 +65,31 @@ class Role
         return $this->name;
     }
 
-    public function setName(string $name): Role
+    public function setName(string $name): OrderStatus
     {
         $this->name = $name;
         return $this;
     }
 
-    public function getUsers(): Collection
+    public function isNotifiable(): bool
     {
-        return $this->users;
+        return $this->notifiable;
     }
 
-    public function setUsers(Collection $users): Role
+    public function setNotifiable(bool $notifiable): OrderStatus
     {
-        $this->users = $users;
+        $this->notifiable = $notifiable;
+        return $this;
+    }
+
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function setOrders(Collection $orders): OrderStatus
+    {
+        $this->orders = $orders;
         return $this;
     }
 
@@ -87,7 +98,7 @@ class Role
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): Role
+    public function setCreatedAt(DateTimeImmutable $createdAt): OrderStatus
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -98,9 +109,10 @@ class Role
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): Role
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): OrderStatus
     {
         $this->updatedAt = $updatedAt;
         return $this;
     }
 }
+

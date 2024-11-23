@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace App\Role\Infrastructure\Repository;
 
-use App\Common\Infrastructure\Repository\AbstractRepository;
 use App\Role\Domain\Entity\Role;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-final class RoleRepository extends AbstractRepository implements RoleRepositoryInterface
+final class RoleRepository extends ServiceEntityRepository implements RoleRepositoryInterface
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Role::class);
+    }
+
     public function create(Role $role): void
     {
-        $this->entityManager->persist($role);
+        $this->getEntityManager()->persist($role);
     }
 
     public function findBySlug(string $slug): ?Role
     {
-        return $this->entityManager->getRepository(Role::class)
-            ->findOneBy(['slug' => $slug]);
+        return $this->findOneBy(['slug' => $slug]);
     }
 }

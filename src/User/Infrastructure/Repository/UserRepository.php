@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Repository;
 
-use App\Common\Domain\Repository\AbstractRepository;
+use App\Common\Infrastructure\Repository\AbstractRepository;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 

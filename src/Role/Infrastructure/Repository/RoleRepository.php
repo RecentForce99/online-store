@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Role\Infrastructure\Repository;
 
-use App\Common\Domain\Repository\AbstractRepository;
+use App\Common\Infrastructure\Repository\AbstractRepository;
 use App\Role\Domain\Entity\Role;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
 

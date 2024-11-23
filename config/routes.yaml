@@ -1,11 +1,11 @@
 common_api:
-    resource: ../src/Common/Infrastructure/Controller/Api
+    resource: ../src/Common/Infrastructure/Presentation/Api
     type: attribute
     stateless: false
     prefix: /api
 
 user_api:
-    resource: ../src/User/Infrastructure/Controller/Api
+    resource: ../src/User/Infrastructure/Presentation/Api
     type: attribute
     stateless: false
     prefix: /api

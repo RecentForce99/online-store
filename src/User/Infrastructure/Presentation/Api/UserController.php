@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Infrastructure\Controller\Api;
+namespace App\User\Infrastructure\Presentation\Api;
 
 use App\Common\Infrastructure\Enum\Kafka\KafkaTopicEnum;
 use App\User\Application\UseCase\Create\CreateUserCommand;

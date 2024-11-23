@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\User\Domain\Repository\UserRepositoryInterface:
+        class: App\User\Infrastructure\Repository\UserRepository
+
+    App\Role\Domain\Repository\RoleRepositoryInterface:
+        class: App\Role\Infrastructure\Repository\RoleRepository
+
+    App\Common\Domain\Message\MessageBusInterface:
+        class: App\Common\Application\Message\MessageBus

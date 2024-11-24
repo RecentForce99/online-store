@@ -1,15 +1,3 @@
-parameters:
-    app.env: '%env(APP_ENV)%'
-    app.domain: '%env(APP_DOMAIN)%'
-    app.scheme: '%env(APP_SCHEME)%'
-
-    kafka.global:
-        group.id: '%env(string:RD_KAFKA_GROUP_ID)%'
-        metadata.broker.list: '%env(string:RD_KAFKA_BROKER_LIST)%'
-        enable.auto.commit: 'false'
-    kafka.topic:
-        auto.offset.reset: beginning
-
 services:
     _defaults:
         autowire: true
@@ -20,13 +8,9 @@ services:
             $globalConfig: '%kafka.global%'
             $topicConfig: '%kafka.topic%'
 
-
     Interop\Queue\ConnectionFactory:
         class: Enqueue\RdKafka\RdKafkaConnectionFactory
         arguments:
             $config:
                 global: '%kafka.global%'
                 topic: '%kafka.topic%'
-
-    Symfony\Component\Uid\AbstractUid:
-        class: Symfony\Component\Uid\UuidV4

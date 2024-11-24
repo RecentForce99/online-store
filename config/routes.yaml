@@ -9,3 +9,9 @@ user_api:
     type: attribute
     stateless: false
     prefix: /api
+
+cart_api:
+    resource: ../src/Cart/Infrastructure/Presentation/Api
+    type: attribute
+    stateless: false
+    prefix: /api

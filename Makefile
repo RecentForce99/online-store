@@ -1,8 +1,12 @@
-###> Composer ###
 init: # Сделать полную инициализацию приложения
 	make dc_build;
 	make dc_up;
+	php bin/console doctrine:migrations:migrate;
+	php bin/console doctrine:fixtures:load --append;
 
+###> Composer ###
+c_tests:
+	docker exec online-store_php-fpm ./vendor/bin/phpunit tests
 ###< Composer ###
 
 #test: # Выполнить тесты приложения

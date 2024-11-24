@@ -5,33 +5,57 @@ declare(strict_types=1);
 namespace App\Common\Domain\ValueObject;
 
 use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\Response;
 
-final class RuPhoneNumber extends IntegerValue
+#[ORM\Embeddable]
+final class RuPhoneNumber
 {
-    private const int LENGTH = 10;
+    private const int VALIDATION_LENGTH = 10;
+
+    #[ORM\Column(type: 'integer')]
+    private int $phone;
 
     /**
      * @throws WrongLengthOfPhoneNumberException
      */
-    protected function __construct(protected int $value)
+    private function __construct(int $ruPhoneNumber)
     {
-        $phoneNumber = abs($value);
+        $ruPhoneNumber = abs($ruPhoneNumber);
 
-        $phoneNumberString = strval($phoneNumber);
-        $phoneNumberLength = strlen($phoneNumberString);
-        if (self::LENGTH !== $phoneNumberLength) {
+        $ruPhoneNumberString = strval($ruPhoneNumber);
+        $ruPhoneNumberLength = strlen($ruPhoneNumberString);
+        if (self::VALIDATION_LENGTH !== $ruPhoneNumberLength) {
             throw new WrongLengthOfPhoneNumberException(
                 sprintf(
                     'The length of the phone number [%d] is [%s], whereas it must be [%d].',
-                    $phoneNumber,
-                    $phoneNumberLength,
-                    self::LENGTH,
+                    $ruPhoneNumber,
+                    $ruPhoneNumberLength,
+                    self::VALIDATION_LENGTH,
                 ),
                 Response::HTTP_INTERNAL_SERVER_ERROR,
             );
         }
 
-        parent::__construct($phoneNumber);
+        $this->phone = $ruPhoneNumber;
+    }
+
+    /**
+     * @throws WrongLengthOfPhoneNumberException
+     */
+    public static function fromInt(int $ruPhoneNumber): RuPhoneNumber
+    {
+        return new RuPhoneNumber($ruPhoneNumber);
+    }
+
+    public function getRuPhoneNumber(): int
+    {
+        return $this->phone;
+    }
+
+    public function setRuPhoneNumber(int $ruPhoneNumber): RuPhoneNumber
+    {
+        $this->phone = $ruPhoneNumber;
+        return $this;
     }
 }

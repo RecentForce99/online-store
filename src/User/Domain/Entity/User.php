@@ -13,38 +13,33 @@ use App\Role\Domain\Entity\Role;
 use App\User\Domain\ValueObject\Name;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\UuidV4;
 
-#[Entity]
-#[Table(name: 'users')]
+#[ORM\Entity]
+#[ORM\Table(name: 'users')]
 class User extends AbstractBaseEntity
 {
-    #[Column(type: 'string', length: 255)]
+    #[ORM\Embedded(class: Name::class, columnPrefix: false)]
     private Name $name;
 
-    #[Column(type: 'string', unique: true, length: 255)]
+    #[ORM\Embedded(class: Email::class, columnPrefix: false)]
     private Email $email;
 
-    #[Column(type: 'bigint', unique: true, options: ['unsigned' => true])]
+    #[ORM\Embedded(class: RuPhoneNumber::class, columnPrefix: false)]
     private RuPhoneNumber $phone;
 
-    #[Column(type: 'uuid', nullable: true)]
+    #[ORM\Column(type: 'uuid', nullable: true)]
     private ?UuidV4 $promoId;
 
-    #[ManyToOne(targetEntity: Role::class)]
-    #[JoinColumn(name: 'role_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\ManyToOne(targetEntity: Role::class)]
+    #[ORM\JoinColumn(name: 'role_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
     private Role $role;
 
-    #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection $orders;
 
-    #[OneToMany(mappedBy: 'user', targetEntity: CartProduct::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CartProduct::class)]
     private Collection $cartProducts;
 
     public static function create(

@@ -7,38 +7,41 @@ namespace App\Common\Domain\ValueObject;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\InvalidEmailException;
 use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\Response;
 
-final class Email extends StringValue
+#[ORM\Embeddable]
+final class Email
 {
-    private const int MIN_LENGTH = 3;
-    private const int MAX_LENGTH = 255;
+    private const int VALIDATION_MIN_LENGTH = 3;
+    private const int VALIDATION_MAX_LENGTH = 255;
+
+    #[ORM\Column(type: 'string')]
+    private string $email;
 
     /**
      * @throws GreaterThanMaxLengthException
      * @throws InvalidEmailException
      * @throws LessThanMinLengthException
      */
-    protected function __construct(protected string $value)
+    private function __construct(string $email)
     {
-        $email = $value;
-
-        $emailLength = strlen($value);
-        if (self::MIN_LENGTH > $emailLength) {
+        $emailLength = strlen($email);
+        if (self::VALIDATION_MIN_LENGTH > $emailLength) {
             throw new LessThanMinLengthException(sprintf(
                 'The email [%s] is too short, it must be minimum [%s] characters.',
                 $email,
-                self::MIN_LENGTH,
+                self::VALIDATION_MIN_LENGTH,
             ),
                 Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        if (self::MAX_LENGTH < $emailLength) {
+        if (self::VALIDATION_MAX_LENGTH < $emailLength) {
             throw new GreaterThanMaxLengthException(
                 sprintf(
                     'The email [%s] is too long, it must be maximum [%s] characters.',
                     $email,
-                    self::MAX_LENGTH,
+                    self::VALIDATION_MAX_LENGTH,
                 ),
                 Response::HTTP_INTERNAL_SERVER_ERROR,
             );
@@ -54,6 +57,27 @@ final class Email extends StringValue
             );
         }
 
-        parent::__construct($email);
+        $this->email = $email;
+    }
+
+    /**
+     * @throws GreaterThanMaxLengthException
+     * @throws InvalidEmailException
+     * @throws LessThanMinLengthException
+     */
+    public static function fromString(string $email): Email
+    {
+        return new Email($email);
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): Email
+    {
+        $this->email = $email;
+        return $this;
     }
 }

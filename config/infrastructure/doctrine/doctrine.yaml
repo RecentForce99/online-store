@@ -18,12 +18,19 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            AppUser:
+            AppUserEntities:
                 type: attribute
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/User/Domain/Entity'
                 prefix: 'App\User\Domain\Entity'
-                alias: AppUser
+                alias: AppUserEntities
+
+            AppUserValueObjects:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/User/Domain/ValueObject'
+                prefix: 'App\User\Domain\ValueObject'
+                alias: AppUserValueObjects
 
             AppRole:
                 type: attribute
@@ -32,12 +39,19 @@ doctrine:
                 prefix: 'App\Role\Domain\Entity'
                 alias: AppRole
 
-            AppCommon:
-               type: attribute
-               is_bundle: false
-               dir: '%kernel.project_dir%/src/Common/Domain/Entity'
-               prefix: 'App\Common\Domain\Entity'
-               alias: AppCommon
+            AppCommonEntities:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Common/Domain/Entity'
+                prefix: 'App\Common\Domain\Entity'
+                alias: AppCommonEntities
+
+            AppCommonValueObjects:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Common/Domain/ValueObject'
+                prefix: 'App\Common\Domain\ValueObject'
+                alias: AppCommonValueObjects
 
             AppCart:
                 type: attribute

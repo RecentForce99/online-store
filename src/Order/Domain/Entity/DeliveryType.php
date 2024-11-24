@@ -6,30 +6,26 @@ namespace App\Order\Domain\Entity;
 
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity]
-#[Table(name: 'delivery_types')]
+#[ORM\Entity]
+#[ORM\Table(name: 'delivery_types')]
 class DeliveryType
 {
-    #[Id]
-    #[Column(type: 'string', length: 20)]
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 20)]
     private string $name;
 
-    #[Column(type: 'string', unique: true, length: 20)]
+    #[ORM\Column(type: 'string', unique: true, length: 20)]
     private string $slug;
 
-    #[OneToMany(mappedBy: 'deliveryType', targetEntity: Order::class)]
+    #[ORM\OneToMany(mappedBy: 'deliveryType', targetEntity: Order::class)]
     private Collection $orders;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $updatedAt;
 
     private function __construct(string $slug)

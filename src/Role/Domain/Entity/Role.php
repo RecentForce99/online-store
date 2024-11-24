@@ -7,34 +7,30 @@ namespace App\Role\Domain\Entity;
 use App\User\Domain\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity]
-#[Table(name: 'roles')]
+#[ORM\Entity]
+#[ORM\Table(name: 'roles')]
 class Role
 {
     /**
      * Better-off to use UUID id to inherit AbstractEntity
      * But this way is a new possibility to use slug as primary key which I've never done before
      */
-    #[Id]
-    #[Column(type: 'string', length: 255)]
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $slug;
 
-    #[Column(type: 'string', unique: true, length: 255)]
+    #[ORM\Column(type: 'string', unique: true, length: 255)]
     private string $name;
 
-    #[OneToMany(mappedBy: 'role', targetEntity: User::class)]
+    #[ORM\OneToMany(mappedBy: 'role', targetEntity: User::class)]
     private Collection $users;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $updatedAt;
 
     private function __construct(string $slug)

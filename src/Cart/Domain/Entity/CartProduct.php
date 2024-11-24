@@ -7,41 +7,39 @@ namespace App\Cart\Domain\Entity;
 use App\Product\Domain\Entity\Product;
 use App\User\Domain\Entity\User;
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\UniqueConstraint;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity]
-#[Table(name: 'cart_products')]
+#[ORM\Entity]
+#[ORM\Table(name: 'cart_products')]
 class CartProduct
 {
-    #[Id]
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'cartProducts')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cartProducts')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
-    #[Id]
-    #[ManyToOne(targetEntity: Product::class, inversedBy: 'cartProducts')]
-    #[JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'cartProducts')]
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Product $product;
 
-    #[Column(type: 'integer', options: ['default' => 0])]
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $quantity;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $updatedAt;
+
+    private function __construct()
+    {
+    }
 
     public static function create(
         User              $user,
         Product           $product,
-        int               $quantity = 0,
+        int               $quantity = 1,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): CartProduct

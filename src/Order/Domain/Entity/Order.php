@@ -8,18 +8,13 @@ use App\Common\Domain\Entity\AbstractBaseEntity;
 use App\User\Domain\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity]
-#[Table(name: 'orders')]
+#[ORM\Entity]
+#[ORM\Table(name: 'orders')]
 class Order extends AbstractBaseEntity
 {
-    #[Column(
+    #[ORM\Column(
         type: 'bigint',
         nullable: true,
         options: [
@@ -28,19 +23,19 @@ class Order extends AbstractBaseEntity
     ]
     private ?int $phone;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
-    #[ManyToOne(targetEntity: OrderStatus::class, inversedBy: 'orders')]
-    #[JoinColumn(name: 'status_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\ManyToOne(targetEntity: OrderStatus::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(name: 'status_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
     private OrderStatus $status;
 
-    #[ManyToOne(targetEntity: DeliveryType::class, inversedBy: 'orders')]
-    #[JoinColumn(name: 'delivery_type_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\ManyToOne(targetEntity: DeliveryType::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(name: 'delivery_type_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
     private DeliveryType $deliveryType;
 
-    #[OneToMany(mappedBy: 'order', targetEntity: OrderProduct::class)]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderProduct::class)]
     private Collection $orderProducts;
 
     public static function create(

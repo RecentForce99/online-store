@@ -6,36 +6,34 @@ namespace App\Order\Domain\Entity;
 
 use App\Product\Domain\Entity\Product;
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\UniqueConstraint;
+use Doctrine\ORM\Mapping as ORM;
 
-#[Entity]
-#[Table(name: 'order_product')]
+#[ORM\Entity]
+#[ORM\Table(name: 'order_product')]
 class OrderProduct
 {
-    #[Id]
-    #[ManyToOne(targetEntity: Order::class, inversedBy: 'orderProducts')]
-    #[JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orderProducts')]
+    #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Order $order;
 
-    #[Id]
-    #[ManyToOne(targetEntity: Product::class, inversedBy: 'orderProducts')]
-    #[JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'orderProducts')]
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Product $product;
 
-    #[Column(type: 'integer', options: ['default' => 0])]
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $quantity;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $updatedAt;
+
+    private function __construct()
+    {
+    }
 
     public static function create(
         Order             $order,

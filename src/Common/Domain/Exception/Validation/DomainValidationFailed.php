@@ -6,6 +6,6 @@ namespace App\Common\Domain\Exception\Validation;
 
 use Exception;
 
-abstract class ValidationFailed extends Exception
+abstract class DomainValidationFailed extends Exception
 {
 }

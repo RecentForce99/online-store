@@ -16,6 +16,11 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
         parent::__construct($registry, User::class);
     }
 
+    public function findById(string $id): ?User
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
     public function create(User $user): void
     {
         $this->getEntityManager()->persist($user);

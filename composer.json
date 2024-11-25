@@ -70,7 +70,7 @@
             "@auto-scripts"
         ],
         "test": "./vendor/bin/phpunit tests",
-        "fix:code-style": "vendor/bin/php-cs-fixer fix src"
+        "fix:code-style": "vendor/bin/php-cs-fixer fix src --allow-risky=yes "
     },
     "conflict": {
         "symfony/symfony": "*"

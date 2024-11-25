@@ -1,12 +1,10 @@
-init: # Сделать полную инициализацию приложения
-	make dc_build;
-	make dc_up;
+init: dc_build dc_up # Сделать полную инициализацию приложения
 	php bin/console doctrine:migrations:migrate;
 	php bin/console doctrine:fixtures:load --append;
 
 ###> Composer ###
-c_tests:
-	docker exec online-store_php-fpm ./vendor/bin/phpunit tests
+test:
+	docker exec online-store_php-fpm composer test
 ###< Composer ###
 
 #test: # Выполнить тесты приложения
@@ -20,14 +18,9 @@ dc_logs:
 dc_link_env:
 	ln -s ./../.env ./docker/.env
 
-dc_reload:
-	make dc_down
-	make dc_up
+dc_reload: dc_down dc_up
 
-dc_restart:
-	make dc_down
-	make dc_build
-	make dc_up
+dc_restart: dc_down dc_build dc_up
 
 dc_build:
 	docker compose -f ./docker/docker-compose.yml build

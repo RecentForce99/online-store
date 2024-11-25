@@ -12,13 +12,15 @@ use App\Order\Domain\Entity\Order;
 use App\Role\Domain\Entity\Role;
 use App\User\Domain\ValueObject\Name;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
-class User extends AbstractBaseEntity
+class User extends AbstractBaseEntity implements UserInterface
 {
     #[ORM\Embedded(class: Name::class, columnPrefix: false)]
     private Name $name;
@@ -32,9 +34,17 @@ class User extends AbstractBaseEntity
     #[ORM\Column(type: 'uuid', nullable: true)]
     private ?UuidV4 $promoId;
 
-    #[ORM\ManyToOne(targetEntity: Role::class)]
-    #[ORM\JoinColumn(name: 'role_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
-    private Role $role;
+    #[ORM\Column(type: 'string')]
+    private ?string $password = null;
+
+    #[ORM\Column(type: 'json', options: ['jsonb' => true])]
+    private array $permissions;
+
+    #[ORM\JoinTable(name: 'roles_users')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
+    private Collection $roles;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection $orders;
@@ -46,10 +56,10 @@ class User extends AbstractBaseEntity
         Name              $name,
         Email             $email,
         RuPhoneNumber     $phone,
-        ?UuidV4           $promoId, // UuidV4 can be replaced with a service interface to avoid overlapping layers
-        Role              $role,
-        DateTimeImmutable $createdAt = new DateTimeImmutable(),
-        DateTimeImmutable $updatedAt = new DateTimeImmutable(),
+        ?UuidV4           $promoId, // How to replace this a concrete instance with an abstraction?
+        Collection        $roles = new ArrayCollection(), // How to replace this a concrete instance with an abstraction?
+        DateTimeImmutable $createdAt = new DateTimeImmutable(), // How to replace this a concrete instance with an abstraction?
+        DateTimeImmutable $updatedAt = new DateTimeImmutable(), // How to replace this a concrete instance with an abstraction?
     ): User
     {
         return (new self())
@@ -57,9 +67,19 @@ class User extends AbstractBaseEntity
             ->setEmail($email)
             ->setPhone($phone)
             ->setPromoId($promoId)
-            ->setRole($role)
+            ->setRoles($roles)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
+    }
+
+    public function eraseCredentials(): void
+    {
+        $this->password = null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email->getEmail();
     }
 
     public function getName(): Name
@@ -106,14 +126,36 @@ class User extends AbstractBaseEntity
         return $this;
     }
 
-    public function getRole(): Role
+    public function getPassword(): string
     {
-        return $this->role;
+        return $this->password;
     }
 
-    public function setRole(Role $role): User
+    public function setPassword(string $password): User
     {
-        $this->role = $role;
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    public function setPermissions(array $permissions): User
+    {
+        $this->permissions = $permissions;
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles->map(fn(Role $role) => $role->getSlug())->toArray();
+    }
+
+    public function setRoles(Collection $roles): User
+    {
+        $this->roles = $roles;
         return $this;
     }
 

@@ -5,6 +5,8 @@ init: dc_build dc_up # Сделать полную инициализацию п
 ###> Composer ###
 test:
 	docker exec online-store_php-fpm composer test
+fix\:code-style:
+	docker exec online-store_php-fpm composer fix:code-style
 ###< Composer ###
 
 #test: # Выполнить тесты приложения

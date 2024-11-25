@@ -42,7 +42,7 @@ class CartProduct
         int               $quantity = 1,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): CartProduct
+    ): self
     {
         return (new static())
             ->setUser($user)
@@ -57,51 +57,31 @@ class CartProduct
         return $this->user;
     }
 
-    public function setUser(User $user): CartProduct
+    public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getProduct(): Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(Product $product): CartProduct
+    public function setProduct(Product $product): self
     {
         $this->product = $product;
         return $this;
     }
 
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): CartProduct
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): CartProduct
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): CartProduct
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;

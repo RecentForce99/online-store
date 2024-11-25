@@ -41,7 +41,7 @@ class OrderProduct
         int               $quantity = 0,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): OrderProduct
+    ): self
     {
         return (new static())
             ->setOrder($order)
@@ -51,56 +51,31 @@ class OrderProduct
             ->setUpdatedAt($updatedAt);
     }
 
-    public function getOrder(): Order
-    {
-        return $this->order;
-    }
-
-    public function setOrder(Order $order): OrderProduct
+    public function setOrder(Order $order): self
     {
         $this->order = $order;
         return $this;
     }
 
-    public function getProduct(): Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(Product $product): OrderProduct
+    public function setProduct(Product $product): self
     {
         $this->product = $product;
         return $this;
     }
 
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): OrderProduct
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): OrderProduct
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): OrderProduct
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;

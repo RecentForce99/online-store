@@ -63,7 +63,7 @@ class Product extends AbstractBaseEntity
         int               $version,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): Product
+    ): self
     {
         return (new self())
             ->setName($name)
@@ -84,29 +84,19 @@ class Product extends AbstractBaseEntity
         return $this->name;
     }
 
-    public function setName(string $name): Product
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
-    public function getWeight(): int
-    {
-        return $this->weight;
-    }
-
-    public function setWeight(int $weight): Product
+    public function setWeight(int $weight): self
     {
         $this->weight = $weight;
         return $this;
     }
 
-    public function getHeight(): int
-    {
-        return $this->height;
-    }
-
-    public function setHeight(int $height): Product
+    public function setHeight(int $height): self
     {
         $this->height = $height;
         return $this;
@@ -117,18 +107,13 @@ class Product extends AbstractBaseEntity
         return $this->width;
     }
 
-    public function setWidth(int $width): Product
+    public function setWidth(int $width): self
     {
         $this->width = $width;
         return $this;
     }
 
-    public function getLength(): int
-    {
-        return $this->length;
-    }
-
-    public function setLength(int $length): Product
+    public function setLength(int $length): self
     {
         $this->length = $length;
         return $this;
@@ -139,29 +124,19 @@ class Product extends AbstractBaseEntity
         return $this->description;
     }
 
-    public function setDescription(?string $description): Product
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
         return $this;
     }
 
-    public function getCost(): int
-    {
-        return $this->cost;
-    }
-
-    public function setCost(int $cost): Product
+    public function setCost(int $cost): self
     {
         $this->cost = $cost;
         return $this;
     }
 
-    public function getTax(): int
-    {
-        return $this->tax;
-    }
-
-    public function setTax(int $tax): Product
+    public function setTax(int $tax): self
     {
         $this->tax = $tax;
         return $this;
@@ -172,31 +147,9 @@ class Product extends AbstractBaseEntity
         return $this->version;
     }
 
-    public function setVersion(int $version): Product
+    public function setVersion(int $version): self
     {
         $this->version = $version;
-        return $this;
-    }
-
-    public function getOrderProducts(): Collection
-    {
-        return $this->orderProducts;
-    }
-
-    public function setOrderProducts(Collection $orderProducts): Product
-    {
-        $this->orderProducts = $orderProducts;
-        return $this;
-    }
-
-    public function getCartProducts(): Collection
-    {
-        return $this->cartProducts;
-    }
-
-    public function setCartProducts(Collection $cartProducts): Product
-    {
-        $this->cartProducts = $cartProducts;
         return $this;
     }
 }

@@ -37,9 +37,6 @@ class User extends AbstractBaseEntity implements UserInterface
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
-    #[ORM\Column(type: 'json', options: ['jsonb' => true])]
-    private array $permissions;
-
     #[ORM\JoinTable(name: 'roles_users')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -56,10 +53,10 @@ class User extends AbstractBaseEntity implements UserInterface
         Name              $name,
         Email             $email,
         RuPhoneNumber     $phone,
-        ?UuidV4           $promoId, // How to replace this a concrete instance with an abstraction?
-        Collection        $roles = new ArrayCollection(), // How to replace this a concrete instance with an abstraction?
-        DateTimeImmutable $createdAt = new DateTimeImmutable(), // How to replace this a concrete instance with an abstraction?
-        DateTimeImmutable $updatedAt = new DateTimeImmutable(), // How to replace this a concrete instance with an abstraction?
+        ?UuidV4           $promoId,
+        Collection        $roles = new ArrayCollection(),
+        DateTimeImmutable $createdAt = new DateTimeImmutable(),
+        DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): User
     {
         return (new self())
@@ -93,31 +90,16 @@ class User extends AbstractBaseEntity implements UserInterface
         return $this;
     }
 
-    public function getEmail(): Email
-    {
-        return $this->email;
-    }
-
     public function setEmail(Email $email): User
     {
         $this->email = $email;
         return $this;
     }
 
-    public function getPhone(): RuPhoneNumber
-    {
-        return $this->phone;
-    }
-
     public function setPhone(RuPhoneNumber $phone): User
     {
         $this->phone = $phone;
         return $this;
-    }
-
-    public function getPromoId(): ?UuidV4
-    {
-        return $this->promoId;
     }
 
     public function setPromoId(?UuidV4 $promoId): User
@@ -131,23 +113,6 @@ class User extends AbstractBaseEntity implements UserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): User
-    {
-        $this->password = $password;
-        return $this;
-    }
-
-    public function getPermissions(): array
-    {
-        return $this->permissions;
-    }
-
-    public function setPermissions(array $permissions): User
-    {
-        $this->permissions = $permissions;
-        return $this;
-    }
-
     public function getRoles(): array
     {
         return $this->roles->map(fn(Role $role) => $role->getSlug())->toArray();
@@ -156,28 +121,6 @@ class User extends AbstractBaseEntity implements UserInterface
     public function setRoles(Collection $roles): User
     {
         $this->roles = $roles;
-        return $this;
-    }
-
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(Collection $orders): User
-    {
-        $this->orders = $orders;
-        return $this;
-    }
-
-    public function getCartProducts(): Collection
-    {
-        return $this->cartProducts;
-    }
-
-    public function setCartProducts(Collection $cartProducts): User
-    {
-        $this->cartProducts = $cartProducts;
         return $this;
     }
 }

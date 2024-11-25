@@ -45,7 +45,7 @@ class Order extends AbstractBaseEntity
         DeliveryType      $deliveryType,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): Order
+    ): self
     {
         return (new self())
             ->setUser($user)
@@ -56,12 +56,7 @@ class Order extends AbstractBaseEntity
             ->setUpdatedAt($updatedAt);
     }
 
-    public function getPhone(): ?int
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?int $phone): Order
+    public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
         return $this;
@@ -72,42 +67,21 @@ class Order extends AbstractBaseEntity
         return $this->user;
     }
 
-    public function setUser(User $user): Order
+    public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getStatus(): OrderStatus
-    {
-        return $this->status;
-    }
-
-    public function setStatus(OrderStatus $status): Order
+    public function setStatus(OrderStatus $status): self
     {
         $this->status = $status;
         return $this;
     }
 
-    public function getDeliveryType(): DeliveryType
-    {
-        return $this->deliveryType;
-    }
-
-    public function setDeliveryType(DeliveryType $deliveryType): Order
+    public function setDeliveryType(DeliveryType $deliveryType): self
     {
         $this->deliveryType = $deliveryType;
-        return $this;
-    }
-
-    public function getOrderProducts(): Collection
-    {
-        return $this->orderProducts;
-    }
-
-    public function setOrderProducts(Collection $orderProducts): Order
-    {
-        $this->orderProducts = $orderProducts;
         return $this;
     }
 }

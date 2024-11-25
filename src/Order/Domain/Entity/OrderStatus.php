@@ -42,7 +42,7 @@ class OrderStatus
         bool              $notifiable,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): OrderStatus
+    ): self
     {
         return (new static($slug))
             ->setName($name)
@@ -51,61 +51,30 @@ class OrderStatus
             ->setUpdatedAt($updatedAt);
     }
 
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): OrderStatus
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
-    public function isNotifiable(): bool
-    {
-        return $this->notifiable;
-    }
-
-    public function setNotifiable(bool $notifiable): OrderStatus
+    public function setNotifiable(bool $notifiable): self
     {
         $this->notifiable = $notifiable;
         return $this;
     }
 
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(Collection $orders): OrderStatus
-    {
-        $this->orders = $orders;
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): OrderStatus
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): OrderStatus
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;

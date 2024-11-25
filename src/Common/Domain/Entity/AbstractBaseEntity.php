@@ -35,7 +35,7 @@ abstract class AbstractBaseEntity
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): AbstractBaseEntity
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -46,7 +46,7 @@ abstract class AbstractBaseEntity
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): AbstractBaseEntity
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;

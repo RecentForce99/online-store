@@ -38,7 +38,7 @@ class DeliveryType
         string            $name,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): DeliveryType
+    ): self
     {
         return (new static($slug))
             ->setName($name)
@@ -51,7 +51,7 @@ class DeliveryType
         return $this->name;
     }
 
-    public function setName(string $name): DeliveryType
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
@@ -62,34 +62,13 @@ class DeliveryType
         return $this->slug;
     }
 
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(Collection $orders): DeliveryType
-    {
-        $this->orders = $orders;
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): DeliveryType
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): DeliveryType
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;

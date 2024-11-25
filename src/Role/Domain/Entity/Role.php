@@ -24,7 +24,7 @@ class Role  extends AbstractBaseEntity
         string            $name,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): Role
+    ): self
     {
         return (new static())
             ->setSlug($slug)
@@ -33,34 +33,18 @@ class Role  extends AbstractBaseEntity
             ->setUpdatedAt($updatedAt);
     }
 
-    public function getId(): UuidV4
-    {
-        return $this->id;
-    }
-
-    public function setId(UuidV4 $id): Role
-    {
-        $this->id = $id;
-        return $this;
-    }
-
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug(string $slug): Role
+    public function setSlug(string $slug): self
     {
         $this->slug = $slug;
         return $this;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): Role
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;

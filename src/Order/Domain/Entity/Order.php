@@ -19,7 +19,8 @@ class Order extends AbstractBaseEntity
         nullable: true,
         options: [
             'comment' => 'This field will be used as custom phone number that can be defined',
-        ]),
+        ]
+    ),
     ]
     private ?int $phone;
 
@@ -39,14 +40,13 @@ class Order extends AbstractBaseEntity
     private Collection $orderProducts;
 
     public static function create(
-        User              $user,
-        ?int              $phone,
-        OrderStatus       $status,
-        DeliveryType      $deliveryType,
+        User $user,
+        ?int $phone,
+        OrderStatus $status,
+        DeliveryType $deliveryType,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): self
-    {
+    ): self {
         return (new self())
             ->setUser($user)
             ->setPhone($phone)
@@ -59,6 +59,7 @@ class Order extends AbstractBaseEntity
     public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -70,18 +71,21 @@ class Order extends AbstractBaseEntity
     public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
     public function setStatus(OrderStatus $status): self
     {
         $this->status = $status;
+
         return $this;
     }
 
     public function setDeliveryType(DeliveryType $deliveryType): self
     {
         $this->deliveryType = $deliveryType;
+
         return $this;
     }
 }

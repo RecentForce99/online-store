@@ -10,8 +10,7 @@ final readonly class Flusher
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     public function flush(): void

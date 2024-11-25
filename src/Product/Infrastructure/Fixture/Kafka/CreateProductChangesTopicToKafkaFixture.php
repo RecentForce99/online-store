@@ -25,14 +25,12 @@ use Symfony\Component\Uid\UuidV4;
 final class CreateProductChangesTopicToKafkaFixture extends Fixture
 {
     private const string SERIALIZE_FORMAT = 'json';
-
     private string $topic;
     private Serializer $serializer;
 
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
-    )
-    {
+    ) {
         $this->topic = KafkaTopicEnum::PRODUCT_CHANGES->value;
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
     }

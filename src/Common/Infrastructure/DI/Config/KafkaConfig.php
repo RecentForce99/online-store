@@ -9,7 +9,6 @@ final class KafkaConfig
     public function __construct(
         public readonly array $globalConfig,
         public readonly array $topicConfig,
-    )
-    {
+    ) {
     }
 }

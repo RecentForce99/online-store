@@ -67,6 +67,7 @@ final class Name
     public function setName(string $name): Name
     {
         $this->name = $name;
+
         return $this;
     }
 }

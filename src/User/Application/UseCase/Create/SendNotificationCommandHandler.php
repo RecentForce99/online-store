@@ -12,8 +12,7 @@ final readonly class SendNotificationCommandHandler
 
     public function __construct(
         private MessageBusInterface $messageBus,
-    )
-    {
+    ) {
     }
 
     public function __invoke(CreateUserCommand $createUserCommand, string $topic): void

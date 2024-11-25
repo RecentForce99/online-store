@@ -11,7 +11,6 @@ final readonly class ProductMeasurementsForSendingToKafkaDto
         public int $height,
         public int $width,
         public int $length,
-    )
-    {
+    ) {
     }
 }

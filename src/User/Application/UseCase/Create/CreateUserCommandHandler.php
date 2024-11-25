@@ -20,11 +20,9 @@ final class CreateUserCommandHandler
     public function __construct(
         private readonly RoleRepositoryInterface $roleRepository,
         private readonly UserRepositoryInterface $userRepository,
-        private readonly AbstractUid             $uuid,
-        private readonly Flusher                 $flusher,
-
-    )
-    {
+        private readonly AbstractUid $uuid,
+        private readonly Flusher $flusher,
+    ) {
     }
 
     public function __invoke(CreateUserCommand $createUserCommand): void

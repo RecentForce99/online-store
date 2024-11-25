@@ -11,11 +11,9 @@ use App\User\Domain\Repository\UserRepositoryInterface;
 final class CartProductListQueryHandler
 {
     public function __construct(
-        private readonly UserRepositoryInterface        $userRepository,
+        private readonly UserRepositoryInterface $userRepository,
         private readonly CartProductRepositoryInterface $cartProductRepository,
-
-    )
-    {
+    ) {
     }
 
     /**

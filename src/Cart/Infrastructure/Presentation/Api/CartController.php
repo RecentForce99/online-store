@@ -27,12 +27,10 @@ final class CartController extends AbstractController
      */
     #[Route(methods: ['GET'])]
     public function list(
-        Request                     $request,
-        ValidatorInterface          $validator,
+        Request $request,
+        ValidatorInterface $validator,
         CartProductListQueryHandler $cartProductListQueryHandler,
-
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cartProductListQuery = new CartProductListQuery(
             userId: $request->get('userId', ''),
             offset: (int)$request->get('offset', 0),
@@ -59,12 +57,10 @@ final class CartController extends AbstractController
      */
     #[Route(methods: ['POST'])]
     public function addProductToCart(
-        Request                        $request,
-        ValidatorInterface             $validator,
+        Request $request,
+        ValidatorInterface $validator,
         AddProductToCartCommandHandler $addProductToCartCommandHandler,
-
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $addProductToCartCommand = new AddProductToCartCommand(
             userId: $request->get('userId', ''),
             productId: $request->get('productId', ''),

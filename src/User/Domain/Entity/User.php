@@ -50,15 +50,14 @@ class User extends AbstractBaseEntity implements UserInterface
     private Collection $cartProducts;
 
     public static function create(
-        Name              $name,
-        Email             $email,
-        RuPhoneNumber     $phone,
-        ?UuidV4           $promoId,
-        Collection        $roles = new ArrayCollection(),
+        Name $name,
+        Email $email,
+        RuPhoneNumber $phone,
+        ?UuidV4 $promoId,
+        Collection $roles = new ArrayCollection(),
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): User
-    {
+    ): self {
         return (new self())
             ->setName($name)
             ->setEmail($email)
@@ -84,27 +83,31 @@ class User extends AbstractBaseEntity implements UserInterface
         return $this->name;
     }
 
-    public function setName(Name $name): User
+    public function setName(Name $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
-    public function setEmail(Email $email): User
+    public function setEmail(Email $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
-    public function setPhone(RuPhoneNumber $phone): User
+    public function setPhone(RuPhoneNumber $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
-    public function setPromoId(?UuidV4 $promoId): User
+    public function setPromoId(?UuidV4 $promoId): self
     {
         $this->promoId = $promoId;
+
         return $this;
     }
 
@@ -115,12 +118,13 @@ class User extends AbstractBaseEntity implements UserInterface
 
     public function getRoles(): array
     {
-        return $this->roles->map(fn(Role $role) => $role->getSlug())->toArray();
+        return $this->roles->map(fn (Role $role) => $role->getSlug())->toArray();
     }
 
-    public function setRoles(Collection $roles): User
+    public function setRoles(Collection $roles): self
     {
         $this->roles = $roles;
+
         return $this;
     }
 }

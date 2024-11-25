@@ -37,13 +37,12 @@ class OrderStatus
     }
 
     public static function create(
-        string            $slug,
-        string            $name,
-        bool              $notifiable,
+        string $slug,
+        string $name,
+        bool $notifiable,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): self
-    {
+    ): self {
         return (new static($slug))
             ->setName($name)
             ->setNotifiable($notifiable)
@@ -59,25 +58,28 @@ class OrderStatus
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setNotifiable(bool $notifiable): self
     {
         $this->notifiable = $notifiable;
+
         return $this;
     }
 
     public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
     public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 }
-

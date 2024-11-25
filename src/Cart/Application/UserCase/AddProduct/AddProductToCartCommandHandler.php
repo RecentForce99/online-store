@@ -15,14 +15,12 @@ use Symfony\Component\Uid\AbstractUid;
 final class AddProductToCartCommandHandler
 {
     public function __construct(
-        private readonly UserRepositoryInterface        $userRepository,
-        private readonly ProductRepositoryInterface     $productRepository,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly ProductRepositoryInterface $productRepository,
         private readonly CartProductRepositoryInterface $cartProductRepository,
-        private readonly AbstractUid                    $uuid,
-        private readonly Flusher                        $flusher,
-
-    )
-    {
+        private readonly AbstractUid $uuid,
+        private readonly Flusher $flusher,
+    ) {
     }
 
     /**

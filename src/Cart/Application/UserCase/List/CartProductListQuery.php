@@ -11,7 +11,7 @@ final class CartProductListQuery
 {
     public function __construct(
         #[Assert\NotBlank]
-        #[Assert\Uuid(
+        #[Uuid(
             message: 'Id не соответствует формату',
             strict: true,
             versions: [
@@ -19,15 +19,12 @@ final class CartProductListQuery
             ],
         )]
         public string $userId,
-
         #[Assert\Type(type: 'int')]
         #[Assert\Range(min: 1, max: 100)]
-        public int    $limit = 20,
-
+        public int $limit = 20,
         #[Assert\Type(type: 'int')]
         #[Assert\Range(min: 0)]
-        public int    $offset = 0,
-    )
-    {
+        public int $offset = 0,
+    ) {
     }
 }

@@ -22,12 +22,11 @@ final class UserController extends AbstractController
 
     #[Route(methods: 'POST')]
     public function create(
-        Request                        $request,
-        ValidatorInterface             $validator,
-        CreateUserCommandHandler       $createUserCommandHandler,
+        Request $request,
+        ValidatorInterface $validator,
+        CreateUserCommandHandler $createUserCommandHandler,
         SendNotificationCommandHandler $sendNotificationToKafkaCommandHandler,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $createUserCommand = new CreateUserCommand(
             name: $request->get('name', ''),
             email: $request->get('email', ''),

@@ -11,7 +11,7 @@ final class AddProductToCartCommand
 {
     public function __construct(
         #[Assert\NotBlank]
-        #[Assert\Uuid(
+        #[Uuid(
             message: 'Id не соответствует формату',
             strict: true,
             versions: [
@@ -19,9 +19,8 @@ final class AddProductToCartCommand
             ],
         )]
         public string $userId,
-
         #[Assert\NotBlank]
-        #[Assert\Uuid(
+        #[Uuid(
             message: 'Id не соответствует формату',
             strict: true,
             versions: [
@@ -29,7 +28,6 @@ final class AddProductToCartCommand
             ],
         )]
         public string $productId,
-    )
-    {
+    ) {
     }
 }

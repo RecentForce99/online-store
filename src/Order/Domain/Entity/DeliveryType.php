@@ -34,12 +34,11 @@ class DeliveryType
     }
 
     public static function create(
-        string            $slug,
-        string            $name,
+        string $slug,
+        string $name,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): self
-    {
+    ): self {
         return (new static($slug))
             ->setName($name)
             ->setCreatedAt($createdAt)
@@ -54,6 +53,7 @@ class DeliveryType
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -65,12 +65,14 @@ class DeliveryType
     public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
     public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 }

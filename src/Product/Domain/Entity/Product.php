@@ -52,19 +52,18 @@ class Product extends AbstractBaseEntity
     private Collection $cartProducts;
 
     public static function create(
-        string            $name,
-        int               $weight,
-        int               $height,
-        int               $width,
-        int               $length,
-        ?string           $description,
-        int               $cost,
-        int               $tax,
-        int               $version,
+        string $name,
+        int $weight,
+        int $height,
+        int $width,
+        int $length,
+        ?string $description,
+        int $cost,
+        int $tax,
+        int $version,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): self
-    {
+    ): self {
         return (new self())
             ->setName($name)
             ->setWeight($weight)
@@ -87,18 +86,21 @@ class Product extends AbstractBaseEntity
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setWeight(int $weight): self
     {
         $this->weight = $weight;
+
         return $this;
     }
 
     public function setHeight(int $height): self
     {
         $this->height = $height;
+
         return $this;
     }
 
@@ -110,12 +112,14 @@ class Product extends AbstractBaseEntity
     public function setWidth(int $width): self
     {
         $this->width = $width;
+
         return $this;
     }
 
     public function setLength(int $length): self
     {
         $this->length = $length;
+
         return $this;
     }
 
@@ -127,18 +131,21 @@ class Product extends AbstractBaseEntity
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
     public function setCost(int $cost): self
     {
         $this->cost = $cost;
+
         return $this;
     }
 
     public function setTax(int $tax): self
     {
         $this->tax = $tax;
+
         return $this;
     }
 
@@ -150,6 +157,7 @@ class Product extends AbstractBaseEntity
     public function setVersion(int $version): self
     {
         $this->version = $version;
+
         return $this;
     }
 }

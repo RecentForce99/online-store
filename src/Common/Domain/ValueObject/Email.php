@@ -28,12 +28,14 @@ final class Email
     {
         $emailLength = strlen($email);
         if (self::VALIDATION_MIN_LENGTH > $emailLength) {
-            throw new LessThanMinLengthException(sprintf(
-                'The email [%s] is too short, it must be minimum [%s] characters.',
-                $email,
-                self::VALIDATION_MIN_LENGTH,
-            ),
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new LessThanMinLengthException(
+                sprintf(
+                    'The email [%s] is too short, it must be minimum [%s] characters.',
+                    $email,
+                    self::VALIDATION_MIN_LENGTH,
+                ),
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         if (self::VALIDATION_MAX_LENGTH < $emailLength) {
@@ -78,6 +80,7 @@ final class Email
     public function setEmail(string $email): Email
     {
         $this->email = $email;
+
         return $this;
     }
 }

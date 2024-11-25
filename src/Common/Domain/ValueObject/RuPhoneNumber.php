@@ -56,6 +56,7 @@ final class RuPhoneNumber
     public function setRuPhoneNumber(int $ruPhoneNumber): RuPhoneNumber
     {
         $this->phone = $ruPhoneNumber;
+
         return $this;
     }
 }

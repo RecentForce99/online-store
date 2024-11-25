@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * This class <MUST NOT> work for the production environment
+ * This class <MUST NOT> work for the production environment.
  */
 final class GlobalApiEventSubscriber implements EventSubscriberInterface
 {
@@ -21,9 +21,8 @@ final class GlobalApiEventSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private ParameterBagInterface $params,
-        private LoggerInterface       $logger,
-    )
-    {
+        private LoggerInterface $logger,
+    ) {
     }
 
     public static function getSubscribedEvents(): array

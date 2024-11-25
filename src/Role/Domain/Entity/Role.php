@@ -7,11 +7,10 @@ namespace App\Role\Domain\Entity;
 use App\Common\Domain\Entity\AbstractBaseEntity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'roles')]
-class Role  extends AbstractBaseEntity
+class Role extends AbstractBaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $slug;
@@ -20,12 +19,11 @@ class Role  extends AbstractBaseEntity
     private string $name;
 
     public static function create(
-        string            $slug,
-        string            $name,
+        string $slug,
+        string $name,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
-    ): self
-    {
+    ): self {
         return (new static())
             ->setSlug($slug)
             ->setName($name)
@@ -41,12 +39,14 @@ class Role  extends AbstractBaseEntity
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
         return $this;
     }
 
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 }

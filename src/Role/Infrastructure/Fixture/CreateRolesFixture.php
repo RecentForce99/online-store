@@ -15,10 +15,9 @@ use Doctrine\Persistence\ObjectManager;
 final class CreateRolesFixture extends Fixture
 {
     public function __construct(
-        private readonly Flusher                 $flusher,
+        private readonly Flusher $flusher,
         private readonly RoleRepositoryInterface $roleRepository,
-    )
-    {
+    ) {
     }
 
     public function load(ObjectManager $manager)

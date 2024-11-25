@@ -23,11 +23,10 @@ final class ConsumeProductsFromKafkaCommand extends Command
     private string $topic;
 
     public function __construct(
-        private readonly ConnectionFactory          $connectionFactory,
+        private readonly ConnectionFactory $connectionFactory,
         private readonly ProductRepositoryInterface $productRepository,
-        private readonly Flusher                    $flusher,
-    )
-    {
+        private readonly Flusher $flusher,
+    ) {
         parent::__construct();
 
         $this->topic = KafkaTopicEnum::PRODUCT_CHANGES->value;
@@ -58,7 +57,7 @@ final class ConsumeProductsFromKafkaCommand extends Command
                 try {
                     $this->saveProduct($message);
                     $consumer->acknowledge($message);
-                    $output->writeln("Acknowledged product changes");
+                    $output->writeln('Acknowledged product changes');
                 } catch (Exception $e) {
                     $consumer->reject($message);
                     $output->writeln("Rejected product changes: {$e->getMessage()}");
@@ -107,6 +106,6 @@ final class ConsumeProductsFromKafkaCommand extends Command
             ->setDescription($productFields['description'])
             ->setCost($productFields['cost'])
             ->setTax($productFields['tax'])
-            ->setVersion($productFields['version']);;
+            ->setVersion($productFields['version']);
     }
 }

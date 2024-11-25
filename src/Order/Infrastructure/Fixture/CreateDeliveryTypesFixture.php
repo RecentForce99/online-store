@@ -16,9 +16,8 @@ final class CreateDeliveryTypesFixture extends Fixture
 {
     public function __construct(
         private readonly DeliveryTypeRepositoryInterface $deliveryTypeRepository,
-        private readonly Flusher                         $flusher,
-    )
-    {
+        private readonly Flusher $flusher,
+    ) {
     }
 
     public function load(ObjectManager $manager)

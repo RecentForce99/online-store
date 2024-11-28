@@ -38,15 +38,6 @@
             "migrations/.gitignore"
         ]
     },
-    "enqueue/rdkafka": {
-        "version": "0.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "0.8",
-            "ref": "52a1ce303070ba433874414402e240cca13ed17d"
-        }
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.65",
         "recipe": {
@@ -58,6 +49,9 @@
         "files": [
             ".php-cs-fixer.dist.php"
         ]
+    },
+    "koco/messenger-kafka": {
+        "version": "v0.18"
     },
     "phpunit/phpunit": {
         "version": "11.4",

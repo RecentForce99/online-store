@@ -4,18 +4,27 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Repository;
 
-use App\Common\Application\Exception\EntityNotFound;
+use App\User\Application\Exception\UserNotFound;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Response;
 
 final class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    public function isEmailAvailable(string $email): bool
+    {
+        return is_null($this->findOneBy(['email.email' => $email]));
+    }
+
+    public function isPhoneAvailable(int $phone): bool
+    {
+        return is_null($this->findOneBy(['phone.phone' => $phone]));
     }
 
     public function findById(string $id): ?User
@@ -27,16 +36,13 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
     {
         $user = $this->findById($id);
         if (true === is_null($user)) {
-            throw new EntityNotFound(
-                "User with id [$id] has not been found",
-                Response::HTTP_BAD_REQUEST,
-            );
+            throw UserNotFound::byId($id);
         }
 
         return $user;
     }
 
-    public function create(User $user): void
+    public function add(User $user): void
     {
         $this->getEntityManager()->persist($user);
     }

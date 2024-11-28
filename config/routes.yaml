@@ -1,17 +1,17 @@
 common_api:
-    resource: ../src/Common/Infrastructure/Presentation/Api
+    resource: ../src/Common/Infrastructure/Controller
     type: attribute
     stateless: false
     prefix: /api
 
-user_api:
-    resource: ../src/User/Infrastructure/Presentation/Api
+auth_api:
+    resource: ../src/Auth/Infrastructure/Controller
     type: attribute
     stateless: false
     prefix: /api
 
 cart_api:
-    resource: ../src/Cart/Infrastructure/Presentation/Api
+    resource: ../src/Cart/Infrastructure/Controller
     type: attribute
     stateless: false
     prefix: /api

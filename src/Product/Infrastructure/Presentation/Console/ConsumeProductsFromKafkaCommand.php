@@ -9,7 +9,6 @@ use App\Common\Infrastructure\Repository\Flusher;
 use App\Product\Domain\Entity\Product;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
 use Exception;
-use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Message;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +22,6 @@ final class ConsumeProductsFromKafkaCommand extends Command
     private string $topic;
 
     public function __construct(
-        private readonly ConnectionFactory $connectionFactory,
         private readonly ProductRepositoryInterface $productRepository,
         private readonly Flusher $flusher,
     ) {

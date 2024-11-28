@@ -9,7 +9,6 @@ use App\Product\Infrastructure\Dto\Fixture\Kafka\ProductForSendingToKafkaDto;
 use App\Product\Infrastructure\Dto\Fixture\Kafka\ProductMeasurementsForSendingToKafkaDto;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Context;
 use Interop\Queue\Exception;
 use Interop\Queue\Exception\InvalidDestinationException;
@@ -29,7 +28,6 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
     private Serializer $serializer;
 
     public function __construct(
-        private readonly ConnectionFactory $connectionFactory,
     ) {
         $this->topic = KafkaTopicEnum::PRODUCT_CHANGES->value;
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
@@ -37,15 +35,15 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $context = $this->connectionFactory->createContext();
-        $topic = $context->createTopic($this->topic);
-
-        $productsToSend = $this->getProductsToSend();
-        $messagesToSend = $this->getMessagesToSend($context, $productsToSend);
-
-        $producer = $context->createProducer();
-
-        $this->sendMessages($producer, $topic, $messagesToSend);
+//        $context = $this->connectionFactory->createContext();
+//        $topic = $context->createTopic($this->topic);
+//
+//        $productsToSend = $this->getProductsToSend();
+//        $messagesToSend = $this->getMessagesToSend($context, $productsToSend);
+//
+//        $producer = $context->createProducer();
+//
+//        $this->sendMessages($producer, $topic, $messagesToSend);
     }
 
     private function getProductsToSend(): array

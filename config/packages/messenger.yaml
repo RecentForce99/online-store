@@ -1,3 +1,33 @@
 framework:
     messenger:
+        transports:
+            product_changes:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    flushTimeout: 10000
+                    flushRetries: 5
+                    topic:
+                        name: 'product_changes'
+                    kafka_conf:
+                        group.id: '%kafka.global.group.id%'
+                        enable.auto.offset.store: 'false'
+                    topic_conf:
+                        auto.offset.reset: 'earliest'
 
+            notifications:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    flushTimeout: 10000
+                    flushRetries: 5
+                    topic:
+                        name: 'notifications'
+                    kafka_conf:
+                        group.id: '%kafka.global.group.id%'
+                        enable.auto.offset.store: 'false'
+                    topic_conf:
+                        auto.offset.reset: 'earliest'
+
+        routing:
+            'App\Common\Domain\MessageBus\Notification': notifications

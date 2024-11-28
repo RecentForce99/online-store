@@ -1,16 +1,13 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
+parameters:
+    app.env: '%env(string:APP_ENV)%'
+    app.domain: '%env(string:APP_DOMAIN)%'
+    app.scheme: '%env(string:APP_SCHEME)%'
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
-imports:
-    - { resource: application/*/*.yaml }
-    - { resource: application/*.yaml }
-    - { resource: domain/*.yaml }
-    - { resource: infrastructure/*/*.yaml }
-    - { resource: infrastructure/*.yaml }
-    - { resource: presentation/*.yaml }
-    - { resource: test/*/*.yaml }
+    kafka.global.group.id: '%env(string:RD_KAFKA_GROUP_ID)%'
+    kafka.global.metadata.broker.list: '%env(string:RD_KAFKA_BROKER_LIST)%'
+    kafka.topic:
+        auto.offset.reset: beginning
+
 
 services:
     # default configuration for services in *this* file
@@ -25,3 +22,35 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Kernel.php'
+            - '../src/User/Domain/Entity/'
+            - '../src/Cart/Domain/Entity/'
+            - '../src/Common/Domain/Entity/'
+            - '../src/Order/Domain/Entity/'
+            - '../src/Product/Domain/Entity/'
+            - '../src/Role/Domain/Entity/'
+
+    # Configs
+    App\Common\Infrastructure\DI\Config\AppConfig:
+        arguments:
+            $env: '%app.env%'
+            $domain: '%app.domain%'
+            $scheme: '%app.scheme%'
+
+    Symfony\Component\Uid\AbstractUid:
+        class: Symfony\Component\Uid\UuidV4
+
+    Doctrine\Common\Collections\Collection:
+        class: Doctrine\Common\Collections\ArrayCollection
+
+    App\User\Domain\Repository\UserRepositoryInterface:
+        class: App\User\Infrastructure\Repository\UserRepository
+
+    App\Role\Domain\Repository\RoleRepositoryInterface:
+        class: App\Role\Infrastructure\Repository\RoleRepository
+
+    App\Product\Domain\Repository\ProductRepositoryInterface:
+        class: App\Product\Infrastructure\Repository\ProductRepository
+
+    App\Common\Domain\Repository\FlusherInterface:
+        class: App\Common\Infrastructure\Repository\Flusher
+

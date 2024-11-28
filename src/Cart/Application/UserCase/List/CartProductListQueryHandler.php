@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Cart\Application\UserCase\List;
 
 use App\Cart\Domain\Repository\CartProductRepositoryInterface;
-use App\Common\Application\Exception\EntityNotFound;
+use App\User\Application\Exception\UserNotFound;
 use App\User\Domain\Repository\UserRepositoryInterface;
 
 final class CartProductListQueryHandler
@@ -17,7 +17,7 @@ final class CartProductListQueryHandler
     }
 
     /**
-     * @throws EntityNotFound
+     * @throws UserNotFound
      */
     public function __invoke(CartProductListQuery $cartProductListQuery): array
     {

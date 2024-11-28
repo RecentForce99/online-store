@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Product\Infrastructure\Repository;
 
-use App\Common\Application\Exception\EntityNotFound;
 use App\Product\Domain\Entity\Product;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
+use App\User\Application\Exception\UserNotFound;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +27,7 @@ final class ProductRepository extends ServiceEntityRepository implements Product
     {
         $product = $this->findById($id);
         if (true === is_null($product)) {
-            throw new EntityNotFound(
+            throw new UserNotFound(
                 "Product with id [$id] has not been found",
                 Response::HTTP_BAD_REQUEST,
             );

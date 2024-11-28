@@ -8,7 +8,6 @@ use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\InvalidEmailException;
 use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Embeddable]
 final class Email
@@ -16,7 +15,7 @@ final class Email
     private const int VALIDATION_MIN_LENGTH = 3;
     private const int VALIDATION_MAX_LENGTH = 255;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', length: self::VALIDATION_MAX_LENGTH, unique: true)]
     private string $email;
 
     /**
@@ -28,35 +27,25 @@ final class Email
     {
         $emailLength = strlen($email);
         if (self::VALIDATION_MIN_LENGTH > $emailLength) {
-            throw new LessThanMinLengthException(
-                sprintf(
-                    'The email [%s] is too short, it must be minimum [%s] characters.',
-                    $email,
-                    self::VALIDATION_MIN_LENGTH,
-                ),
-                Response::HTTP_INTERNAL_SERVER_ERROR
+            throw LessThanMinLengthException::byEmail(
+                'email',
+                'почта',
+                $email,
+                $emailLength,
             );
         }
 
         if (self::VALIDATION_MAX_LENGTH < $emailLength) {
-            throw new GreaterThanMaxLengthException(
-                sprintf(
-                    'The email [%s] is too long, it must be maximum [%s] characters.',
-                    $email,
-                    self::VALIDATION_MAX_LENGTH,
-                ),
-                Response::HTTP_INTERNAL_SERVER_ERROR,
+            throw GreaterThanMaxLengthException::byEmail(
+                'email',
+                'почта',
+                $email,
+                $emailLength,
             );
         }
 
         if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidEmailException(
-                sprintf(
-                    'The email [%s] is invalid.',
-                    $email,
-                ),
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+            throw InvalidEmailException::byEmail($email);
         }
 
         $this->email = $email;

@@ -15,7 +15,7 @@ final class Name
     private const int VALIDATION_MIN_LENGTH = 2;
     private const int VALIDATION_MAX_LENGTH = 100;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', length: self::VALIDATION_MAX_LENGTH)]
     private string $name;
 
     /**
@@ -26,24 +26,20 @@ final class Name
     {
         $nameLength = strlen($name);
         if (self::VALIDATION_MIN_LENGTH > $nameLength) {
-            throw new LessThanMinLengthException(
-                sprintf(
-                    'The name [%s] is too short, it must be minimum [%s] characters.',
-                    $name,
-                    self::VALIDATION_MIN_LENGTH,
-                ),
-                Response::HTTP_INTERNAL_SERVER_ERROR,
+            throw LessThanMinLengthException::byEmail(
+                'name',
+                'имя',
+                $name,
+                self::VALIDATION_MIN_LENGTH,
             );
         }
 
         if (self::VALIDATION_MAX_LENGTH < $nameLength) {
-            throw new GreaterThanMaxLengthException(
-                sprintf(
-                    'The name [%s] is too long, it must be maximum [%s] characters.',
-                    $name,
-                    self::VALIDATION_MAX_LENGTH,
-                ),
-                Response::HTTP_INTERNAL_SERVER_ERROR,
+            throw GreaterThanMaxLengthException::byEmail(
+                'name',
+                'имя',
+                $name,
+                self::VALIDATION_MAX_LENGTH,
             );
         }
 

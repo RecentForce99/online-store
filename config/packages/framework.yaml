@@ -16,6 +16,9 @@ framework:
         log: true
 
 when@test:
+    doctrine:
+        dbal:
+            dbname: 'dbname_test'
     framework:
         test: true
         session:

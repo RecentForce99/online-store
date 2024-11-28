@@ -6,9 +6,9 @@ namespace App\Cart\Application\UserCase\AddProduct;
 
 use App\Cart\Domain\Entity\CartProduct;
 use App\Cart\Domain\Repository\CartProductRepositoryInterface;
-use App\Common\Application\Exception\EntityNotFound;
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
+use App\User\Application\Exception\UserNotFound;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Uid\AbstractUid;
 
@@ -24,7 +24,7 @@ final class AddProductToCartCommandHandler
     }
 
     /**
-     * @throws EntityNotFound
+     * @throws UserNotFound
      */
     public function __invoke(AddProductToCartCommand $addProductToCartCommand): void
     {

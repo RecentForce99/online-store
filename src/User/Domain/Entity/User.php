@@ -15,12 +15,13 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
-class User extends AbstractBaseEntity implements UserInterface
+class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Embedded(class: Name::class, columnPrefix: false)]
     private Name $name;
@@ -34,6 +35,9 @@ class User extends AbstractBaseEntity implements UserInterface
     #[ORM\Column(type: 'uuid', nullable: true)]
     private ?UuidV4 $promoId;
 
+    /**
+     * The password must be set after creating an instance to generate a hash using PasswordAuthenticatedUserInterface.
+     */
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
@@ -124,6 +128,13 @@ class User extends AbstractBaseEntity implements UserInterface
     public function setRoles(Collection $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }

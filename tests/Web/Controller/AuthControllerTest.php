@@ -50,12 +50,15 @@ final class AuthControllerTest extends WebBaseTestCase
             $this->serializer->serialize($body, 'json'),
         );
 
+        $responseJson = $this->client->getResponse()->getContent();
+        $responseData = json_decode($responseJson, true);
+
         $this->assertEquals(
             Response::HTTP_UNPROCESSABLE_ENTITY,
             $this->client->getResponse()->getStatusCode(),
         );
-        $this->assertJson($this->client->getResponse()->getContent());
-        $this->assertStringContainsString('code', $this->client->getResponse()->getContent());
-        $this->assertStringContainsString('message', $this->client->getResponse()->getContent());
+        $this->assertJson($responseJson);
+        $this->assertArrayHasKey('code', $responseData);
+        $this->assertArrayHasKey('message', $responseData);
     }
 }

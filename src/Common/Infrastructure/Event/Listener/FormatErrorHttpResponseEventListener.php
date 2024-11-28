@@ -6,6 +6,8 @@ namespace App\Common\Infrastructure\Event\Listener;
 
 use App\Common\Domain\Exception\AbstractPublicRenderedException;
 use App\Common\Infrastructure\DI\Config\AppConfig;
+use App\Common\Infrastructure\Dto\ExceptionDetailsDto;
+use App\Common\Infrastructure\Dto\ExceptionDetailsProductionDto;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,9 +26,10 @@ final class FormatErrorHttpResponseEventListener
     private const PRODUCTION_ENVIRONMENT = 'prod';
 
     public function __construct(
-        private AppConfig $appConfig,
+        private AppConfig       $appConfig,
         private LoggerInterface $logger,
-    ) {
+    )
+    {
     }
 
     public function __invoke(ExceptionEvent $event): void
@@ -60,40 +63,21 @@ final class FormatErrorHttpResponseEventListener
         $event->setResponse($response);
     }
 
-    private function getErrorDetails(Throwable $exception): array
+    private function getErrorDetails(Throwable $exception): ExceptionDetailsDto|ExceptionDetailsProductionDto
     {
-        $errorDetails = [
-            'code' => $exception->getCode(),
-            'message' => $exception->getMessage(),
-        ];
-
-        if (self::PRODUCTION_ENVIRONMENT !== $this->appConfig->env) {
-            $errorDetails = array_merge(
-                $errorDetails,
-                [
-                    'line' => $exception->getLine(),
-                    'file' => $exception->getFile(),
-                    'trace' => $this->formatTrace($exception->getTrace()),
-                ]
+        if (self::PRODUCTION_ENVIRONMENT === $this->appConfig->env) {
+            return new ExceptionDetailsProductionDto(
+                code: $exception->getCode(),
+                message: $exception->getMessage(),
             );
         }
 
-        return $errorDetails;
-    }
-
-    private function formatTrace(array $trace): array
-    {
-        $formattedTrace = [];
-        foreach ($trace as $traceItem) {
-            $formattedTrace[] = [
-                'file' => $traceItem['file'] ?? '',
-                'line' => $traceItem['line'] ?? 0,
-                'function' => $traceItem['function'] ?? '',
-                'class' => $traceItem['class'] ?? '',
-                'type' => $traceItem['type'] ?? '',
-            ];
-        }
-
-        return $formattedTrace;
+        return new ExceptionDetailsDto(
+            code: $exception->getCode(),
+            message: $exception->getMessage(),
+            line: $exception->getLine(),
+            file: $exception->getFile(),
+            trace: $exception->getTrace(),
+        );
     }
 }

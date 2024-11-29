@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Product\Infrastructure\Dto\Fixture\Kafka;
+namespace App\User\Domain\MessageBus;
 
-final readonly class ProductForSendingToKafkaDto
+final readonly class ProductChanges
 {
     public function __construct(
         public string $id,
         public string $name,
-        public ProductMeasurementsForSendingToKafkaDto $measurements,
+        public ProductChangesMeasurements $measurements,
         public string $description,
         public int $cost,
         public int $tax,

@@ -54,3 +54,6 @@ services:
     App\Common\Domain\Repository\FlusherInterface:
         class: App\Common\Infrastructure\Repository\Flusher
 
+    App\Tests\Fixture\:
+        resource: '../tests/Fixture/**/*Fixture.php'
+        tags: [ 'doctrine.fixture.orm' ]

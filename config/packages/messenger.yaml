@@ -30,4 +30,5 @@ framework:
                         auto.offset.reset: 'earliest'
 
         routing:
+            'App\User\Domain\MessageBus\ProductChanges': product_changes
             'App\Common\Domain\MessageBus\Notification': notifications

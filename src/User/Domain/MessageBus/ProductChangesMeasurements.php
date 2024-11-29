@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Product\Infrastructure\Dto\Fixture\Kafka;
+namespace App\User\Domain\MessageBus;
 
-final readonly class ProductMeasurementsForSendingToKafkaDto
+final readonly class ProductChangesMeasurements
 {
     public function __construct(
         public int $weight,

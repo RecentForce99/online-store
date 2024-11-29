@@ -7,7 +7,10 @@ namespace App\Common\Domain\MessageBus;
 final readonly class Notification
 {
     public function __construct(
-        public string $message,
+        public string $type,
+        public string $userEmail,
+        public int $userPhone,
+        public ?string $promoId,
     ) {
     }
 }

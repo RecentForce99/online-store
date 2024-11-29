@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Order\Infrastructure\Fixture;
+namespace App\Tests\Fixture\Order;
 
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Order\Domain\Entity\DeliveryType;

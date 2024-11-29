@@ -4,6 +4,8 @@ init: dc_build dc_up # Сделать полную инициализацию п
 	php bin/console doctrine:database:create --env=test
 	php bin/console lexik:jwt:generate-keypair
 
+prepare: fix\:code-style test
+
 ###< Composer ###
 test:
 	docker exec online-store_php-fpm composer test

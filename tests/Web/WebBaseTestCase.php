@@ -6,7 +6,7 @@ namespace App\Tests\Web;
 
 use App\Common\Domain\Repository\FlusherInterface;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
-use App\Role\Infrastructure\Fixture\CreateRolesFixture;
+use App\Tests\Fixture\Role\CreateRolesFixture;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;

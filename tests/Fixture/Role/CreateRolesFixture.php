@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Role\Infrastructure\Fixture;
+namespace App\Tests\Fixture\Role;
 
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Role\Domain\Entity\Role;

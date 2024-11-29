@@ -8,7 +8,7 @@ use App\Common\Domain\Exception\AbstractPublicRenderedException;
 
 class RoleNotFound extends AbstractPublicRenderedException
 {
-    public static function bySlug(string $slug, string $name = null): self
+    public static function bySlug(string $slug, ?string $name = null): self
     {
         if (true === is_null($name)) {
             $name = $slug;

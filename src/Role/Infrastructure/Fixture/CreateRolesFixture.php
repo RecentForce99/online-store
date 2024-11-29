@@ -20,7 +20,7 @@ final class CreateRolesFixture extends Fixture
     ) {
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /* @var Role $role */
         foreach ($this->getRolesToCreate() as $role) {

@@ -33,17 +33,17 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-//        $context = $this->connectionFactory->createContext();
-//        $topic = $context->createTopic($this->topic);
-//
-//        $productsToSend = $this->getProductsToSend();
-//        $messagesToSend = $this->getMessagesToSend($context, $productsToSend);
-//
-//        $producer = $context->createProducer();
-//
-//        $this->sendMessages($producer, $topic, $messagesToSend);
+        //        $context = $this->connectionFactory->createContext();
+        //        $topic = $context->createTopic($this->topic);
+        //
+        //        $productsToSend = $this->getProductsToSend();
+        //        $messagesToSend = $this->getMessagesToSend($context, $productsToSend);
+        //
+        //        $producer = $context->createProducer();
+        //
+        //        $this->sendMessages($producer, $topic, $messagesToSend);
     }
 
     private function getProductsToSend(): array

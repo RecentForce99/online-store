@@ -7,7 +7,6 @@ namespace App\User\Domain\ValueObject;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Embeddable]
 final class Name

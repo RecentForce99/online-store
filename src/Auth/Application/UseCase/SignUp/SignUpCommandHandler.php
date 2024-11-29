@@ -31,14 +31,13 @@ final class SignUpCommandHandler
     private const string AUTHORIZED_USER_ROLE_NAME = 'Авторизованный пользователь';
 
     public function __construct(
-        private readonly RoleRepositoryInterface     $roleRepository,
-        private readonly UserRepositoryInterface     $userRepository,
-        private readonly AbstractUid                 $uuid,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly AbstractUid $uuid,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly FlusherInterface            $flusher,
-        private readonly EventDispatcherInterface    $eventDispatcher,
-    )
-    {
+        private readonly FlusherInterface $flusher,
+        private readonly EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     /**
@@ -80,10 +79,9 @@ final class SignUpCommandHandler
      * @throws RoleNotFound
      */
     private function validate(
-        ?Role         $authorizedUserRole,
+        ?Role $authorizedUserRole,
         SignUpCommand $signUpCommand,
-    ): void
-    {
+    ): void {
         if (true === is_null($authorizedUserRole)) {
             throw RoleNotFound::bySlug(self::AUTHORIZED_USER_ROLE_SLUG, self::AUTHORIZED_USER_ROLE_NAME);
         }

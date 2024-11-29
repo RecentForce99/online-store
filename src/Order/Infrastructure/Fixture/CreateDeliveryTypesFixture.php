@@ -20,7 +20,7 @@ final class CreateDeliveryTypesFixture extends Fixture
     ) {
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $existingDeliveryTypes = $this->deliveryTypeRepository->findAll();
 

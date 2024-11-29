@@ -26,10 +26,9 @@ final class FormatErrorHttpResponseEventListener
     private const PRODUCTION_ENVIRONMENT = 'prod';
 
     public function __construct(
-        private AppConfig       $appConfig,
+        private AppConfig $appConfig,
         private LoggerInterface $logger,
-    )
-    {
+    ) {
     }
 
     public function __invoke(ExceptionEvent $event): void

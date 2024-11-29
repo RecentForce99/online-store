@@ -15,3 +15,6 @@ cart_api:
     type: attribute
     stateless: false
     prefix: /api
+
+api_login_check:
+    path: /api/login_check

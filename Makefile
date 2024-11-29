@@ -2,18 +2,16 @@ init: dc_build dc_up # Сделать полную инициализацию п
 	php bin/console doctrine:migrations:migrate;
 	php bin/console doctrine:fixtures:load;
 	php bin/console doctrine:database:create --env=test
+	php bin/console lexik:jwt:generate-keypair
 
-###> Composer ###
+###< Composer ###
 test:
 	docker exec online-store_php-fpm composer test
 fix\:code-style:
 	docker exec online-store_php-fpm composer fix:code-style
-###< Composer ###
+###</ Composer ###
 
-#test: # Выполнить тесты приложения
-#	@echo test
-
-###> Docker compose v2 (screw v1) ###
+###< Docker compose v2 (screw v1) ###
 dc_ps:
 	docker compose -f ./docker/docker-compose.yml ps
 dc_logs:
@@ -41,4 +39,4 @@ dc_down:
 dc_drop:
 	@echo "WARNING: This command will remove all containers, volumes, and images! Proceed? (y/n)"
 	@read answer && [ $$answer = y ] && docker compose -f ./docker/docker-compose.yml down -v --rmi=all --remove-orphans || echo "Aborted."
-###< Docker compose ###
+###</ Docker compose ###

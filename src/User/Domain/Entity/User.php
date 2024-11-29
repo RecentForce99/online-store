@@ -74,7 +74,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
 
     public function eraseCredentials(): void
     {
-        $this->password = null;
     }
 
     public function getUserIdentifier(): string

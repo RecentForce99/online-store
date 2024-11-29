@@ -17,7 +17,7 @@ final class AuthController extends AbstractController
     #[Route(methods: 'POST', path: '/signUp')]
     public function signUp(
         #[MapRequestPayload] SignUpCommand $signUpCommand,
-        SignUpCommandHandler               $signUpCommandHandler,
+        SignUpCommandHandler $signUpCommandHandler,
     ): JsonResponse {
         $signUpCommandHandler($signUpCommand);
 

@@ -5,15 +5,22 @@ declare(strict_types=1);
 namespace App\Order\Domain\Entity;
 
 use App\Common\Domain\Entity\AbstractBaseEntity;
+use App\Common\Domain\Trait\HasDatetime;
+use App\Common\Domain\Trait\HasId;
 use App\User\Domain\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'orders')]
+#[HasLifecycleCallbacks]
 class Order extends AbstractBaseEntity
 {
+    use HasId;
+    use HasDatetime;
+
     #[ORM\Column(
         type: 'bigint',
         nullable: true,

@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Order\Domain\Entity;
 
+use App\Common\Domain\Entity\AbstractBaseEntity;
+use App\Common\Domain\Trait\HasDatetime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'delivery_types')]
-class DeliveryType
+#[ORM\HasLifecycleCallbacks]
+class DeliveryType extends AbstractBaseEntity
 {
+    use HasDatetime;
+
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 20)]
     private string $name;
@@ -21,12 +26,6 @@ class DeliveryType
 
     #[ORM\OneToMany(mappedBy: 'deliveryType', targetEntity: Order::class)]
     private Collection $orders;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(string $slug)
     {
@@ -60,19 +59,5 @@ class DeliveryType
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 }

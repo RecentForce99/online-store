@@ -29,7 +29,6 @@ services:
             - '../src/Product/Domain/Entity/'
             - '../src/Role/Domain/Entity/'
 
-    # Configs
     App\Common\Infrastructure\DI\Config\AppConfig:
         arguments:
             $env: '%app.env%'

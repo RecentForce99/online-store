@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Domain\MessageBus;
+namespace App\Product\Domain\MessageBus;
 
 final readonly class ProductChanges
 {

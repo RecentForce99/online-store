@@ -6,6 +6,8 @@ namespace App\User\Domain\Entity;
 
 use App\Cart\Domain\Entity\CartProduct;
 use App\Common\Domain\Entity\AbstractBaseEntity;
+use App\Common\Domain\Trait\HasDatetime;
+use App\Common\Domain\Trait\HasId;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
 use App\Order\Domain\Entity\Order;
@@ -21,8 +23,12 @@ use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
+#[ORM\HasLifecycleCallbacks]
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use HasId;
+    use HasDatetime;
+
     #[ORM\Embedded(class: Name::class, columnPrefix: false)]
     private Name $name;
 

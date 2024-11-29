@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Fixture\Product\Kafka;
 
-use App\User\Domain\MessageBus\ProductChanges;
-use App\User\Domain\MessageBus\ProductChangesMeasurements;
+use App\Product\Domain\MessageBus\ProductChanges;
+use App\Product\Domain\MessageBus\ProductChangesMeasurements;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Uid\UuidV4;
 
 final class CreateProductChangesTopicToKafkaFixture extends Fixture
 {
@@ -34,9 +33,13 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
 
     private function getProductsToSend(): array
     {
+        $uuid1 = 'ed63267d-e7e2-4a24-8bfd-c74afc65f041';
+        $uuid2 = 'ed63267d-e7e2-4a24-8bfd-c74afc65f042';
+        $uuid3 = 'ed63267d-e7e2-4a24-8bfd-c74afc65f043';
+
         return [
             new ProductChanges(
-                id: UuidV4::v4()->toString(),
+                id: $uuid1,
                 name: 'Product1',
                 measurements: new ProductChangesMeasurements(
                     weight: 100,
@@ -50,7 +53,7 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
                 version: 1
             ),
             new ProductChanges(
-                id: UuidV4::v4()->toString(),
+                id: $uuid2,
                 name: 'Product2',
                 measurements: new ProductChangesMeasurements(
                     weight: 200,
@@ -64,7 +67,7 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
                 version: 1
             ),
             new ProductChanges(
-                id: UuidV4::v4()->toString(),
+                id: $uuid3,
                 name: 'Product3',
                 measurements: new ProductChangesMeasurements(
                     weight: 300,

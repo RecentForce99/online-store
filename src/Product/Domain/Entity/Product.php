@@ -6,18 +6,26 @@ namespace App\Product\Domain\Entity;
 
 use App\Cart\Domain\Entity\CartProduct;
 use App\Common\Domain\Entity\AbstractBaseEntity;
+use App\Common\Domain\Trait\HasDatetime;
+use App\Common\Domain\Trait\HasId;
 use App\Order\Domain\Entity\OrderProduct;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Uid\UuidV4;
 
 #[Entity]
 #[Table(name: 'products')]
+#[HasLifecycleCallbacks]
 class Product extends AbstractBaseEntity
 {
+    use HasId;
+    use HasDatetime;
+
     #[Column(type: 'string', length: 255)]
     private string $name;
 
@@ -51,6 +59,12 @@ class Product extends AbstractBaseEntity
     #[OneToMany(mappedBy: 'product', targetEntity: CartProduct::class)]
     private Collection $cartProducts;
 
+    protected function __construct(UuidV4 $id)
+    {
+        parent::__construct();
+        $this->id = $id;
+    }
+
     public static function create(
         string $name,
         int $weight,
@@ -61,10 +75,11 @@ class Product extends AbstractBaseEntity
         int $cost,
         int $tax,
         int $version,
+        UuidV4 $id = new UuidV4(),
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
-        return (new self())
+        return (new self($id))
             ->setName($name)
             ->setWeight($weight)
             ->setHeight($height)

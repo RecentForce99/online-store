@@ -22,7 +22,7 @@
 
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests</directory>
+            <directory>tests/Web</directory>
         </testsuite>
     </testsuites>
 </phpunit>

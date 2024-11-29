@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Auth\Application\Event\Listener;
 
 use App\Auth\Application\Event\AfterUserSignUpEvent;
-use App\Auth\Application\UseCase\Create\CreateUserCommand;
+use App\Auth\Application\UseCase\SignUp\SignUpCommand;
 use App\Common\Domain\MessageBus\Notification;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -28,14 +28,14 @@ final class AfterUserSignUpEventListener
      */
     public function __invoke(AfterUserSignUpEvent $event): void
     {
-        $message = $this->getMessage($event->createUserCommand);
+        $message = $this->getMessage($event->signUpCommand);
         $message = $this->serializer->serialize($message, 'json');
 
         $notification = new Notification($message);
         $this->messageBus->dispatch($notification)->last('');
     }
 
-    private function getMessage(CreateUserCommand $createUserCommand): array
+    private function getMessage(SignUpCommand $createUserCommand): array
     {
         return [
             'promoId' => $createUserCommand->promoId,

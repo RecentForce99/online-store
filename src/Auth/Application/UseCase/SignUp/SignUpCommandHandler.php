@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Application\UseCase\Create;
+namespace App\Auth\Application\UseCase\SignUp;
 
 use App\Auth\Application\Event\AfterUserSignUpEvent;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
@@ -25,7 +25,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Uid\AbstractUid;
 
-final class CreateUserCommandHandler
+final class SignUpCommandHandler
 {
     private const string AUTHORIZED_USER_ROLE_SLUG = 'authorized_user';
     private const string AUTHORIZED_USER_ROLE_NAME = 'Авторизованный пользователь';
@@ -50,27 +50,27 @@ final class CreateUserCommandHandler
      * @throws EmailHasBeenTakenException
      * @throws PhoneHasBeenTakenException
      */
-    public function __invoke(CreateUserCommand $createUserCommand): void
+    public function __invoke(SignUpCommand $signUpCommand): void
     {
         $authorizedUserRole = $this->roleRepository->findBySlug(self::AUTHORIZED_USER_ROLE_SLUG);
 
-        $this->validate($authorizedUserRole, $createUserCommand);
+        $this->validate($authorizedUserRole, $signUpCommand);
 
         $user = User::create(
-            name: Name::fromString($createUserCommand->name),
-            email: Email::fromString($createUserCommand->email),
-            phone: RuPhoneNumber::fromInt($createUserCommand->phone),
-            promoId: $this->getPromoId($createUserCommand),
+            name: Name::fromString($signUpCommand->name),
+            email: Email::fromString($signUpCommand->email),
+            phone: RuPhoneNumber::fromInt($signUpCommand->phone),
+            promoId: $this->getPromoId($signUpCommand),
             roles: new ArrayCollection([$authorizedUserRole])
         );
 
-        $hashedPassword = $this->userPasswordHasher->hashPassword($user, $createUserCommand->password);
+        $hashedPassword = $this->userPasswordHasher->hashPassword($user, $signUpCommand->password);
         $user->setPassword($hashedPassword);
 
         $this->userRepository->add($user);
         $this->flusher->flush();
 
-        $afterUserSignUpEvent = new AfterUserSignUpEvent($createUserCommand);
+        $afterUserSignUpEvent = new AfterUserSignUpEvent($signUpCommand);
         $this->eventDispatcher->dispatch($afterUserSignUpEvent);
     }
 
@@ -80,27 +80,27 @@ final class CreateUserCommandHandler
      * @throws RoleNotFound
      */
     private function validate(
-        ?Role             $authorizedUserRole,
-        CreateUserCommand $createUserCommand,
+        ?Role         $authorizedUserRole,
+        SignUpCommand $signUpCommand,
     ): void
     {
         if (true === is_null($authorizedUserRole)) {
             throw RoleNotFound::bySlug(self::AUTHORIZED_USER_ROLE_SLUG, self::AUTHORIZED_USER_ROLE_NAME);
         }
 
-        if (false === $this->userRepository->isEmailAvailable($createUserCommand->email)) {
-            throw EmailHasBeenTakenException::byEmail($createUserCommand->email);
+        if (false === $this->userRepository->isEmailAvailable($signUpCommand->email)) {
+            throw EmailHasBeenTakenException::byEmail($signUpCommand->email);
         }
 
-        if (false === $this->userRepository->isPhoneAvailable($createUserCommand->phone)) {
-            throw PhoneHasBeenTakenException::byPhone($createUserCommand->phone);
+        if (false === $this->userRepository->isPhoneAvailable($signUpCommand->phone)) {
+            throw PhoneHasBeenTakenException::byPhone($signUpCommand->phone);
         }
     }
 
-    private function getPromoId(CreateUserCommand $createUserCommand): ?AbstractUid
+    private function getPromoId(SignUpCommand $signUpCommand): ?AbstractUid
     {
-        return is_null($createUserCommand->promoId)
+        return is_null($signUpCommand->promoId)
             ? null
-            : $this->uuid::fromString($createUserCommand->promoId);
+            : $this->uuid::fromString($signUpCommand->promoId);
     }
 }

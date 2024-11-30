@@ -36,7 +36,7 @@ final class CartController extends AbstractController
      * @throws UserNotFound
      */
     #[Route(methods: ['POST'])]
-    public function listAddProductToCartCommand(
+    public function addProductToCartCommand(
         #[MapRequestPayload] AddProductToCartCommand $addProductToCartCommand,
         AddProductToCartCommandHandler $addProductToCartCommandHandler,
     ): JsonResponse {

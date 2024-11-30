@@ -95,7 +95,7 @@ final class SignUpCommandHandler
 
     private function getPromoId(SignUpCommand $signUpCommand): ?AbstractUid
     {
-        return is_null($signUpCommand->promoId)
+        return true === is_null($signUpCommand->promoId)
             ? null
             : $this->uuid::fromString($signUpCommand->promoId);
     }

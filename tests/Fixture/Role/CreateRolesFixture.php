@@ -15,8 +15,8 @@ use Doctrine\Persistence\ObjectManager;
 final class CreateRolesFixture extends Fixture
 {
     public function __construct(
-        private readonly Flusher $flusher,
         private readonly RoleRepositoryInterface $roleRepository,
+        private readonly Flusher $flusher,
     ) {
     }
 
@@ -36,12 +36,12 @@ final class CreateRolesFixture extends Fixture
     {
         return new ArrayCollection([
             Role::create(
-                slug: 'admin',
+                slug: 'ROLE_ADMIN',
                 name: 'Администратор',
             ),
             Role::create(
-                slug: 'authorized_user',
-                name: 'Авторизованный пользователь',
+                slug: 'ROLE_USER',
+                name: 'Пользователь',
             ),
         ]);
     }
@@ -53,6 +53,6 @@ final class CreateRolesFixture extends Fixture
 
     private function createRole(Role $role): void
     {
-        $this->roleRepository->create($role);
+        $this->roleRepository->add($role);
     }
 }

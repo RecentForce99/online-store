@@ -9,7 +9,6 @@ use App\Product\Domain\Repository\ProductRepositoryInterface;
 use App\User\Application\Exception\UserNotFound;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Response;
 
 final class ProductRepository extends ServiceEntityRepository implements ProductRepositoryInterface
 {
@@ -27,16 +26,15 @@ final class ProductRepository extends ServiceEntityRepository implements Product
     {
         $product = $this->findById($id);
         if (true === is_null($product)) {
-            throw new UserNotFound(
-                "Product with id [$id] has not been found",
-                Response::HTTP_BAD_REQUEST,
+            throw UserNotFound::byId(
+                $id,
             );
         }
 
         return $product;
     }
 
-    public function create(Product $product): void
+    public function add(Product $product): void
     {
         $this->getEntityManager()->persist($product);
     }

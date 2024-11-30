@@ -13,13 +13,15 @@ trait HasId
     #[ORM\Column(type: 'uuid', unique: true)]
     protected UuidV4 $id;
 
-    protected function __construct()
-    {
-        $this->id = new UuidV4();
-    }
-
     public function getId(): UuidV4
     {
         return $this->id;
+    }
+
+    protected function setId(UuidV4 $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

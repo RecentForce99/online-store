@@ -16,5 +16,5 @@ interface ProductRepositoryInterface
      */
     public function getById(string $id): Product;
 
-    public function create(Product $product): void;
+    public function add(Product $product): void;
 }

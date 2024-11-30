@@ -5,26 +5,22 @@ declare(strict_types=1);
 namespace App\Cart\Application\UserCase\List;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Uuid;
 
 final class CartProductListQuery
 {
+    #[Assert\Type('numeric')]
+    #[Assert\Range(min: 1, max: 100)]
+    public int $limit = 20;
+
+    #[Assert\Type('numeric')]
+    #[Assert\Range(min: 0)]
+    public int $offset = 0;
+
     public function __construct(
-        #[Assert\NotBlank]
-        #[Uuid(
-            message: 'Id не соответствует формату',
-            strict: true,
-            versions: [
-                Uuid::V4_RANDOM,
-            ],
-        )]
-        public string $userId,
-        #[Assert\Type(type: 'int')]
-        #[Assert\Range(min: 1, max: 100)]
-        public int $limit = 20,
-        #[Assert\Type(type: 'int')]
-        #[Assert\Range(min: 0)]
-        public int $offset = 0,
+        ?int $limit = null,
+        ?int $offset = null,
     ) {
+        null === $limit ?: $this->limit = $limit;
+        null === $offset ?: $this->offset = $offset;
     }
 }

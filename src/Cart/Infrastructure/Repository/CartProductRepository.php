@@ -39,7 +39,7 @@ final class CartProductRepository extends ServiceEntityRepository implements Car
         return $this->findOneBy(['id' => $id]);
     }
 
-    public function create(CartProduct $cartProduct): void
+    public function add(CartProduct $cartProduct): void
     {
         $this->getEntityManager()->persist($cartProduct);
     }

@@ -16,7 +16,7 @@ final class RoleRepository extends ServiceEntityRepository implements RoleReposi
         parent::__construct($registry, Role::class);
     }
 
-    public function create(Role $role): void
+    public function add(Role $role): void
     {
         $this->getEntityManager()->persist($role);
     }

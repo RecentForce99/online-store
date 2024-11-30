@@ -8,7 +8,7 @@ use App\Order\Domain\Entity\DeliveryType;
 
 interface DeliveryTypeRepositoryInterface
 {
-    public function create(DeliveryType $deliveryType): void;
+    public function add(DeliveryType $deliveryType): void;
 
     public function findAll(): array;
 }

@@ -9,16 +9,13 @@ use App\Cart\Domain\Repository\CartProductRepositoryInterface;
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
 use App\User\Application\Exception\UserNotFound;
-use App\User\Domain\Repository\UserRepositoryInterface;
-use Symfony\Component\Uid\AbstractUid;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class AddProductToCartCommandHandler
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
         private readonly ProductRepositoryInterface $productRepository,
         private readonly CartProductRepositoryInterface $cartProductRepository,
-        private readonly AbstractUid $uuid,
         private readonly Flusher $flusher,
     ) {
     }
@@ -26,17 +23,16 @@ final class AddProductToCartCommandHandler
     /**
      * @throws UserNotFound
      */
-    public function __invoke(AddProductToCartCommand $addProductToCartCommand): void
+    public function __invoke(UserInterface $user, AddProductToCartCommand $addProductToCartCommand): void
     {
-        $currentProduct = $this->productRepository->getById($addProductToCartCommand->productId);
-        $currentUser = $this->userRepository->getById($addProductToCartCommand->userId);
+        $product = $this->productRepository->getById($addProductToCartCommand->productId);
 
         $cartProduct = CartProduct::create(
-            user: $currentUser,
-            product: $currentProduct,
+            user: $user,
+            product: $product,
         );
 
-        $this->cartProductRepository->create($cartProduct);
+        $this->cartProductRepository->add($cartProduct);
         $this->flusher->flush();
     }
 }

@@ -30,10 +30,6 @@ class OrderProduct extends AbstractBaseEntity
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $quantity;
 
-    private function __construct()
-    {
-    }
-
     public static function create(
         Order $order,
         Product $product,
@@ -49,14 +45,14 @@ class OrderProduct extends AbstractBaseEntity
             ->setUpdatedAt($updatedAt);
     }
 
-    public function setOrder(Order $order): self
+    private function setOrder(Order $order): self
     {
         $this->order = $order;
 
         return $this;
     }
 
-    public function setProduct(Product $product): self
+    private function setProduct(Product $product): self
     {
         $this->product = $product;
 

@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Web;
 
 use App\Common\Domain\Repository\FlusherInterface;
-use App\Role\Domain\Repository\RoleRepositoryInterface;
-use App\Tests\Fixture\Role\CreateRolesFixture;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -17,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class WebBaseTestCase extends WebTestCase
+abstract class WebBaseTestCase extends WebTestCase
 {
     public const string CONTENT_TYPE = 'application/json';
 
@@ -26,12 +23,10 @@ class WebBaseTestCase extends WebTestCase
     protected UserPasswordHasherInterface $passwordHasher;
     protected SerializerInterface $serializer;
     protected FlusherInterface $flusher;
-    protected RoleRepositoryInterface $roleRepository;
 
     protected function setUp(): void
     {
-        $client = static::createClient();
-        $this->injectDependencies($client);
+        $this->injectDependencies();
 
         $schemaTool = new SchemaTool($this->entityManager);
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
@@ -41,25 +36,20 @@ class WebBaseTestCase extends WebTestCase
             $schemaTool->createSchema($metadata);
         }
 
-        $fixtureLoader = new Loader();
-        $fixtureLoader->addFixture(new CreateRolesFixture(
-            $this->flusher,
-            $this->roleRepository,
-        ));
-
-        $purger = new ORMPurger();
-        $executor = new ORMExecutor($this->entityManager, $purger);
-        $executor->execute($fixtureLoader->getFixtures());
+        $ormPurger = new ORMPurger();
+        $ormExecutor = new ORMExecutor($this->entityManager, $ormPurger);
+        $ormExecutor->execute($this->getFixtures());
     }
 
-    private function injectDependencies(KernelBrowser $client): void
+    abstract protected function getFixtures(): array;
+
+    protected function injectDependencies(): void
     {
-        $this->client = $client;
-        $this->entityManager = $client->getContainer()->get('doctrine')->getManager();
-        $this->passwordHasher = $client->getContainer()->get(UserPasswordHasherInterface::class);
-        $this->serializer = $client->getContainer()->get(SerializerInterface::class);
-        $this->flusher = $client->getContainer()->get(FlusherInterface::class);
-        $this->roleRepository = $client->getContainer()->get(RoleRepositoryInterface::class);
+        $this->client = static::createClient();
+        $this->entityManager = $this->client->getContainer()->get('doctrine')->getManager();
+        $this->passwordHasher = $this->client->getContainer()->get(UserPasswordHasherInterface::class);
+        $this->serializer = $this->client->getContainer()->get(SerializerInterface::class);
+        $this->flusher = $this->client->getContainer()->get(FlusherInterface::class);
     }
 
     protected function tearDown(): void

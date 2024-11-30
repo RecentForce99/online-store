@@ -10,6 +10,7 @@ use App\Common\Domain\Trait\HasId;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'roles')]
@@ -32,6 +33,7 @@ class Role extends AbstractBaseEntity
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
         return (new static())
+            ->setId(new UuidV4())
             ->setSlug($slug)
             ->setName($name)
             ->setCreatedAt($createdAt)

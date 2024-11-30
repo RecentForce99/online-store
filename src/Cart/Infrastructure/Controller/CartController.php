@@ -11,40 +11,23 @@ use App\Cart\Application\UserCase\List\CartProductListQueryHandler;
 use App\User\Application\Exception\UserNotFound;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/cart')]
 final class CartController extends AbstractController
 {
-    /**
-     * @throws UserNotFound
-     */
     #[Route(methods: ['GET'])]
     public function list(
-        Request $request,
-        ValidatorInterface $validator,
+        #[MapQueryString] ?CartProductListQuery $cartProductListQuery,
         CartProductListQueryHandler $cartProductListQueryHandler,
     ): JsonResponse {
-        $cartProductListQuery = new CartProductListQuery(
-            userId: $request->get('userId', ''),
-            offset: (int)$request->get('offset', 0),
-            limit: (int)$request->get('limit', 20),
+        $user = $this->getUser();
+        $queryHandlerResult = $cartProductListQueryHandler(
+            $user,
+            $cartProductListQuery ?? new CartProductListQuery(),
         );
-
-        $errors = $validator->validate($cartProductListQuery);
-        if (count($errors) > 0) {
-            return new JsonResponse(
-                data: [
-                    'errors' => $this->getFormattedErrors($errors),
-                ],
-                status: JsonResponse::HTTP_BAD_REQUEST,
-            );
-        }
-
-        $queryHandlerResult = $cartProductListQueryHandler($cartProductListQuery);
 
         return new JsonResponse($queryHandlerResult);
     }
@@ -53,28 +36,16 @@ final class CartController extends AbstractController
      * @throws UserNotFound
      */
     #[Route(methods: ['POST'])]
-    public function addProductToCart(
-        Request $request,
-        ValidatorInterface $validator,
+    public function listAddProductToCartCommand(
+        #[MapRequestPayload] AddProductToCartCommand $addProductToCartCommand,
         AddProductToCartCommandHandler $addProductToCartCommandHandler,
     ): JsonResponse {
-        $addProductToCartCommand = new AddProductToCartCommand(
-            userId: $request->get('userId', ''),
-            productId: $request->get('productId', ''),
+        $user = $this->getUser();
+        $queryHandlerResult = $addProductToCartCommandHandler(
+            $user,
+            $addProductToCartCommand,
         );
 
-        $errors = $validator->validate($addProductToCartCommand);
-        if (count($errors) > 0) {
-            return new JsonResponse(
-                data: [
-                    'errors' => $this->getFormattedErrors($errors),
-                ],
-                status: JsonResponse::HTTP_BAD_REQUEST,
-            );
-        }
-
-        $addProductToCartCommandHandler($addProductToCartCommand);
-
-        return new JsonResponse(null, Response::HTTP_CREATED);
+        return new JsonResponse($queryHandlerResult);
     }
 }

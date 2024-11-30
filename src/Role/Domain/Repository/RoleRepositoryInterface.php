@@ -8,7 +8,7 @@ use App\Role\Domain\Entity\Role;
 
 interface RoleRepositoryInterface
 {
-    public function create(Role $role): void;
+    public function add(Role $role): void;
 
     public function findBySlug(string $slug): ?Role;
 }

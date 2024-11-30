@@ -18,15 +18,6 @@ final class AddProductToCartCommand
                 Uuid::V4_RANDOM,
             ],
         )]
-        public string $userId,
-        #[Assert\NotBlank]
-        #[Uuid(
-            message: 'Id не соответствует формату',
-            strict: true,
-            versions: [
-                Uuid::V4_RANDOM,
-            ],
-        )]
         public string $productId,
     ) {
     }

@@ -86,6 +86,6 @@ final class CreateDeliveryTypesFixture extends Fixture
 
     private function createDeliveryType(DeliveryType $deliveryType): void
     {
-        $this->deliveryTypeRepository->create($deliveryType);
+        $this->deliveryTypeRepository->add($deliveryType);
     }
 }

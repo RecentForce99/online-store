@@ -30,11 +30,6 @@ class OrderStatus extends AbstractBaseEntity
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Order::class)]
     private Collection $orders;
 
-    private function __construct(string $slug)
-    {
-        $this->slug = $slug;
-    }
-
     public static function create(
         string $slug,
         string $name,
@@ -42,11 +37,19 @@ class OrderStatus extends AbstractBaseEntity
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
-        return (new static($slug))
+        return (new static())
+            ->setSlug($slug)
             ->setName($name)
             ->setNotifiable($notifiable)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
+    }
+
+    private function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 
     public function getName(): string

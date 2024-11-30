@@ -16,6 +16,8 @@ interface UserRepositoryInterface
     // If it's possible, then replace string with Uuid abstract class
     public function findById(string $id): ?User;
 
+    public function findByEmail(string $email): ?User;
+
     /**
      * @throws UserNotFound
      */

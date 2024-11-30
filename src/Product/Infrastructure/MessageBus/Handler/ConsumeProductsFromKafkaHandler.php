@@ -47,7 +47,7 @@ class ConsumeProductsFromKafkaHandler
             id: UuidV4::fromString($message->id),
         );
 
-        $this->productRepository->create($product);
+        $this->productRepository->add($product);
     }
 
     private function updateProduct(Product $existingProduct, ProductChanges $message): void

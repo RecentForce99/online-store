@@ -69,6 +69,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
         return (new self())
+            ->setId(new UuidV4())
             ->setName($name)
             ->setEmail($email)
             ->setPhone($phone)

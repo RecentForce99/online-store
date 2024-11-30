@@ -59,12 +59,6 @@ class Product extends AbstractBaseEntity
     #[OneToMany(mappedBy: 'product', targetEntity: CartProduct::class)]
     private Collection $cartProducts;
 
-    protected function __construct(UuidV4 $id)
-    {
-        parent::__construct();
-        $this->id = $id;
-    }
-
     public static function create(
         string $name,
         int $weight,
@@ -79,7 +73,8 @@ class Product extends AbstractBaseEntity
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
-        return (new self($id))
+        return (new self())
+            ->setId($id)
             ->setName($name)
             ->setWeight($weight)
             ->setHeight($height)

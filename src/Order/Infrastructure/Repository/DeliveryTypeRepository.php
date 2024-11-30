@@ -16,7 +16,7 @@ final class DeliveryTypeRepository extends ServiceEntityRepository implements De
         parent::__construct($registry, DeliveryType::class);
     }
 
-    public function create(DeliveryType $deliveryType): void
+    public function add(DeliveryType $deliveryType): void
     {
         $this->getEntityManager()->persist($deliveryType);
     }

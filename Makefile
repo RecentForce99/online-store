@@ -1,6 +1,5 @@
 init: dc_build dc_up # Сделать полную инициализацию приложения
 	php bin/console doctrine:migrations:migrate;
-	php bin/console doctrine:fixtures:load;
 	php bin/console doctrine:database:create --env=test
 	php bin/console lexik:jwt:generate-keypair
 

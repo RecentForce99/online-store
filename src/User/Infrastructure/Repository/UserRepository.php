@@ -32,6 +32,11 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
         return $this->findOneBy(['id' => $id]);
     }
 
+    public function findByEmail(string $email): ?User
+    {
+        return $this->findOneBy(['email.email' => $email]);
+    }
+
     public function getById(string $id): User
     {
         $user = $this->findById($id);

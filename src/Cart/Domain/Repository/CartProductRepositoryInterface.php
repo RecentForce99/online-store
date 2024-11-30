@@ -13,5 +13,5 @@ interface CartProductRepositoryInterface
 
     public function findById(string $id): CartProduct;
 
-    public function create(CartProduct $cartProduct): void;
+    public function add(CartProduct $cartProduct): void;
 }

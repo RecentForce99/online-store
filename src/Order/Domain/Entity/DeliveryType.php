@@ -27,18 +27,14 @@ class DeliveryType extends AbstractBaseEntity
     #[ORM\OneToMany(mappedBy: 'deliveryType', targetEntity: Order::class)]
     private Collection $orders;
 
-    private function __construct(string $slug)
-    {
-        $this->slug = $slug;
-    }
-
     public static function create(
         string $slug,
         string $name,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
-        return (new static($slug))
+        return (new static())
+            ->setSlug($slug)
             ->setName($name)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
@@ -59,5 +55,12 @@ class DeliveryType extends AbstractBaseEntity
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    private function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

@@ -12,6 +12,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Uid\UuidV4;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'orders')]
@@ -55,6 +56,7 @@ class Order extends AbstractBaseEntity
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
         return (new self())
+            ->setId(new UuidV4())
             ->setUser($user)
             ->setPhone($phone)
             ->setStatus($status)

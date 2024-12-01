@@ -160,6 +160,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function setCartProducts(Collection $cartProducts): self
     {
         $this->cartProducts = $cartProducts;
+
         return $this;
     }
 }

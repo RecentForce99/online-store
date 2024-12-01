@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Cart\Domain\Entity;
 
+use App\Common\Domain\Entity\AbstractBaseEntity;
+use App\Common\Domain\Trait\HasDatetime;
 use App\Product\Domain\Entity\Product;
 use App\User\Domain\Entity\User;
 use DateTimeImmutable;
@@ -11,8 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'cart_products')]
-class CartProduct
+class CartProduct extends AbstractBaseEntity
 {
+    use HasDatetime;
+
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cartProducts')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
@@ -25,16 +29,6 @@ class CartProduct
 
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $quantity;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
-
-    private function __construct()
-    {
-    }
 
     public static function create(
         User $user,
@@ -63,6 +57,11 @@ class CartProduct
         return $this;
     }
 
+    public function getProduct(): Product
+    {
+        return $this->product;
+    }
+
     public function setProduct(Product $product): self
     {
         $this->product = $product;
@@ -73,20 +72,6 @@ class CartProduct
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }

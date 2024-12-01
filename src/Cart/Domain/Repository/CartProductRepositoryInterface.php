@@ -11,7 +11,7 @@ interface CartProductRepositoryInterface
 {
     public function getListWithPaginateForUser(User $user, int $limit, int $offset): array;
 
-    public function findById(string $id): CartProduct;
-
     public function add(CartProduct $cartProduct): void;
+
+    public function delete(CartProduct $cartProduct): void;
 }

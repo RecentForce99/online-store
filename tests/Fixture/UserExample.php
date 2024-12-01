@@ -19,6 +19,7 @@ final class UserExample
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -30,6 +31,7 @@ final class UserExample
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -41,6 +43,7 @@ final class UserExample
     public function setPhone(int $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -52,6 +55,7 @@ final class UserExample
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 }

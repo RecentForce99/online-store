@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Repository;
 
-use App\User\Application\Exception\UserNotFound;
+use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -41,7 +41,7 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
     {
         $user = $this->findById($id);
         if (true === is_null($user)) {
-            throw UserNotFound::byId($id);
+            throw UserNotFoundException::byId($id);
         }
 
         return $user;

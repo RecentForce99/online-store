@@ -14,9 +14,8 @@ final class CreateProductsFixture extends Fixture
 {
     public function __construct(
         private readonly ProductRepositoryInterface $productRepository,
-        private readonly Flusher                    $flusher,
-    )
-    {
+        private readonly Flusher $flusher,
+    ) {
     }
 
     public function load(ObjectManager $manager): void

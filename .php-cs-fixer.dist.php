@@ -1,8 +1,10 @@
 <?php
 
 $finder = (new PhpCsFixer\Finder())
-    ->in(__DIR__)
-    ->exclude('var');
+    ->in([
+        'src',
+        'tests',
+    ]);
 
 return (new PhpCsFixer\Config())
     ->setRules([
@@ -32,6 +34,9 @@ return (new PhpCsFixer\Config())
                 'trait_import' => 'none',
                 'case' => 'none',
             ],
+        ],
+        'concat_space' => [
+            'spacing' => 'one',
         ],
     ])
     ->setFinder($finder);

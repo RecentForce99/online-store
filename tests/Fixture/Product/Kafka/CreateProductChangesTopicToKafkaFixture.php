@@ -15,8 +15,7 @@ final class CreateProductChangesTopicToKafkaFixture extends Fixture
 {
     public function __construct(
         private MessageBusInterface $messageBus,
-    )
-    {
+    ) {
     }
 
     /**

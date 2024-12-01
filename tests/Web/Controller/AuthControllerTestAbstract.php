@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Web\Controller;
 
 use App\Role\Domain\Repository\RoleRepositoryInterface;
 use App\Tests\Fixture\Role\CreateRolesFixture;
-use App\Tests\Fixture\UserExample;
-use App\Tests\Web\WebBaseTestCase;
+use App\Tests\Web\AbstractWebBaseTestCase;
 use Doctrine\Common\DataFixtures\Loader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\ByteString;
 
-final class AuthControllerTest extends WebBaseTestCase
+final class AuthControllerTestAbstract extends AbstractWebBaseTestCase
 {
     private const string SIGN_UP_METHOD = 'POST';
     private const string SIGN_UP_ENDPOINT = '/api/auth/signUp';
-
     private RoleRepositoryInterface $roleRepository;
 
     protected function injectDependencies(): void

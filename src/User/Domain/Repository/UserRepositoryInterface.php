@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Repository;
 
-use App\User\Application\Exception\UserNotFound;
+use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
 
 interface UserRepositoryInterface
@@ -19,7 +19,7 @@ interface UserRepositoryInterface
     public function findByEmail(string $email): ?User;
 
     /**
-     * @throws UserNotFound
+     * @throws UserNotFoundException
      */
     public function getById(string $id): User;
 

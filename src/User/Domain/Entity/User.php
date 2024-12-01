@@ -79,13 +79,20 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
             ->setUpdatedAt($updatedAt);
     }
 
+    public function findCartProductByProductId(string $productId): ?CartProduct
+    {
+        return $this->getCartProducts()->findFirst(function (int $index, CartProduct $cartProduct) use ($productId) {
+            return $cartProduct->getProduct()->getId()->toString() === $productId;
+        });
+    }
+
     public function eraseCredentials(): void
     {
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->email->getEmail();
+        return $this->getId()->toString();
     }
 
     public function getName(): Name
@@ -143,5 +150,10 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getCartProducts(): Collection
+    {
+        return $this->cartProducts;
     }
 }

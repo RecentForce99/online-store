@@ -6,7 +6,7 @@ namespace App\Role\Application\Exception;
 
 use App\Common\Domain\Exception\AbstractPublicRenderedException;
 
-class RoleNotFound extends AbstractPublicRenderedException
+class RoleNotFoundException extends AbstractPublicRenderedException
 {
     public static function bySlug(string $slug, ?string $name = null): self
     {

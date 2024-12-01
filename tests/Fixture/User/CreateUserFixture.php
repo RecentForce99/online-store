@@ -22,12 +22,11 @@ use Symfony\Component\Uid\UuidV4;
 final class CreateUserFixture extends Fixture
 {
     public function __construct(
-        private readonly RoleRepositoryInterface     $roleRepository,
-        private readonly UserRepositoryInterface     $userRepository,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly UserRepositoryInterface $userRepository,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly Flusher                     $flusher,
-    )
-    {
+        private readonly Flusher $flusher,
+    ) {
     }
 
     public function load(ObjectManager $manager): void

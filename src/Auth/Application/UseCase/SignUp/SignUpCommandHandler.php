@@ -12,7 +12,7 @@ use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
 use App\Common\Domain\Repository\FlusherInterface;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
-use App\Role\Application\Exception\RoleNotFound;
+use App\Role\Application\Exception\RoleNotFoundException;
 use App\Role\Domain\Entity\Role;
 use App\Role\Domain\Enum\RoleEnum;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
@@ -43,7 +43,7 @@ final class SignUpCommandHandler
      * @throws WrongLengthOfPhoneNumberException
      * @throws InvalidEmailException
      * @throws LessThanMinLengthException
-     * @throws RoleNotFound
+     * @throws RoleNotFoundException
      * @throws EmailHasBeenTakenException
      * @throws PhoneHasBeenTakenException
      */
@@ -74,14 +74,14 @@ final class SignUpCommandHandler
     /**
      * @throws EmailHasBeenTakenException
      * @throws PhoneHasBeenTakenException
-     * @throws RoleNotFound
+     * @throws RoleNotFoundException
      */
     private function validate(
         ?Role $userRole,
         SignUpCommand $signUpCommand,
     ): void {
         if (true === is_null($userRole)) {
-            throw RoleNotFound::bySlug(RoleEnum::ROLE_USER->name, RoleEnum::ROLE_USER->value);
+            throw RoleNotFoundException::bySlug(RoleEnum::ROLE_USER->name, RoleEnum::ROLE_USER->value);
         }
 
         if (false === $this->userRepository->isEmailAvailable($signUpCommand->email)) {

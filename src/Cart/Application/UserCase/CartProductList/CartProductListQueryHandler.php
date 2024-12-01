@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Cart\Application\UserCase\List;
+namespace App\Cart\Application\UserCase\CartProductList;
 
 use App\Cart\Domain\Repository\CartProductRepositoryInterface;
+use App\User\Domain\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 final class CartProductListQueryHandler
@@ -16,6 +17,7 @@ final class CartProductListQueryHandler
 
     public function __invoke(UserInterface $user, CartProductListQuery $cartProductListQuery): array
     {
+        /* @var User $user */
         return $this->cartProductRepository->getListWithPaginateForUser(
             user: $user,
             limit: $cartProductListQuery->limit,

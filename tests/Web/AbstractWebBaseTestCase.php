@@ -14,10 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-abstract class WebBaseTestCase extends WebTestCase
+abstract class AbstractWebBaseTestCase extends WebTestCase
 {
     public const string CONTENT_TYPE = 'application/json';
-
     protected KernelBrowser $client;
     protected ?EntityManagerInterface $entityManager;
     protected UserPasswordHasherInterface $passwordHasher;

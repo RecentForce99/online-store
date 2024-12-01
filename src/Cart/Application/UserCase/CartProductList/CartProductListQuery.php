@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Cart\Application\UserCase\List;
+namespace App\Cart\Application\UserCase\CartProductList;
 
 use Symfony\Component\Validator\Constraints as Assert;
 

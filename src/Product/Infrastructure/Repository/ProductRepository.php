@@ -6,7 +6,7 @@ namespace App\Product\Infrastructure\Repository;
 
 use App\Product\Domain\Entity\Product;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
-use App\User\Application\Exception\UserNotFound;
+use App\User\Application\Exception\UserNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,7 +26,7 @@ final class ProductRepository extends ServiceEntityRepository implements Product
     {
         $product = $this->findById($id);
         if (true === is_null($product)) {
-            throw UserNotFound::byId(
+            throw UserNotFoundException::byId(
                 $id,
             );
         }

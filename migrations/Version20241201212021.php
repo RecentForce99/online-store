@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241127102714 extends AbstractMigration
+final class Version20241201212021 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,8 +27,7 @@ final class Version20241127102714 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN cart_products.product_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN cart_products.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN cart_products.updated_at IS \'(DC2Type:datetime_immutable)\'');
-        $this->addSql('CREATE TABLE delivery_types (name VARCHAR(20) NOT NULL, slug VARCHAR(20) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(name))');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_493B6FA2989D9B62 ON delivery_types (slug)');
+        $this->addSql('CREATE TABLE delivery_types (slug VARCHAR(20) NOT NULL, name VARCHAR(20) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(slug))');
         $this->addSql('COMMENT ON COLUMN delivery_types.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN delivery_types.updated_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE TABLE order_product (order_id UUID NOT NULL, product_id UUID NOT NULL, quantity INT DEFAULT 0 NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(order_id, product_id))');

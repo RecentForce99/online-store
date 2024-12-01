@@ -13,5 +13,7 @@ interface CartProductRepositoryInterface
 
     public function add(CartProduct $cartProduct): void;
 
+    public function clear(User $user): void;
+
     public function delete(CartProduct $cartProduct): void;
 }

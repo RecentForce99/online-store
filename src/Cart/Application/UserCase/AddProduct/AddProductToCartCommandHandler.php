@@ -11,7 +11,6 @@ use App\Product\Domain\Repository\ProductRepositoryInterface;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
 use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 final class AddProductToCartCommandHandler
 {
@@ -26,12 +25,11 @@ final class AddProductToCartCommandHandler
      * @throws UserNotFoundException
      * @throws ProductAlreadyAddedToCartException
      */
-    public function __invoke(UserInterface $user, AddProductToCartCommand $addProductToCartCommand): void
+    public function __invoke(User $user, AddProductToCartCommand $addProductToCartCommand): void
     {
         $product = $this->productRepository->getById($addProductToCartCommand->productId);
         $productId = $product->getId()->toString();
 
-        /* @var User $user */
         $user->getCartProducts()->initialize();
         if (true === $this->isProductInCart($user, $productId)) {
             throw ProductAlreadyAddedToCartException::byId($productId);

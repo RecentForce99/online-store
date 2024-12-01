@@ -39,6 +39,14 @@ final class CartProductRepository extends ServiceEntityRepository implements Car
         $this->getEntityManager()->persist($cartProduct);
     }
 
+    public function clear(User $user): void
+    {
+        /* @var CartProduct $cartProduct */
+        foreach ($user->getCartProducts() as $cartProduct) {
+            $this->delete($cartProduct);
+        }
+    }
+
     public function delete(CartProduct $cartProduct): void
     {
         $this->getEntityManager()->remove($cartProduct);

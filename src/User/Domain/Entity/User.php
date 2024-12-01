@@ -92,7 +92,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
 
     public function getUserIdentifier(): string
     {
-        return $this->getId()->toString();
+        return $this->email->getEmail();
     }
 
     public function getName(): Name
@@ -155,5 +155,11 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function getCartProducts(): Collection
     {
         return $this->cartProducts;
+    }
+
+    public function setCartProducts(Collection $cartProducts): self
+    {
+        $this->cartProducts = $cartProducts;
+        return $this;
     }
 }

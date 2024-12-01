@@ -53,6 +53,7 @@ security:
     access_control:
         - { path: ^/api/auth/signUp, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cart, roles: ROLE_USER }
+        - { path: ^/api/order, roles: ROLE_USER }
 
 when@test:
     security:

@@ -33,7 +33,7 @@ class OrderStatus extends AbstractBaseEntity
     public static function create(
         string $slug,
         string $name,
-        bool $notifiable,
+        bool $notifiable = false,
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
@@ -43,6 +43,11 @@ class OrderStatus extends AbstractBaseEntity
             ->setNotifiable($notifiable)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 
     private function setSlug(string $slug): self

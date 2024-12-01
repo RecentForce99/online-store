@@ -38,36 +38,12 @@ final class CreateDeliveryTypesFixture extends Fixture
     {
         return new ArrayCollection([
             DeliveryType::create(
-                slug: 'payment_required',
-                name: 'Ожидается оплата',
+                slug: 'pickup',
+                name: 'Самовывоз',
             ),
             DeliveryType::create(
-                slug: 'payment_successful',
-                name: 'Оплачен',
-            ),
-            DeliveryType::create(
-                slug: 'assembly_awaited',
-                name: 'Ждёт сборки',
-            ),
-            DeliveryType::create(
-                slug: 'assembling',
-                name: 'В сборке',
-            ),
-            DeliveryType::create(
-                slug: 'delivering',
-                name: 'Доставляется',
-            ),
-            DeliveryType::create(
-                slug: 'ready',
-                name: 'Готов к выдаче',
-            ),
-            DeliveryType::create(
-                slug: 'received',
-                name: 'Получен',
-            ),
-            DeliveryType::create(
-                slug: 'canceled',
-                name: 'Отменён',
+                slug: 'courier',
+                name: 'Курьер',
             ),
         ]);
     }

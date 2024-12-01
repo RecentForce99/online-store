@@ -15,6 +15,7 @@ use App\Cart\Application\UserCase\CartProductList\CartProductListQueryHandler;
 use App\Product\Domain\Entity\Product;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
 use App\User\Application\Exception\UserNotFoundException;
+use App\User\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
@@ -33,6 +34,7 @@ final class CartController extends AbstractController
         #[MapRequestPayload] AddProductToCartCommand $addProductToCartCommand,
         AddProductToCartCommandHandler $addProductToCartCommandHandler,
     ): JsonResponse {
+        /* @var User $user */
         $user = $this->getUser();
         $addProductToCartCommandHandler(
             $user,
@@ -47,6 +49,7 @@ final class CartController extends AbstractController
         #[MapQueryString] ?CartProductListQuery $cartProductListQuery,
         CartProductListQueryHandler $cartProductListQueryHandler,
     ): JsonResponse {
+        /* @var User $user */
         $user = $this->getUser();
         $queryHandlerResult = $cartProductListQueryHandler(
             $user,
@@ -65,6 +68,7 @@ final class CartController extends AbstractController
         #[MapRequestPayload] ChangeQuantityOfProductCommand $changeQuantityOfProductCommand,
         ChangeQuantityOfProductCommandHandler $changeQuantityOfProductCommandHandler,
     ): JsonResponse {
+        /* @var User $user */
         $user = $this->getUser();
         $changeQuantityOfProductCommandHandler(
             $changeQuantityOfProductCommand,
@@ -83,6 +87,7 @@ final class CartController extends AbstractController
         Product $product,
         DeleteProductFromCartCommandHandler $deleteProductFromCartCommandHandler,
     ): JsonResponse {
+        /* @var User $user */
         $user = $this->getUser();
         $deleteProductFromCartCommandHandler(
             $user,

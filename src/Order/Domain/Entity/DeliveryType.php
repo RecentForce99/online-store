@@ -17,10 +17,10 @@ class DeliveryType extends AbstractBaseEntity
 {
     use HasDatetime;
 
-    #[ORM\Id]
     #[ORM\Column(type: 'string', length: 20)]
     private string $name;
 
+    #[ORM\Id]
     #[ORM\Column(type: 'string', unique: true, length: 20)]
     private string $slug;
 

@@ -50,6 +50,9 @@ services:
     App\Product\Domain\Repository\ProductRepositoryInterface:
         class: App\Product\Infrastructure\Repository\ProductRepository
 
+    App\Order\Domain\Repository\OrderStatusRepositoryInterface:
+        class: App\Order\Infrastructure\Repository\OrderStatusRepository
+
     App\Common\Domain\Repository\FlusherInterface:
         class: App\Common\Infrastructure\Repository\Flusher
 

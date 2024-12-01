@@ -25,7 +25,7 @@ final class SignUpCommand
     #[Assert\NotBlank]
     #[Assert\Type(
         type: 'integer',
-        message: 'Номер телефона должен соответствовать формату +7 (XXX) XXX XX-XX',
+        message: 'Номер телефона должен быть числом',
     )]
     #[Assert\GreaterThan(0)]
     public readonly int $phone;

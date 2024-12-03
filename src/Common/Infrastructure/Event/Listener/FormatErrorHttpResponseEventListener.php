@@ -11,6 +11,7 @@ use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
 use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
 use App\Common\Infrastructure\Dto\ExceptionDetailsDto;
 use App\Common\Infrastructure\Dto\ExceptionDetailsProductionDto;
+use App\Common\Infrastructure\Exception\ConstraintViolationException;
 use App\Order\Application\Exception\CartIsEmptyException;
 use App\Order\Application\Exception\CartIsOverflowingException;
 use App\Order\Application\Exception\InvalidDeliveryTypeException;
@@ -24,6 +25,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Throwable;
 
@@ -43,8 +45,12 @@ final class FormatErrorHttpResponseEventListener
 
     public function getHttpExceptionStatusCodeByExceptionInstance(Throwable $exception): int
     {
+        if ($exception instanceof HttpException) {
+            return Response::HTTP_UNPROCESSABLE_ENTITY;
+        }
+
         return match ($exception::class) {
-            ProductWasNotAddedToCartException::class,
+            ProductWasNotAddedToCartException::class => Response::HTTP_NOT_FOUND,
             InvalidEmailException::class,
             LessThanMinLengthException::class,
             WrongLengthOfPhoneNumberException::class,
@@ -56,6 +62,7 @@ final class FormatErrorHttpResponseEventListener
             CartIsEmptyException::class,
             CartIsOverflowingException::class,
             InvalidDeliveryTypeException::class,
+            ConstraintViolationException::class,
             GreaterThanMaxLengthException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
             default => Response::HTTP_INTERNAL_SERVER_ERROR,
         };

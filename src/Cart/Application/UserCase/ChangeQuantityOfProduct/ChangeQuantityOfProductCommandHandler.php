@@ -20,12 +20,10 @@ final class ChangeQuantityOfProductCommandHandler
      * @throws ProductWasNotAddedToCartException
      */
     public function __invoke(
+        string $productId,
         ChangeQuantityOfProductCommand $changeQuantityOfProductCommand,
         User $user,
-        Product $product,
     ): void {
-        $productId = $product->getId()->toString();
-
         $cartProduct = $user->findCartProductByProductId($productId);
         if (null === $cartProduct) {
             throw ProductWasNotAddedToCartException::byId($productId);

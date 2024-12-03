@@ -21,7 +21,7 @@ use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Common\DataFixtures\Loader;
 
-class AbstractBaseOrderTestCaseAbstract extends AbstractWebBaseTestCase
+abstract class AbstractBaseOrderTestCase extends AbstractWebBaseTestCase
 {
     protected RoleRepositoryInterface $roleRepository;
     protected UserRepositoryInterface $userRepository;
@@ -30,7 +30,6 @@ class AbstractBaseOrderTestCaseAbstract extends AbstractWebBaseTestCase
     protected User $user;
     private DeliveryTypeRepositoryInterface $deliveryTypeRepository;
     private OrderStatusRepositoryInterface $orderStatusRepository;
-    private OrderRepositoryInterface $orderRepository;
 
     public function setUp(): void
     {
@@ -48,7 +47,6 @@ class AbstractBaseOrderTestCaseAbstract extends AbstractWebBaseTestCase
         $this->cartProductRepository = $this->client->getContainer()->get(CartProductRepositoryInterface::class);
         $this->deliveryTypeRepository = $this->client->getContainer()->get(DeliveryTypeRepositoryInterface::class);
         $this->orderStatusRepository = $this->client->getContainer()->get(OrderStatusRepositoryInterface::class);
-        $this->orderRepository = $this->client->getContainer()->get(OrderRepositoryInterface::class);
     }
 
     private function logIn(): void

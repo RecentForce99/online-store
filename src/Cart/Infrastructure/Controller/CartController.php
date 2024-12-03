@@ -7,12 +7,13 @@ namespace App\Cart\Infrastructure\Controller;
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Cart\Application\UserCase\AddProduct\AddProductToCartCommand;
 use App\Cart\Application\UserCase\AddProduct\AddProductToCartCommandHandler;
+use App\Cart\Application\UserCase\CartProductList\CartProductListQuery;
+use App\Cart\Application\UserCase\CartProductList\CartProductListQueryHandler;
 use App\Cart\Application\UserCase\ChangeQuantityOfProduct\ChangeQuantityOfProductCommand;
 use App\Cart\Application\UserCase\ChangeQuantityOfProduct\ChangeQuantityOfProductCommandHandler;
 use App\Cart\Application\UserCase\DeleteProductFromCart\DeleteProductFromCartCommandHandler;
-use App\Cart\Application\UserCase\CartProductList\CartProductListQuery;
-use App\Cart\Application\UserCase\CartProductList\CartProductListQueryHandler;
-use App\Product\Domain\Entity\Product;
+use App\Common\Infrastructure\Exception\ConstraintViolationException;
+use App\Common\Infrastructure\Trait\FormatConstraintViolationTrait;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
 use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
@@ -21,10 +22,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/cart')]
 final class CartController extends AbstractController
 {
+    use FormatConstraintViolationTrait;
+
     /**
      * @throws UserNotFoundException
      * @throws ProductAlreadyAddedToCartException
@@ -61,19 +66,29 @@ final class CartController extends AbstractController
 
     /**
      * @throws ProductWasNotAddedToCartException
+     * @throws ConstraintViolationException
      */
-    #[Route(path: '/{product}', methods: ['PATCH'])]
+    #[Route(path: '/{productId}', methods: ['PATCH'])]
     public function changeQuantityOfProductCommand(
-        Product $product,
+        string $productId,
+        ValidatorInterface $validator,
         #[MapRequestPayload] ChangeQuantityOfProductCommand $changeQuantityOfProductCommand,
         ChangeQuantityOfProductCommandHandler $changeQuantityOfProductCommandHandler,
     ): JsonResponse {
+        $constraintViolations = $validator->validate(
+            $productId,
+            new Assert\Uuid(
+                message: 'Неверный UUID товара.'
+            )
+        );
+        $this->throwFirstFormattedViolationExceptionIfThereIsOne($constraintViolations);
+
         /* @var User $user */
         $user = $this->getUser();
         $changeQuantityOfProductCommandHandler(
+            $productId,
             $changeQuantityOfProductCommand,
             $user,
-            $product,
         );
 
         return new JsonResponse();
@@ -81,17 +96,28 @@ final class CartController extends AbstractController
 
     /**
      * @throws ProductWasNotAddedToCartException
+     * @throws ConstraintViolationException
      */
-    #[Route(path: '/{product}', methods: ['DELETE'])]
-    public function DeleteProductFromCart(
-        Product $product,
+
+    #[Route(path: '/{productId}', methods: ['DELETE'])]
+    public function deleteProductFromCart(
+        string $productId,
+        ValidatorInterface $validator,
         DeleteProductFromCartCommandHandler $deleteProductFromCartCommandHandler,
     ): JsonResponse {
+        $constraintViolations = $validator->validate(
+            $productId,
+            new Assert\Uuid(
+                message: 'Неверный UUID товара.'
+            )
+        );
+        $this->throwFirstFormattedViolationExceptionIfThereIsOne($constraintViolations);
+
         /* @var User $user */
         $user = $this->getUser();
         $deleteProductFromCartCommandHandler(
+            $productId,
             $user,
-            $product,
         );
 
         return new JsonResponse();

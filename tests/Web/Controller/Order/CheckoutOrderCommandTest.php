@@ -9,7 +9,7 @@ use App\Product\Domain\Entity\Product;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\UuidV4;
 
-final class CheckoutOrderCommandTest extends AbstractBaseOrderTestCaseAbstract
+final class CheckoutOrderCommandTest extends AbstractBaseOrderTestCase
 {
     private const string CHECKOUT_ORDER_METHOD = 'POST';
     private const string CHECKOUT_ORDER_ENDPOINT = '/api/order';

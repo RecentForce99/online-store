@@ -17,17 +17,12 @@ final class AddProductToCartCommandTest extends AbstractBaseCartTestCaseAbstract
         /* @var UuidV4 $firstProductId */
         $firstProductId = current($this->productRepository->findAll())->getId()->toString();
 
-        $body = [
-            'productId' => $firstProductId,
-        ];
-
         $this->client->request(
             self::ADD_PRODUCT_TO_CART_METHOD,
-            self::ADD_PRODUCT_TO_CART_ENDPOINT,
+            self::ADD_PRODUCT_TO_CART_ENDPOINT . '/' . $firstProductId,
             [],
             [],
             ['CONTENT_TYPE' => parent::CONTENT_TYPE],
-            $this->serializer->serialize($body, 'json'),
         );
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());

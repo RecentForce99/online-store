@@ -25,10 +25,9 @@ final class AddProductToCartCommandHandler
      * @throws UserNotFoundException
      * @throws ProductAlreadyAddedToCartException
      */
-    public function __invoke(User $user, AddProductToCartCommand $addProductToCartCommand): void
+    public function __invoke(User $user, string $productId): void
     {
-        $product = $this->productRepository->getById($addProductToCartCommand->productId);
-        $productId = $product->getId()->toString();
+        $product = $this->productRepository->getById($productId);
 
         $user->getCartProducts()->initialize();
         if (true === $this->isProductInCart($user, $productId)) {

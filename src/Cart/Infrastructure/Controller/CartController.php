@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Cart\Infrastructure\Controller;
 
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
-use App\Cart\Application\UserCase\AddProduct\AddProductToCartCommand;
 use App\Cart\Application\UserCase\AddProduct\AddProductToCartCommandHandler;
 use App\Cart\Application\UserCase\CartProductList\CartProductListQuery;
 use App\Cart\Application\UserCase\CartProductList\CartProductListQueryHandler;
@@ -33,17 +32,27 @@ final class CartController extends AbstractController
     /**
      * @throws UserNotFoundException
      * @throws ProductAlreadyAddedToCartException
+     * @throws ConstraintViolationException
      */
-    #[Route(methods: ['POST'])]
+    #[Route(path: '/{productId}', methods: ['POST'])]
     public function addProductToCartCommand(
-        #[MapRequestPayload] AddProductToCartCommand $addProductToCartCommand,
+        string $productId,
+        ValidatorInterface $validator,
         AddProductToCartCommandHandler $addProductToCartCommandHandler,
     ): JsonResponse {
+        $constraintViolations = $validator->validate(
+            $productId,
+            new Assert\Uuid(
+                message: 'Неверный UUID товара.'
+            )
+        );
+        $this->throwFirstFormattedViolationExceptionIfThereIsOne($constraintViolations);
+
         /* @var User $user */
         $user = $this->getUser();
         $addProductToCartCommandHandler(
             $user,
-            $addProductToCartCommand,
+            $productId,
         );
 
         return new JsonResponse();
@@ -98,7 +107,6 @@ final class CartController extends AbstractController
      * @throws ProductWasNotAddedToCartException
      * @throws ConstraintViolationException
      */
-
     #[Route(path: '/{productId}', methods: ['DELETE'])]
     public function deleteProductFromCart(
         string $productId,

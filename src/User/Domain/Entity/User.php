@@ -56,7 +56,11 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection $orders;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CartProduct::class)]
+    #[ORM\OneToMany(
+        mappedBy: 'user',
+        targetEntity: CartProduct::class,
+        orphanRemoval: true,
+    )]
     private Collection $cartProducts;
 
     public static function create(
@@ -157,10 +161,8 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return $this->cartProducts;
     }
 
-    public function setCartProducts(Collection $cartProducts): self
+    public function clearCart(): void
     {
-        $this->cartProducts = $cartProducts;
-
-        return $this;
+        $this->cartProducts->clear();
     }
 }

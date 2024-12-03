@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Order\Application\UseCase\CheckoutOrder;
 
-use App\Cart\Domain\Repository\CartProductRepositoryInterface;
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Order\Application\Exception\CartIsEmptyException;
 use App\Order\Application\Exception\CartIsOverflowingException;
@@ -24,7 +23,6 @@ final class CheckoutOrderCommandHandler
         private readonly DeliveryTypeRepositoryInterface $deliveryTypeRepository,
         private readonly OrderStatusRepositoryInterface $orderStatusRepository,
         private readonly OrderRepositoryInterface $orderRepository,
-        private readonly CartProductRepositoryInterface $cartProductRepository,
         private readonly Flusher $flusher,
     ) {
     }
@@ -64,7 +62,7 @@ final class CheckoutOrderCommandHandler
         // TODO Add notification dispatching
 
         $this->orderRepository->add($order);
-        $this->cartProductRepository->clear($user);
+        $user->clearCart();
         $this->flusher->flush();
     }
 

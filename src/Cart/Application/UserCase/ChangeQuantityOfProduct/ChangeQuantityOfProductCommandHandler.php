@@ -6,7 +6,6 @@ namespace App\Cart\Application\UserCase\ChangeQuantityOfProduct;
 
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Common\Infrastructure\Repository\Flusher;
-use App\Product\Domain\Entity\Product;
 use App\User\Domain\Entity\User;
 
 final class ChangeQuantityOfProductCommandHandler

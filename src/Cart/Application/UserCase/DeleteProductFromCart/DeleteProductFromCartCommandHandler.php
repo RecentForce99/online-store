@@ -7,7 +7,6 @@ namespace App\Cart\Application\UserCase\DeleteProductFromCart;
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Cart\Domain\Repository\CartProductRepositoryInterface;
 use App\Common\Infrastructure\Repository\Flusher;
-use App\Product\Domain\Entity\Product;
 use App\User\Domain\Entity\User;
 
 final class DeleteProductFromCartCommandHandler

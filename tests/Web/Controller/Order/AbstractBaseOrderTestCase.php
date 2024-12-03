@@ -6,7 +6,6 @@ namespace App\Tests\Web\Controller\Order;
 
 use App\Cart\Domain\Repository\CartProductRepositoryInterface;
 use App\Order\Domain\Repository\DeliveryTypeRepositoryInterface;
-use App\Order\Domain\Repository\OrderRepositoryInterface;
 use App\Order\Domain\Repository\OrderStatusRepositoryInterface;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
 use App\Role\Domain\Repository\RoleRepositoryInterface;

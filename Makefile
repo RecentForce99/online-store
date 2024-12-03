@@ -1,4 +1,4 @@
-init: dc_build dc_up # Сделать полную инициализацию приложения
+init: dc.build dc.up # Сделать полную инициализацию приложения
 	php bin/console doctrine:migrations:migrate;
 	php bin/console doctrine:database:create --env=test
 	php bin/console lexik:jwt:generate-keypair
@@ -13,31 +13,31 @@ fix\:code-style:
 ###</ Composer ###
 
 ###< Docker compose v2 (screw v1) ###
-dc_ps:
+dc.ps:
 	docker compose -f ./docker/docker-compose.yml ps
-dc_logs:
+dc.logs:
 	docker compose -f ./docker/docker-compose.yml logs -f
-dc_link_env:
+dc.link_env:
 	ln -s ./../.env ./docker/.env
 
-dc_reload: dc_down dc_up
+dc.reload: dc.down dc.up
 
-dc_restart: dc_down dc_build dc_up
+dc.restart: dc.down dc.build dc.up
 
-dc_build:
+dc.build:
 	docker compose -f ./docker/docker-compose.yml build
 
-dc_start:
+dc.start:
 	docker compose -f ./docker/docker-compose.yml start
-dc_stop:
+dc.stop:
 	docker compose -f ./docker/docker-compose.yml stop
 
-dc_up:
+dc.up:
 	docker compose -f ./docker/docker-compose.yml up -d --remove-orphans
-dc_down:
+dc.down:
 	docker compose -f ./docker/docker-compose.yml down --remove-orphans
 
-dc_drop:
+dc.drop:
 	@echo "WARNING: This command will remove all containers, volumes, and images! Proceed? (y/n)"
 	@read answer && [ $$answer = y ] && docker compose -f ./docker/docker-compose.yml down -v --rmi=all --remove-orphans || echo "Aborted."
 ###</ Docker compose ###

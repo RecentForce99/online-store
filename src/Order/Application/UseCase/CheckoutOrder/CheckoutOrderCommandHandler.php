@@ -79,7 +79,7 @@ final class CheckoutOrderCommandHandler
         ?DeliveryType $currentDeliveryType,
     ): void {
         if ($user->getCartProducts()->isEmpty()) {
-            throw CartIsEmptyException::get();
+            throw CartIsEmptyException::emptyCart();
         }
 
         $countOfProducts = $user->getCartProducts()->count();

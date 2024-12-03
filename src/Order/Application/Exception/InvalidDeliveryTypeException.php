@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Order\Application\Exception;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
+use Exception;
 
-class InvalidDeliveryTypeException extends AbstractPublicRenderedException
+class InvalidDeliveryTypeException extends Exception
 {
     public static function bySlug(string $deliveryType): self
     {
-        return new self(
-            message: "Invalid delivery type [$deliveryType].",
-            renderedMessage: "Неверный тип доставки [$deliveryType].",
-        );
+        return new self("Неверный тип доставки [$deliveryType].");
     }
 }

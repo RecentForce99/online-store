@@ -28,7 +28,6 @@ final class Email
         $emailLength = strlen($email);
         if (self::VALIDATION_MIN_LENGTH > $emailLength) {
             throw LessThanMinLengthException::byEmail(
-                'email',
                 'почта',
                 $email,
                 $emailLength,
@@ -37,7 +36,6 @@ final class Email
 
         if (self::VALIDATION_MAX_LENGTH < $emailLength) {
             throw GreaterThanMaxLengthException::byEmail(
-                'email',
                 'почта',
                 $email,
                 $emailLength,
@@ -64,12 +62,5 @@ final class Email
     public function getEmail(): string
     {
         return $this->email;
-    }
-
-    public function setEmail(string $email): Email
-    {
-        $this->email = $email;
-
-        return $this;
     }
 }

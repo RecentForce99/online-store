@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Cart\Application\Exception;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
+use Exception;
 
-class ProductWasNotAddedToCartException extends AbstractPublicRenderedException
+class ProductWasNotAddedToCartException extends Exception
 {
     public static function byId(string $id): self
     {
-        return new self(
-            message: "Product [$id] was not added to the cart.",
-            renderedMessage: "Товар [$id] не был добавлен в корзину.",
-        );
+        return new self("Товар [$id] не был добавлен в корзину.");
     }
 }

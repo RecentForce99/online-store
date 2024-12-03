@@ -4,16 +4,26 @@ declare(strict_types=1);
 
 namespace App\Common\Infrastructure\Event\Listener;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
-use App\Common\Infrastructure\DI\Config\AppConfig;
+use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
+use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
+use App\Common\Domain\Exception\Validation\InvalidEmailException;
+use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
+use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
 use App\Common\Infrastructure\Dto\ExceptionDetailsDto;
 use App\Common\Infrastructure\Dto\ExceptionDetailsProductionDto;
+use App\Order\Application\Exception\CartIsEmptyException;
+use App\Order\Application\Exception\CartIsOverflowingException;
+use App\Order\Application\Exception\InvalidDeliveryTypeException;
+use App\Role\Application\Exception\RoleNotFoundException;
+use App\User\Application\Exception\EmailHasBeenTakenException;
+use App\User\Application\Exception\PhoneHasBeenTakenException;
+use App\User\Application\Exception\ProductAlreadyAddedToCartException;
+use App\User\Application\Exception\UserNotFoundException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Throwable;
 
@@ -26,9 +36,29 @@ final class FormatErrorHttpResponseEventListener
     private const PRODUCTION_ENVIRONMENT = 'prod';
 
     public function __construct(
-        private AppConfig $appConfig,
         private LoggerInterface $logger,
+        private string $appEnv,
     ) {
+    }
+
+    public function getHttpExceptionStatusCodeByExceptionInstance(Throwable $exception): int
+    {
+        return match ($exception::class) {
+            ProductWasNotAddedToCartException::class,
+            InvalidEmailException::class,
+            LessThanMinLengthException::class,
+            WrongLengthOfPhoneNumberException::class,
+            UserNotFoundException::class,
+            RoleNotFoundException::class,
+            PhoneHasBeenTakenException::class,
+            EmailHasBeenTakenException::class,
+            ProductAlreadyAddedToCartException::class,
+            CartIsEmptyException::class,
+            CartIsOverflowingException::class,
+            InvalidDeliveryTypeException::class,
+            GreaterThanMaxLengthException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
+            default => Response::HTTP_INTERNAL_SERVER_ERROR,
+        };
     }
 
     public function __invoke(ExceptionEvent $event): void
@@ -36,19 +66,10 @@ final class FormatErrorHttpResponseEventListener
         $exception = $event->getThrowable();
         $response = new JsonResponse();
 
-        if ($exception instanceof AbstractPublicRenderedException) {
-            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
-            $exception->render();
-        } elseif ($exception instanceof HttpExceptionInterface) {
-            $response->setStatusCode($exception->getStatusCode());
-            $response->headers->replace($exception->getHeaders());
-        } else {
-            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-            self::PRODUCTION_ENVIRONMENT !== $this->appConfig->env
-                ?: $response->setData('Ошибка сервера.');
-        }
-
+        $httpStatusCode = $this->getHttpExceptionStatusCodeByExceptionInstance($exception);
         $errorDetails = $this->getErrorDetails($exception);
+
+        self::PRODUCTION_ENVIRONMENT !== $this->appEnv ?: $response->setData('Ошибка сервера.');
 
         $this->logger->error(
             '[FormatErrorHttpResponseEventListener] an exception occurred while handling a request',
@@ -57,6 +78,7 @@ final class FormatErrorHttpResponseEventListener
             ],
         );
 
+        $response->setStatusCode($httpStatusCode);
         $response->setData($errorDetails);
 
         $event->setResponse($response);
@@ -64,7 +86,7 @@ final class FormatErrorHttpResponseEventListener
 
     private function getErrorDetails(Throwable $exception): ExceptionDetailsDto|ExceptionDetailsProductionDto
     {
-        if (self::PRODUCTION_ENVIRONMENT === $this->appConfig->env) {
+        if (self::PRODUCTION_ENVIRONMENT === $this->appEnv) {
             return new ExceptionDetailsProductionDto(
                 code: $exception->getCode(),
                 message: $exception->getMessage(),

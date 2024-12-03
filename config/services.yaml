@@ -29,12 +29,6 @@ services:
             - '../src/Product/Domain/Entity/'
             - '../src/Role/Domain/Entity/'
 
-    App\Common\Infrastructure\DI\Config\AppConfig:
-        arguments:
-            $env: '%app.env%'
-            $domain: '%app.domain%'
-            $scheme: '%app.scheme%'
-
     Symfony\Component\Uid\AbstractUid:
         class: Symfony\Component\Uid\UuidV4
 
@@ -59,3 +53,7 @@ services:
     App\Tests\Fixture\:
         resource: '../tests/Fixture/**/*Fixture.php'
         tags: [ 'doctrine.fixture.orm' ]
+
+    App\Common\Infrastructure\Event\Listener\FormatErrorHttpResponseEventListener:
+        arguments:
+            $appEnv: '%app.env%'

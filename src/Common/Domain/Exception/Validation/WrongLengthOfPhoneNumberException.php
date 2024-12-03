@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Common\Domain\Exception\Validation;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
+use Exception;
 
-class WrongLengthOfPhoneNumberException extends AbstractPublicRenderedException
+class WrongLengthOfPhoneNumberException extends Exception
 {
     public static function byPhone(int $phone, int $requiredLength): self
     {
-        return new self(
-            message: "The length of the phone number [$phone] must be [$requiredLength] characters.",
-            renderedMessage: "Длина номера телефона [$phone] должна быть [$requiredLength] символов.",
-        );
+        return new self("Длина номера телефона [$phone] должна быть [$requiredLength] символов.");
     }
 }

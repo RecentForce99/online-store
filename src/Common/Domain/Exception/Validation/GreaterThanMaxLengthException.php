@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Common\Domain\Exception\Validation;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
+use Exception;
 
-class GreaterThanMaxLengthException extends AbstractPublicRenderedException
+class GreaterThanMaxLengthException extends Exception
 {
-    public static function byEmail(string $fieldName, string $ruFieldName, string|int|float $value, int $maxLength): self
+    public static function byEmail(string $fieldName, string|int|float $value, int $maxLength): self
     {
-        return new self(
-            message: "The $fieldName [$value] is greater than [$maxLength] characters.",
-            renderedMessage: "Длина поля $ruFieldName [$value] больше [$maxLength] символов.",
-        );
+        return new self("Длина поля $fieldName [$value] больше [$maxLength] символов.");
     }
 }

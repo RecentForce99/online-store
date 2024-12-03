@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\User\Application\Exception;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
+use Exception;
 
-class EmailHasBeenTakenException extends AbstractPublicRenderedException
+class EmailHasBeenTakenException extends Exception
 {
     public static function byEmail(string $email): self
     {
-        return new self(
-            message: "The email [$email] has already been taken.",
-            renderedMessage: "Почта [$email] уже занята.",
-        );
+        return new self("Почта [$email] уже занята.");
     }
 }

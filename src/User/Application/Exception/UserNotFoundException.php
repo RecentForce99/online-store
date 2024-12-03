@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\User\Application\Exception;
 
-use App\Common\Domain\Exception\AbstractPublicRenderedException;
+use Exception;
 
-class UserNotFoundException extends AbstractPublicRenderedException
+class UserNotFoundException extends Exception
 {
     public static function byId(string $id): self
     {
-        return new self(
-            message: "User [$id] not found",
-            renderedMessage: "Пользователь [$id] не найден.",
-        );
+        return new self("Пользователь [$id] не найден.");
     }
 }

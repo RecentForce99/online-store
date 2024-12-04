@@ -69,6 +69,11 @@ class CartProduct extends AbstractBaseEntity
         return $this;
     }
 
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;

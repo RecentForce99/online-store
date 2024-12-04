@@ -33,14 +33,4 @@ final class CartProductRepository extends ServiceEntityRepository implements Car
             ->getQuery()
             ->getResult();
     }
-
-    public function add(CartProduct $cartProduct): void
-    {
-        $this->getEntityManager()->persist($cartProduct);
-    }
-
-    public function delete(CartProduct $cartProduct): void
-    {
-        $this->getEntityManager()->remove($cartProduct);
-    }
 }

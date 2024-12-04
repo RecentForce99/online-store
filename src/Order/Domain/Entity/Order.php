@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Order\Domain\Entity;
 
+use App\Cart\Domain\Entity\CartProduct;
 use App\Common\Domain\Entity\AbstractBaseEntity;
 use App\Common\Domain\Trait\HasDatetime;
 use App\Common\Domain\Trait\HasId;
 use App\User\Domain\Entity\User;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -44,7 +46,13 @@ class Order extends AbstractBaseEntity
     #[ORM\JoinColumn(name: 'delivery_type_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
     private DeliveryType $deliveryType;
 
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderProduct::class)]
+    #[ORM\OneToMany(
+        mappedBy: 'order',
+        targetEntity: OrderProduct::class,
+        cascade: [
+            'persist',
+        ],
+    )]
     private Collection $orderProducts;
 
     public static function create(
@@ -52,6 +60,7 @@ class Order extends AbstractBaseEntity
         ?int $phone,
         OrderStatus $status,
         DeliveryType $deliveryType,
+        Collection $orderProducts = new ArrayCollection(),
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
@@ -61,8 +70,23 @@ class Order extends AbstractBaseEntity
             ->setPhone($phone)
             ->setStatus($status)
             ->setDeliveryType($deliveryType)
+            ->setOrderProducts($orderProducts)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
+    }
+
+    public function addOrderProductsFromCartProducts(Collection $cartProducts): void
+    {
+        /* @var CartProduct $cartProduct */
+        foreach ($cartProducts as $cartProduct) {
+            $orderProduct = OrderProduct::create(
+                order: $this,
+                product: $cartProduct->getProduct(),
+                quantity: $cartProduct->getQuantity(),
+            );
+
+            $this->orderProducts->add($orderProduct);
+        }
     }
 
     public function setPhone(?int $phone): self
@@ -94,6 +118,13 @@ class Order extends AbstractBaseEntity
     public function setDeliveryType(DeliveryType $deliveryType): self
     {
         $this->deliveryType = $deliveryType;
+
+        return $this;
+    }
+
+    public function setOrderProducts(Collection $orderProducts): self
+    {
+        $this->orderProducts = $orderProducts;
 
         return $this;
     }

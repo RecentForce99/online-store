@@ -13,4 +13,6 @@ interface OrderStatusRepositoryInterface
     public function findBySlug(string $slug): ?OrderStatus;
 
     public function findAll(): array;
+
+    public function getPaymentRequiredOrderStatus(): OrderStatus;
 }

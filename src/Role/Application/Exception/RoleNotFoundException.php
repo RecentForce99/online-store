@@ -8,12 +8,8 @@ use Exception;
 
 class RoleNotFoundException extends Exception
 {
-    public static function bySlug(string $slug, ?string $name = null): self
+    public static function byName(string $name): self
     {
-        if (true === is_null($name)) {
-            $name = $slug;
-        }
-
         return new self("Роль [$name] не найдена.");
     }
 }

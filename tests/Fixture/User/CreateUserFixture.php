@@ -7,7 +7,6 @@ namespace App\Tests\Fixture\User;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
 use App\Common\Infrastructure\Repository\Flusher;
-use App\Role\Domain\Enum\RoleEnum;
 use App\Role\Domain\Repository\RoleRepositoryInterface;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
@@ -31,7 +30,7 @@ final class CreateUserFixture extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $userRole = $this->roleRepository->findBySlug(RoleEnum::ROLE_USER->name);
+        $userRole = $this->roleRepository->getUserRole();
         $user = User::create(
             Name::fromString('Less Grossman'),
             Email::fromString('less-grossman@test.com'),

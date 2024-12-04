@@ -14,7 +14,6 @@ use App\Cart\Application\UserCase\DeleteProductFromCart\DeleteProductFromCartCom
 use App\Common\Infrastructure\Exception\ConstraintViolationException;
 use App\Common\Infrastructure\Trait\FormatConstraintViolationTrait;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
-use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +29,6 @@ final class CartController extends AbstractController
     use FormatConstraintViolationTrait;
 
     /**
-     * @throws UserNotFoundException
      * @throws ProductAlreadyAddedToCartException
      * @throws ConstraintViolationException
      */

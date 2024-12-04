@@ -23,12 +23,9 @@ final class ChangeQuantityOfProductCommandHandler
         ChangeQuantityOfProductCommand $changeQuantityOfProductCommand,
         User $user,
     ): void {
-        $cartProduct = $user->findCartProductByProductId($productId);
-        if (null === $cartProduct) {
-            throw ProductWasNotAddedToCartException::byId($productId);
-        }
+        $product = $user->getProductByIdFromCart($productId);
 
-        $cartProduct->setQuantity($changeQuantityOfProductCommand->quantity);
+        $user->changeProductQuantityInCart($product, $changeQuantityOfProductCommand->quantity);
 
         $this->flusher->flush();
     }

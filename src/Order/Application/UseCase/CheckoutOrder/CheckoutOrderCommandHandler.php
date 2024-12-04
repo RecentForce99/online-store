@@ -11,18 +11,14 @@ use App\Order\Application\Exception\InvalidDeliveryTypeException;
 use App\Order\Domain\Entity\DeliveryType;
 use App\Order\Domain\Entity\Order;
 use App\Order\Domain\Repository\DeliveryTypeRepositoryInterface;
-use App\Order\Domain\Repository\OrderRepositoryInterface;
 use App\Order\Domain\Repository\OrderStatusRepositoryInterface;
 use App\User\Domain\Entity\User;
 
 final class CheckoutOrderCommandHandler
 {
-    private const string PAYMENT_REQUIRED_ORDER_STATUS = 'payment_required';
-
     public function __construct(
         private readonly DeliveryTypeRepositoryInterface $deliveryTypeRepository,
         private readonly OrderStatusRepositoryInterface $orderStatusRepository,
-        private readonly OrderRepositoryInterface $orderRepository,
         private readonly Flusher $flusher,
     ) {
     }
@@ -36,21 +32,17 @@ final class CheckoutOrderCommandHandler
         User $user,
         CheckoutOrderCommand $checkoutOrderCommand,
     ): void {
-        $user->getCartProducts()->initialize();
+        $currentDeliveryType = $this->deliveryTypeRepository->getBySlug($checkoutOrderCommand->deliveryType);
 
-        $deliveryTypes = $this->deliveryTypeRepository->findAll();
-        $currentDeliveryType = $this->getCurrentDeliveryType(
-            $deliveryTypes,
-            $checkoutOrderCommand,
-        );
-
-        $this->validate(
+        $this->assertUserCantCheckoutOrder(
             $user,
             $checkoutOrderCommand,
             $currentDeliveryType,
         );
 
-        $paymentRequiredOrderStatus = $this->orderStatusRepository->findBySlug(self::PAYMENT_REQUIRED_ORDER_STATUS);
+        $paymentRequiredOrderStatus = $this->orderStatusRepository->getPaymentRequiredOrderStatus();
+
+        // TODO Add notification dispatching
 
         $order = Order::create(
             user: $user,
@@ -59,10 +51,7 @@ final class CheckoutOrderCommandHandler
             deliveryType: $currentDeliveryType,
         );
 
-        // TODO Add notification dispatching
-
-        $this->orderRepository->add($order);
-        $user->clearCart();
+        $user->checkoutOrder($order);
         $this->flusher->flush();
     }
 
@@ -71,7 +60,7 @@ final class CheckoutOrderCommandHandler
      * @throws CartIsOverflowingException
      * @throws InvalidDeliveryTypeException
      */
-    private function validate(
+    private function assertUserCantCheckoutOrder(
         User $user,
         CheckoutOrderCommand $checkoutOrderCommand,
         ?DeliveryType $currentDeliveryType,
@@ -88,18 +77,5 @@ final class CheckoutOrderCommandHandler
         if (null === $currentDeliveryType) {
             throw InvalidDeliveryTypeException::bySlug($checkoutOrderCommand->deliveryType);
         }
-    }
-
-    private function getCurrentDeliveryType(
-        array $deliveryTypes,
-        CheckoutOrderCommand $checkoutOrderCommand,
-    ): ?DeliveryType {
-        $deliveryTypes = array_filter($deliveryTypes, function (DeliveryType $deliveryType) use ($checkoutOrderCommand) {
-            return $deliveryType->getSlug() === $checkoutOrderCommand->deliveryType;
-        });
-
-        $deliveryType = current($deliveryTypes);
-
-        return $deliveryType instanceof DeliveryType ? $deliveryType : null;
     }
 }

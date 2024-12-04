@@ -11,4 +11,6 @@ interface RoleRepositoryInterface
     public function add(Role $role): void;
 
     public function findBySlug(string $slug): ?Role;
+
+    public function getUserRole(): Role;
 }

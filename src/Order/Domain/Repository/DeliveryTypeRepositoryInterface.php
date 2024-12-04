@@ -11,4 +11,6 @@ interface DeliveryTypeRepositoryInterface
     public function add(DeliveryType $deliveryType): void;
 
     public function findAll(): array;
+
+    public function getBySlug(string $slug): DeliveryType;
 }

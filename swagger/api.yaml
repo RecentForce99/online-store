@@ -12,6 +12,61 @@ servers:
 tags:
   - name: User
 
+paths:
+    /user/add:
+      post:
+        tags: [ User ]
+        summary: Add a new user
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 2
+                    maxLength: 100
+                    example: Иван Иванович
+                    nullable: false
+                  email:
+                    type: string
+                    minLength: 3
+                    maxLength: 255
+                    example: test@mail.ru
+                    nullable: false
+                  phone:
+                    type: integer
+                    size: 10
+                    example: 8005553535
+                    nullable: false
+        responses:
+          200:
+            description: Has a user been added
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: '#/components/schemas/SuccessfulResponseBodyScheme'
+                    - type: object
+                      properties:
+                        data:
+                          items:
+
+          400:
+            description: A request validation or business logic error has occurred
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/FailedResponseBodyScheme'
+          500:
+            description: An unexpected server error has occurred
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/FailedResponseBodyScheme'
+
+
 components:
   schemas:
     SuccessfulResponseBodyScheme:

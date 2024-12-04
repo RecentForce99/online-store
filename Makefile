@@ -1,44 +1,43 @@
-###> Composer ###
-init: # Сделать полную инициализацию приложения
-	make dc_build;
-	make dc_up;
+init: dc.build dc.up # Сделать полную инициализацию приложения
+	php bin/console doctrine:migrations:migrate;
+	php bin/console doctrine:database:create --env=test
+	php bin/console lexik:jwt:generate-keypair
+
+check: fix\:code-style test
 
 ###< Composer ###
+test:
+	docker exec online-store_php-fpm composer test
+fix\:code-style:
+	docker exec online-store_php-fpm composer fix:code-style
+###</ Composer ###
 
-#test: # Выполнить тесты приложения
-#	@echo test
-
-###> Docker compose v2 (screw v1) ###
-dc_ps:
+###< Docker compose v2 (screw v1) ###
+dc.ps:
 	docker compose -f ./docker/docker-compose.yml ps
-dc_logs:
+dc.logs:
 	docker compose -f ./docker/docker-compose.yml logs -f
-dc_link_env:
+dc.link_env:
 	ln -s ./../.env ./docker/.env
 
-dc_reload:
-	make dc_down
-	make dc_up
+dc.reload: dc.down dc.up
 
-dc_restart:
-	make dc_down
-	make dc_build
-	make dc_up
+dc.restart: dc.down dc.build dc.up
 
-dc_build:
+dc.build:
 	docker compose -f ./docker/docker-compose.yml build
 
-dc_start:
+dc.start:
 	docker compose -f ./docker/docker-compose.yml start
-dc_stop:
+dc.stop:
 	docker compose -f ./docker/docker-compose.yml stop
 
-dc_up:
+dc.up:
 	docker compose -f ./docker/docker-compose.yml up -d --remove-orphans
-dc_down:
+dc.down:
 	docker compose -f ./docker/docker-compose.yml down --remove-orphans
 
-dc_drop:
+dc.drop:
 	@echo "WARNING: This command will remove all containers, volumes, and images! Proceed? (y/n)"
 	@read answer && [ $$answer = y ] && docker compose -f ./docker/docker-compose.yml down -v --rmi=all --remove-orphans || echo "Aborted."
-###< Docker compose ###
+###</ Docker compose ###

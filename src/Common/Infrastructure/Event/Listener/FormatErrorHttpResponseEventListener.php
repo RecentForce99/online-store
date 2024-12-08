@@ -15,6 +15,7 @@ use App\Common\Infrastructure\Exception\ConstraintViolationException;
 use App\Order\Application\Exception\CartIsEmptyException;
 use App\Order\Application\Exception\CartIsOverflowingException;
 use App\Order\Application\Exception\InvalidDeliveryTypeException;
+use App\Order\Infrastructure\Exception\DeliveryTypeNotFoundException;
 use App\Role\Application\Exception\RoleNotFoundException;
 use App\User\Application\Exception\EmailHasBeenTakenException;
 use App\User\Application\Exception\PhoneHasBeenTakenException;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
 /**
@@ -50,6 +52,7 @@ final class FormatErrorHttpResponseEventListener
         }
 
         return match ($exception::class) {
+            DeliveryTypeNotFoundException::class,
             ProductWasNotAddedToCartException::class => Response::HTTP_NOT_FOUND,
             InvalidEmailException::class,
             LessThanMinLengthException::class,
@@ -70,8 +73,12 @@ final class FormatErrorHttpResponseEventListener
 
     public function __invoke(ExceptionEvent $event): void
     {
-        $exception = $event->getThrowable();
         $response = new JsonResponse();
+
+        $exception = $event->getThrowable();
+        if ($exception instanceof HandlerFailedException) {
+            $exception = $exception->getPrevious();
+        }
 
         $httpStatusCode = $this->getHttpExceptionStatusCodeByExceptionInstance($exception);
         $errorDetails = $this->getErrorDetails($exception);

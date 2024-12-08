@@ -6,23 +6,28 @@ namespace App\Cart\Application\UserCase\DeleteProductFromCart;
 
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Common\Infrastructure\Repository\Flusher;
-use App\User\Domain\Entity\User;
+use App\User\Application\Exception\UserNotFoundException;
+use App\User\Domain\Repository\UserRepositoryInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class DeleteProductFromCartCommandHandler
+#[AsMessageHandler]
+final readonly class DeleteProductFromCartCommandHandler
 {
     public function __construct(
-        private readonly Flusher $flusher,
+        private UserRepositoryInterface $userRepository,
+        private Flusher $flusher,
     ) {
     }
 
     /**
      * @throws ProductWasNotAddedToCartException
+     * @throws UserNotFoundException
      */
-    public function __invoke(
-        string $productId,
-        User $user,
-    ): void {
-        $product = $user->getProductByIdFromCart($productId);
+    public function __invoke(DeleteProductFromCartCommand $deleteProductFromCartCommand): void
+    {
+        $user = $this->userRepository->getById($deleteProductFromCartCommand->userId);
+
+        $product = $user->getProductByIdFromCart($deleteProductFromCartCommand->productId);
         $user->removeProductFromCart($product);
 
         $this->flusher->flush();

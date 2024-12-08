@@ -7,11 +7,15 @@ namespace App\Cart\Application\UserCase\AddProduct;
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
-use App\User\Domain\Entity\User;
+use App\User\Application\Exception\UserNotFoundException;
+use App\User\Domain\Repository\UserRepositoryInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 final class AddProductToCartCommandHandler
 {
     public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
         private readonly ProductRepositoryInterface $productRepository,
         private readonly Flusher $flusher,
     ) {
@@ -19,10 +23,12 @@ final class AddProductToCartCommandHandler
 
     /**
      * @throws ProductAlreadyAddedToCartException
+     * @throws UserNotFoundException
      */
-    public function __invoke(User $user, string $productId): void
+    public function __invoke(AddProductToCartCommand $addProductToCartCommand): void
     {
-        $product = $this->productRepository->getById($productId);
+        $user = $this->userRepository->getById($addProductToCartCommand->userId);
+        $product = $this->productRepository->getById($addProductToCartCommand->productId);
 
         $user->addProductToCart($product);
         $this->flusher->flush();

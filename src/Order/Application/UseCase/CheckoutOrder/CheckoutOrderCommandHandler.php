@@ -12,11 +12,16 @@ use App\Order\Domain\Entity\DeliveryType;
 use App\Order\Domain\Entity\Order;
 use App\Order\Domain\Repository\DeliveryTypeRepositoryInterface;
 use App\Order\Domain\Repository\OrderStatusRepositoryInterface;
+use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
+use App\User\Domain\Repository\UserRepositoryInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 final class CheckoutOrderCommandHandler
 {
     public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
         private readonly DeliveryTypeRepositoryInterface $deliveryTypeRepository,
         private readonly OrderStatusRepositoryInterface $orderStatusRepository,
         private readonly Flusher $flusher,
@@ -27,11 +32,11 @@ final class CheckoutOrderCommandHandler
      * @throws CartIsEmptyException
      * @throws CartIsOverflowingException
      * @throws InvalidDeliveryTypeException
+     * @throws UserNotFoundException
      */
-    public function __invoke(
-        User $user,
-        CheckoutOrderCommand $checkoutOrderCommand,
-    ): void {
+    public function __invoke(CheckoutOrderCommand $checkoutOrderCommand): void
+    {
+        $user = $this->userRepository->getById($checkoutOrderCommand->userId);
         $currentDeliveryType = $this->deliveryTypeRepository->getBySlug($checkoutOrderCommand->deliveryType);
 
         $this->assertUserCantCheckoutOrder(

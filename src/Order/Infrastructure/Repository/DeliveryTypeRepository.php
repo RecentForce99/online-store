@@ -35,7 +35,7 @@ final class DeliveryTypeRepository extends ServiceEntityRepository implements De
         /* @var DeliveryType|null $deliveryType */
         $deliveryType = $this->findOneBy(['slug' => $slug]);
         if (null === $deliveryType) {
-            throw DeliveryTypeNotFoundException::byName($deliveryType->getName());
+            throw DeliveryTypeNotFoundException::byName($slug);
         }
 
         return $deliveryType;

@@ -18,4 +18,5 @@ final class CheckoutOrderCommand
         message: 'Доставка должна быть обязательна указана.',
     )]
     public string $deliveryType;
+    public string $userId; // This param is set from code
 }

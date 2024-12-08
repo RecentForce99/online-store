@@ -76,6 +76,12 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     )]
     private Collection $cartProducts;
 
+    protected function __construct()
+    {
+        $this->cartProducts = new ArrayCollection();
+        $this->orders = new ArrayCollection();
+    }
+
     public static function create(
         Name $name,
         Email $email,
@@ -106,7 +112,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     /**
      * @throws ProductAlreadyAddedToCartException
      */
-    public function addProductToCart(Product $product): void
+    public function addProductToCart(Product $product, int $quantity = 1): void
     {
         $hasProductAlreadyBeenAddedToCart = $this->hasProductInCart($product);
         if (true === $hasProductAlreadyBeenAddedToCart) {
@@ -116,6 +122,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         $cartProduct = CartProduct::create(
             user: $this,
             product: $product,
+            quantity: $quantity
         );
 
         $this->cartProducts->add($cartProduct);

@@ -2,26 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Web;
+namespace App\Tests\Api;
 
-use App\Common\Domain\Repository\FlusherInterface;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-abstract class AbstractWebBaseTestCase extends WebTestCase
+abstract class AbstractApiBaseTestCase extends WebTestCase
 {
-    public const string CONTENT_TYPE = 'application/json';
     protected KernelBrowser $client;
     protected ?EntityManagerInterface $entityManager;
     protected UserPasswordHasherInterface $passwordHasher;
     protected SerializerInterface $serializer;
-    protected FlusherInterface $flusher;
+    protected DecoderInterface $decoder;
+    protected RouterInterface $router;
 
     protected function setUp(): void
     {
@@ -34,13 +33,7 @@ abstract class AbstractWebBaseTestCase extends WebTestCase
             $schemaTool->dropSchema($metadata);
             $schemaTool->createSchema($metadata);
         }
-
-        $ormPurger = new ORMPurger();
-        $ormExecutor = new ORMExecutor($this->entityManager, $ormPurger);
-        $ormExecutor->execute($this->getFixtures());
     }
-
-    abstract protected function getFixtures(): array;
 
     protected function injectDependencies(): void
     {
@@ -48,7 +41,8 @@ abstract class AbstractWebBaseTestCase extends WebTestCase
         $this->entityManager = $this->client->getContainer()->get('doctrine')->getManager();
         $this->passwordHasher = $this->client->getContainer()->get(UserPasswordHasherInterface::class);
         $this->serializer = $this->client->getContainer()->get(SerializerInterface::class);
-        $this->flusher = $this->client->getContainer()->get(FlusherInterface::class);
+        $this->decoder = $this->client->getContainer()->get(DecoderInterface::class);
+        $this->router = $this->client->getContainer()->get(RouterInterface::class);
     }
 
     protected function tearDown(): void
@@ -56,5 +50,32 @@ abstract class AbstractWebBaseTestCase extends WebTestCase
         parent::tearDown();
         $this->entityManager->clear();
         $this->entityManager->close();
+    }
+
+    protected function sendRequestByControllerName(
+        string $controllerName,
+        array $body = [],
+        array $routeParams = [],
+        array $getParams = [],
+    ): void {
+        $controller = $this->router->getRouteCollection()->get($controllerName);
+
+        $path = $controller->getPath();
+        $uri = static function () use ($path, $routeParams): string {
+            foreach ($routeParams as $key => $value) {
+                $path = str_replace('{' . $key . '}', $value, $path);
+            }
+
+            return $path;
+        };
+
+        $this->client->request(
+            current($controller->getMethods()),
+            $uri(),
+            $getParams,
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            $this->serializer->serialize($body, 'json'),
+        );
     }
 }

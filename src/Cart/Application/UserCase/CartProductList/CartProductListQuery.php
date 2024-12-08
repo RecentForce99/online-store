@@ -15,12 +15,5 @@ final class CartProductListQuery
     #[Assert\Type('numeric')]
     #[Assert\Range(min: 0)]
     public int $offset = 0;
-
-    public function __construct(
-        ?int $limit = null,
-        ?int $offset = null,
-    ) {
-        null === $limit ?: $this->limit = $limit;
-        null === $offset ?: $this->offset = $offset;
-    }
+    public string $userId; // This param is set from code
 }

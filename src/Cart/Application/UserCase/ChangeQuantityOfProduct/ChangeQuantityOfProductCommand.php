@@ -20,6 +20,8 @@ final class ChangeQuantityOfProductCommand
         message: 'Количество товара должно быть целым числом.',
     )]
     public int $quantity;
+    public string $userId; // This param is set from code
+    public string $productId; // This param is set from code
 
     public function __construct(
         int $quantity,

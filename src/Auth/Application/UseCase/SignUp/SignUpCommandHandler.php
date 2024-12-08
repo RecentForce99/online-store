@@ -20,9 +20,11 @@ use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\ValueObject\Name;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Uid\AbstractUid;
 
+#[AsMessageHandler]
 final class SignUpCommandHandler
 {
     public function __construct(

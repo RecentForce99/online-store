@@ -4,37 +4,33 @@ declare(strict_types=1);
 
 namespace App\Order\Infrastructure\Controller;
 
-use App\Order\Application\Exception\CartIsEmptyException;
-use App\Order\Application\Exception\CartIsOverflowingException;
-use App\Order\Application\Exception\InvalidDeliveryTypeException;
 use App\Order\Application\UseCase\CheckoutOrder\CheckoutOrderCommand;
-use App\Order\Application\UseCase\CheckoutOrder\CheckoutOrderCommandHandler;
 use App\User\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/order')]
 final class OrderController extends AbstractController
 {
     /**
-     * @throws CartIsEmptyException
-     * @throws CartIsOverflowingException
-     * @throws InvalidDeliveryTypeException
+     * @throws ExceptionInterface
      */
-    #[Route(methods: ['POST'])]
+    #[Route(methods: ['POST'], name: 'order.checkout')]
     public function checkoutOrder(
         #[MapRequestPayload] CheckoutOrderCommand $checkoutOrderCommand,
-        CheckoutOrderCommandHandler $checkoutOrderCommandHandler,
+        MessageBusInterface $messageBus,
     ): JsonResponse {
         /* @var User $user */
         $user = $this->getUser();
-        $checkoutOrderCommandHandler(
-            $user,
-            $checkoutOrderCommand,
-        );
+        $checkoutOrderCommand->userId = $user->getId()->toString();
 
-        return new JsonResponse();
+        $messageBus->dispatch($checkoutOrderCommand);
+
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 }

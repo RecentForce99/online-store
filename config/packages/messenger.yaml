@@ -2,7 +2,7 @@ framework:
     messenger:
         transports:
             product_changes:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: '%env(KAFKA_MESSENGER_TRANSPORT_DSN)%'
                 serializer: messenger.transport.symfony_serializer
                 options:
                     flushTimeout: 10000
@@ -16,7 +16,7 @@ framework:
                         auto.offset.reset: 'earliest'
 
             notifications:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: '%env(KAFKA_MESSENGER_TRANSPORT_DSN)%'
                 serializer: messenger.transport.symfony_serializer
                 options:
                     flushTimeout: 10000

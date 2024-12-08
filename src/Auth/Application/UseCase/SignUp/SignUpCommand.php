@@ -6,21 +6,21 @@ namespace App\Auth\Application\UseCase\SignUp;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class SignUpCommand
+final readonly class SignUpCommand
 {
     #[Assert\NotBlank]
     #[Assert\Type(
         type: 'string',
         message: 'Некорректное имя',
     )]
-    public readonly string $name;
+    public string $name;
 
     #[Assert\NotBlank]
     #[Assert\Type(
         type: 'string',
         message: 'Некорректный E-mail',
     )]
-    public readonly string $email;
+    public string $email;
 
     #[Assert\NotBlank]
     #[Assert\Type(
@@ -28,12 +28,12 @@ final class SignUpCommand
         message: 'Номер телефона должен быть числом',
     )]
     #[Assert\GreaterThan(0)]
-    public readonly int $phone;
+    public int $phone;
 
     #[Assert\Uuid(
         message: 'Промо id должен соответствовать uuid v4',
     )]
-    public readonly ?string $promoId;
+    public ?string $promoId;
 
     #[Assert\Type(
         type: 'string',
@@ -42,7 +42,7 @@ final class SignUpCommand
     #[Assert\PasswordStrength(
         message: 'Слишком простой пароль',
     )]
-    public readonly string $password;
+    public string $password;
 
     public function __construct(
         string $name,

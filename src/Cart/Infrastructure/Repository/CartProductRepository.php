@@ -30,6 +30,8 @@ final class CartProductRepository extends ServiceEntityRepository implements Car
             ->innerJoin('cart.product', 'product')
             ->where('cart.user = :user')
             ->setParameter('user', $user)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->getQuery()
             ->getResult();
     }

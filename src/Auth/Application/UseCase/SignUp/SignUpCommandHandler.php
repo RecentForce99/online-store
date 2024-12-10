@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Auth\Application\UseCase\SignUp;
 
-use App\Auth\Application\Event\AfterUserSignUpEvent;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\InvalidEmailException;
 use App\Common\Domain\Exception\Validation\LessThanMinLengthException;
@@ -19,7 +18,6 @@ use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\ValueObject\Name;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Uid\AbstractUid;
@@ -33,7 +31,6 @@ final class SignUpCommandHandler
         private readonly AbstractUid $uuid,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly FlusherInterface $flusher,
-        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -64,9 +61,6 @@ final class SignUpCommandHandler
 
         $this->userRepository->add($user);
         $this->flusher->flush();
-
-        $afterUserSignUpEvent = new AfterUserSignUpEvent($signUpCommand);
-        $this->eventDispatcher->dispatch($afterUserSignUpEvent);
     }
 
     /**

@@ -38,4 +38,9 @@ final class RuPhoneNumber
     {
         return new RuPhoneNumber($ruPhoneNumber);
     }
+
+    public function getPhone(): int
+    {
+        return $this->phone;
+    }
 }

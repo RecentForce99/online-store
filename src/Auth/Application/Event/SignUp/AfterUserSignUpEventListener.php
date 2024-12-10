@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Application\Event\Listener;
+namespace App\Auth\Application\Event\SignUp;
 
-use App\Auth\Application\Event\AfterUserSignUpEvent;
 use App\Common\Domain\MessageBus\Notification;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -25,13 +24,11 @@ final class AfterUserSignUpEventListener
      */
     public function __invoke(AfterUserSignUpEvent $event): void
     {
-        $createUserCommand = $event->signUpCommand;
-
         $notification = new Notification(
             type: self::NOTIFICATION_TYPE,
-            userEmail: $createUserCommand->email,
-            userPhone: $createUserCommand->phone,
-            promoId: $createUserCommand->promoId,
+            userEmail: $event->email,
+            userPhone: $event->phone,
+            promoId: $event->promoId,
         );
 
         $this->messageBus->dispatch($notification);

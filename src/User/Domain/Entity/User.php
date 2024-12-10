@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Entity;
 
+use App\Auth\Application\Event\SignUp\AfterUserSignUpEvent;
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Cart\Domain\Entity\CartProduct;
 use App\Common\Domain\Entity\AbstractBaseEntity;
@@ -91,7 +92,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
-        return (new self())
+        $user = (new self())
             ->setId(new UuidV4())
             ->setName($name)
             ->setEmail($email)
@@ -100,6 +101,14 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
             ->setRoles($roles)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
+
+        $user->recordEvent(new AfterUserSignUpEvent(
+            email: $email->getEmail(),
+            phone: $phone->getPhone(),
+            promoId: $promoId?->toString(),
+        ));
+
+        return $user;
     }
 
     public function checkoutOrder(Order $order): void

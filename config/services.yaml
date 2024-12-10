@@ -50,6 +50,9 @@ services:
     App\Common\Domain\Repository\FlusherInterface:
         class: App\Common\Infrastructure\Repository\Flusher
 
-    App\Common\Infrastructure\Event\Listener\FormatErrorHttpResponseEventListener:
+    App\Common\Infrastructure\Event\Http\FormatErrorHttpResponseEventListener:
         arguments:
             $appEnv: '%app.env%'
+
+    App\Common\Application\Event\DomainEventBusInterface:
+        class: App\Common\Infrastructure\Event\DomainEventBus

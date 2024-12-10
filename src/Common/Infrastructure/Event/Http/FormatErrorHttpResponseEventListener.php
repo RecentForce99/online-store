@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Common\Infrastructure\Event\Listener;
+namespace App\Common\Infrastructure\Event\Http;
 
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;

@@ -36,17 +36,13 @@ final readonly class SignUpCommand
     public ?string $promoId;
 
     #[Assert\Type(
-        type: 'integer',
-        message: 'Кладр id должен быть числом',
+        type: 'string',
+        message: 'Кладр id должен быть строкой',
     )]
     #[Assert\NotBlank(
         message: 'Кладр id обязателен к заполнению',
     )]
-    #[Assert\Range(
-        min: 1,
-        max: 100,
-    )]
-    public int $kladrId;
+    public string $kladrId;
 
     #[Assert\Type(
         type: 'string',
@@ -72,7 +68,7 @@ final readonly class SignUpCommand
         int $phone,
         ?string $promoId,
         string $password,
-        int $kladrId,
+        string $kladrId,
         string $address,
     ) {
         $this->name = $name;

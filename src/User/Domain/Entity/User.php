@@ -13,9 +13,9 @@ use App\Common\Domain\Trait\HasId;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
 use App\Order\Domain\Entity\Event\Checkout\AfterOrderCheckoutEvent;
+use App\Order\Domain\Entity\Event\Checkout\DeliveryAddress;
 use App\Order\Domain\Entity\Order;
 use App\Order\Domain\Entity\OrderProduct;
-use App\Order\Domain\MessageBus\Notification\Checkout\DeliveryAddress;
 use App\Product\Domain\Entity\Product;
 use App\Role\Domain\Entity\Role;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
@@ -139,6 +139,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
                 orderNum: $order->getId()->toString(),
                 orderItems: $order->getOrderProducts()->map(function (OrderProduct $orderProduct): array {
                     $product = $orderProduct->getProduct();
+
                     return [
                         'name' => $product->getName(),
                         'cost' => $product->getCost(),
@@ -280,7 +281,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
 
     public function getRoles(): array
     {
-        return $this->roles->map(fn(Role $role) => $role->getSlug())->toArray();
+        return $this->roles->map(fn (Role $role) => $role->getSlug())->toArray();
     }
 
     public function setRoles(Collection $roles): self
@@ -320,6 +321,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function setDelivery(Delivery $delivery): self
     {
         $this->delivery = $delivery;
+
         return $this;
     }
 

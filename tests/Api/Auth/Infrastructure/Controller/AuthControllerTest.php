@@ -31,6 +31,8 @@ final class AuthControllerTest extends AbstractApiBaseTestCase
             'name' => 'Less Grossman',
             'email' => ByteString::fromRandom(50)->toString() . '@test.com',
             'phone' => random_int(1000000000, 9999999999),
+            'kladrId' => (string)random_int(1000000000, 9999999999999),
+            'address' => 'New York',
             'password' => 'LKdkf291DSxz!?S',
         ]);
 

@@ -20,20 +20,15 @@ final class CheckoutOrderCommand
     public string $deliveryType;
 
     #[Assert\Type(
-        type: 'integer',
-        message: 'Кладр id должен быть числом',
+        type: 'string',
+        message: 'Кладр id должен быть строкой',
     )]
-    #[Assert\Range(
-        min: 1,
-        max: 100,
-    )]
-    public int $kladrId;
+    public string $kladrId;
 
     #[Assert\Type(
         type: 'string',
         message: 'Адрес должен быть строкой',
     )]
     public string $address;
-
     public string $userId; // This param is set from code
 }

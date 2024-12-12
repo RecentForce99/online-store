@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Order\Domain\Entity\Event\Checkout;
 
 use App\Common\Domain\Event\DomainEventInterface;
-use App\Order\Domain\MessageBus\Notification\Checkout\DeliveryAddress;
 use Doctrine\Common\Collections\Collection;
 
 final readonly class AfterOrderCheckoutEvent implements DomainEventInterface

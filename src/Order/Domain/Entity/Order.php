@@ -144,6 +144,7 @@ class Order extends AbstractBaseEntity
     public function setDelivery(Delivery $delivery): self
     {
         $this->delivery = $delivery;
+
         return $this;
     }
 

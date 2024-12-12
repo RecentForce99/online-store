@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Order\Domain\MessageBus\Notification\Checkout;
+namespace App\Order\Domain\Entity\Event\Checkout;
 
 final readonly class DeliveryAddress
 {

@@ -7,7 +7,6 @@ namespace App\Common\Infrastructure\Repository;
 use App\Common\Application\Event\DomainEventBusInterface;
 use App\Common\Domain\Entity\AbstractBaseEntity;
 use App\Common\Domain\Repository\FlusherInterface;
-use App\Order\Domain\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class Flusher implements FlusherInterface

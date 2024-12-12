@@ -25,7 +25,7 @@ final class Name
     {
         $nameLength = strlen($name);
         if (self::VALIDATION_MIN_LENGTH > $nameLength) {
-            throw LessThanMinLengthException::byEmail(
+            throw LessThanMinLengthException::byField(
                 'имя',
                 $name,
                 self::VALIDATION_MIN_LENGTH,
@@ -33,7 +33,7 @@ final class Name
         }
 
         if (self::VALIDATION_MAX_LENGTH < $nameLength) {
-            throw GreaterThanMaxLengthException::byEmail(
+            throw GreaterThanMaxLengthException::byField(
                 'имя',
                 $name,
                 self::VALIDATION_MAX_LENGTH,

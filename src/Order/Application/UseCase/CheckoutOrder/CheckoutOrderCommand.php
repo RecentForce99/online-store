@@ -18,5 +18,22 @@ final class CheckoutOrderCommand
         message: 'Доставка должна быть обязательна указана.',
     )]
     public string $deliveryType;
+
+    #[Assert\Type(
+        type: 'integer',
+        message: 'Кладр id должен быть числом',
+    )]
+    #[Assert\Range(
+        min: 1,
+        max: 100,
+    )]
+    public int $kladrId;
+
+    #[Assert\Type(
+        type: 'string',
+        message: 'Адрес должен быть строкой',
+    )]
+    public string $address;
+
     public string $userId; // This param is set from code
 }

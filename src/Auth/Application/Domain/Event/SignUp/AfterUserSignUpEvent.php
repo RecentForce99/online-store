@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Application\Event\SignUp;
+namespace App\Auth\Application\Domain\Event\SignUp;
 
 use App\Common\Domain\Event\DomainEventInterface;
 

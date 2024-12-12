@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Entity;
 
-use App\Auth\Application\Event\SignUp\AfterUserSignUpEvent;
+use App\Auth\Application\Domain\Event\SignUp\AfterUserSignUpEvent;
 use App\Cart\Application\Exception\ProductWasNotAddedToCartException;
 use App\Cart\Domain\Entity\CartProduct;
 use App\Common\Domain\Entity\AbstractBaseEntity;
@@ -12,10 +12,14 @@ use App\Common\Domain\Trait\HasDatetime;
 use App\Common\Domain\Trait\HasId;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
+use App\Order\Domain\Entity\Event\Checkout\AfterOrderCheckoutEvent;
 use App\Order\Domain\Entity\Order;
+use App\Order\Domain\Entity\OrderProduct;
+use App\Order\Domain\MessageBus\Notification\Checkout\DeliveryAddress;
 use App\Product\Domain\Entity\Product;
 use App\Role\Domain\Entity\Role;
 use App\User\Application\Exception\ProductAlreadyAddedToCartException;
+use App\User\Domain\ValueObject\Delivery;
 use App\User\Domain\ValueObject\Name;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,6 +45,9 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
 
     #[ORM\Embedded(class: RuPhoneNumber::class, columnPrefix: false)]
     private RuPhoneNumber $phone;
+
+    #[ORM\Embedded(class: Delivery::class)]
+    private Delivery $delivery;
 
     #[ORM\Column(type: 'uuid', nullable: true)]
     private ?UuidV4 $promoId;
@@ -88,6 +95,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         Email $email,
         RuPhoneNumber $phone,
         ?UuidV4 $promoId,
+        Delivery $delivery,
         Collection $roles = new ArrayCollection(),
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
@@ -98,15 +106,18 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
             ->setEmail($email)
             ->setPhone($phone)
             ->setPromoId($promoId)
+            ->setDelivery($delivery)
             ->setRoles($roles)
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt);
 
-        $user->recordEvent(new AfterUserSignUpEvent(
-            email: $email->getEmail(),
-            phone: $phone->getPhone(),
-            promoId: $promoId?->toString(),
-        ));
+        $user->recordEvent(
+            new AfterUserSignUpEvent(
+                email: $email->getEmail(),
+                phone: $phone->getPhone(),
+                promoId: $promoId?->toString(),
+            )
+        );
 
         return $user;
     }
@@ -116,6 +127,31 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         $this->orders->add($order);
         $order->addOrderProductsFromCartProducts($this->cartProducts);
         $this->cartProducts->clear();
+
+        $user = $order->getUser();
+
+        // Pay attention that this event invoked by user
+        $user->recordEvent(
+            new AfterOrderCheckoutEvent(
+                userPhone: empty($order->getPhone()) ? $user->getPhone()->getPhone() : $order->getPhone(),
+                userEmail: $user->getEmail()->getEmail(),
+                notificationType: $order->getStatus()->getSlug(),
+                orderNum: $order->getId()->toString(),
+                orderItems: $order->getOrderProducts()->map(function (OrderProduct $orderProduct): array {
+                    $product = $orderProduct->getProduct();
+                    return [
+                        'name' => $product->getName(),
+                        'cost' => $product->getCost(),
+                        'additionalInfo' => $product->getDescription(),
+                    ];
+                }),
+                deliveryType: $order->getDeliveryType()->getSlug(),
+                deliveryAddress: new DeliveryAddress(
+                    kladrId: $order->getDelivery()->getKladrId(),
+                    fullAddress: $order->getDelivery()->getAddress(),
+                ),
+            )
+        );
     }
 
     /**
@@ -244,7 +280,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
 
     public function getRoles(): array
     {
-        return $this->roles->map(fn (Role $role) => $role->getSlug())->toArray();
+        return $this->roles->map(fn(Role $role) => $role->getSlug())->toArray();
     }
 
     public function setRoles(Collection $roles): self
@@ -264,5 +300,31 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function getCartProducts(): Collection
     {
         return $this->cartProducts;
+    }
+
+    public function getPhone(): RuPhoneNumber
+    {
+        return $this->phone;
+    }
+
+    public function getPromoId(): ?UuidV4
+    {
+        return $this->promoId;
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
+
+    public function setDelivery(Delivery $delivery): self
+    {
+        $this->delivery = $delivery;
+        return $this;
+    }
+
+    public function getDelivery(): Delivery
+    {
+        return $this->delivery;
     }
 }

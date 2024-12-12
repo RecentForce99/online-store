@@ -170,4 +170,9 @@ class Product extends AbstractBaseEntity
 
         return $this;
     }
+
+    public function getCost(): int
+    {
+        return $this->cost;
+    }
 }

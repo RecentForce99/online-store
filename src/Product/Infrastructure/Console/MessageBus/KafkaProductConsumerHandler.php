@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Product\Infrastructure\MessageBus\Handler;
+namespace App\Product\Infrastructure\Console\MessageBus;
 
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Product\Domain\Entity\Product;
@@ -10,11 +10,12 @@ use App\Product\Domain\MessageBus\ProductChanges;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\UuidV4;
 
 #[AsMessageHandler]
-class ConsumeProductsFromKafkaHandler
+class KafkaProductConsumerHandler
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
@@ -22,6 +23,9 @@ class ConsumeProductsFromKafkaHandler
     ) {
     }
 
+    /**
+     * @throws Exception
+     */
     public function __invoke(ProductChanges $message): void
     {
         $existingProduct = $this->productRepository->findById($message->id);
@@ -50,6 +54,9 @@ class ConsumeProductsFromKafkaHandler
         $this->productRepository->add($product);
     }
 
+    /**
+     * @throws Exception
+     */
     private function updateProduct(Product $existingProduct, ProductChanges $message): void
     {
         $existingProduct

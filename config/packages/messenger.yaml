@@ -32,3 +32,4 @@ framework:
         routing:
             'App\Product\Domain\MessageBus\ProductChanges': product_changes
             'App\Common\Domain\MessageBus\Notification': notifications
+            'App\Order\Domain\MessageBus\Notification\Checkout\OrderCheckedOut': notifications

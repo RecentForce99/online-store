@@ -9,6 +9,7 @@ use App\Common\Domain\Entity\AbstractBaseEntity;
 use App\Common\Domain\Trait\HasDatetime;
 use App\Common\Domain\Trait\HasId;
 use App\User\Domain\Entity\User;
+use App\User\Domain\ValueObject\Delivery;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,6 +35,13 @@ class Order extends AbstractBaseEntity
     ]
     private ?int $phone;
 
+    #[ORM\Embedded(class: Delivery::class)]
+    private Delivery $delivery;
+
+    #[ORM\ManyToOne(targetEntity: DeliveryType::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(name: 'delivery_type_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
+    private DeliveryType $deliveryType;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(name: 'user_id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
@@ -41,10 +49,6 @@ class Order extends AbstractBaseEntity
     #[ORM\ManyToOne(targetEntity: OrderStatus::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(name: 'status_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
     private OrderStatus $status;
-
-    #[ORM\ManyToOne(targetEntity: DeliveryType::class, inversedBy: 'orders')]
-    #[ORM\JoinColumn(name: 'delivery_type_slug', referencedColumnName: 'slug', nullable: false, onDelete: 'RESTRICT')]
-    private DeliveryType $deliveryType;
 
     #[ORM\OneToMany(
         mappedBy: 'order',
@@ -59,20 +63,25 @@ class Order extends AbstractBaseEntity
         User $user,
         ?int $phone,
         OrderStatus $status,
+        Delivery $delivery,
         DeliveryType $deliveryType,
         Collection $orderProducts = new ArrayCollection(),
         DateTimeImmutable $createdAt = new DateTimeImmutable(),
         DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ): self {
-        return (new self())
-            ->setId(new UuidV4())
-            ->setUser($user)
-            ->setPhone($phone)
-            ->setStatus($status)
-            ->setDeliveryType($deliveryType)
-            ->setOrderProducts($orderProducts)
-            ->setCreatedAt($createdAt)
-            ->setUpdatedAt($updatedAt);
+        $order = new self();
+
+        $order->id = new UuidV4();
+        $order->user = $user;
+        $order->phone = $phone;
+        $order->status = $status;
+        $order->delivery = $delivery;
+        $order->deliveryType = $deliveryType;
+        $order->orderProducts = $orderProducts;
+        $order->createdAt = $createdAt;
+        $order->updatedAt = $updatedAt;
+
+        return $order;
     }
 
     public function addOrderProductsFromCartProducts(Collection $cartProducts): void
@@ -115,17 +124,41 @@ class Order extends AbstractBaseEntity
         return $this;
     }
 
-    public function setDeliveryType(DeliveryType $deliveryType): self
-    {
-        $this->deliveryType = $deliveryType;
-
-        return $this;
-    }
-
     public function setOrderProducts(Collection $orderProducts): self
     {
         $this->orderProducts = $orderProducts;
 
         return $this;
+    }
+
+    public function getPhone(): ?int
+    {
+        return $this->phone;
+    }
+
+    public function getStatus(): OrderStatus
+    {
+        return $this->status;
+    }
+
+    public function setDelivery(Delivery $delivery): self
+    {
+        $this->delivery = $delivery;
+        return $this;
+    }
+
+    public function getOrderProducts(): Collection
+    {
+        return $this->orderProducts;
+    }
+
+    public function getDelivery(): Delivery
+    {
+        return $this->delivery;
+    }
+
+    public function getDeliveryType(): DeliveryType
+    {
+        return $this->deliveryType;
     }
 }

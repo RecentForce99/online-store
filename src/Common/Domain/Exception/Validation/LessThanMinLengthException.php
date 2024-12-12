@@ -8,7 +8,7 @@ use Exception;
 
 class LessThanMinLengthException extends Exception
 {
-    public static function byEmail(string $fieldName, string|int|float $value, int $minLength): self
+    public static function byField(string $fieldName, string|int|float $value, int $minLength): self
     {
         return new self("Длина поля $fieldName [$value] меньше [$minLength] символов.");
     }

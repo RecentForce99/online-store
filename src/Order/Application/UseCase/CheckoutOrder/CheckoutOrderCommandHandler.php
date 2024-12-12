@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Order\Application\UseCase\CheckoutOrder;
 
+use App\Common\Domain\Exception\Validation\GreaterThanMaxValueException;
+use App\Common\Domain\Exception\Validation\LessThanMinValueException;
 use App\Common\Infrastructure\Repository\Flusher;
 use App\Order\Application\Exception\CartIsEmptyException;
 use App\Order\Application\Exception\CartIsOverflowingException;
@@ -15,6 +17,7 @@ use App\Order\Domain\Repository\OrderStatusRepositoryInterface;
 use App\User\Application\Exception\UserNotFoundException;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
+use App\User\Domain\ValueObject\Delivery;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -33,10 +36,18 @@ final class CheckoutOrderCommandHandler
      * @throws CartIsOverflowingException
      * @throws InvalidDeliveryTypeException
      * @throws UserNotFoundException
+     * @throws GreaterThanMaxValueException
+     * @throws LessThanMinValueException
      */
     public function __invoke(CheckoutOrderCommand $checkoutOrderCommand): void
     {
         $user = $this->userRepository->getById($checkoutOrderCommand->userId);
+
+        $userDelivery = $user->getDelivery();
+        $currentDelivery = Delivery::create(
+            $checkoutOrderCommand->address ?? $userDelivery->getAddress(),
+            $checkoutOrderCommand->kladrId ?? $userDelivery->getKladrId(),
+        );
         $currentDeliveryType = $this->deliveryTypeRepository->getBySlug($checkoutOrderCommand->deliveryType);
 
         $this->assertUserCantCheckoutOrder(
@@ -47,12 +58,11 @@ final class CheckoutOrderCommandHandler
 
         $paymentRequiredOrderStatus = $this->orderStatusRepository->getPaymentRequiredOrderStatus();
 
-        // TODO Add notification dispatching
-
         $order = Order::create(
             user: $user,
-            phone: $checkoutOrderCommand->phone,
+            phone: $checkoutOrderCommand->phone ?? $user->getPhone()->getPhone(),
             status: $paymentRequiredOrderStatus,
+            delivery: $currentDelivery,
             deliveryType: $currentDeliveryType,
         );
 
@@ -75,7 +85,7 @@ final class CheckoutOrderCommandHandler
         }
 
         $countOfProducts = $user->getCartProducts()->count();
-        if ($countOfProducts > 20) {
+        if (20 < $countOfProducts) {
             throw CartIsOverflowingException::byCountOfProducts($countOfProducts);
         }
 

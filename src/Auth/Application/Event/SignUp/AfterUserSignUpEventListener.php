@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Application\Event\SignUp;
 
+use App\Auth\Application\Domain\Event\SignUp\AfterUserSignUpEvent;
 use App\Common\Domain\MessageBus\Notification;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;

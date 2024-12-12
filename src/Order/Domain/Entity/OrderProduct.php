@@ -65,4 +65,9 @@ class OrderProduct extends AbstractBaseEntity
 
         return $this;
     }
+
+    public function getProduct(): Product
+    {
+        return $this->product;
+    }
 }

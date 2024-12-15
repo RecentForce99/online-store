@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use App\Common\Application\Filesystem\FilesystemInterface;
+use App\Common\Infrastructure\Filesystem\FilesystemForTests;
+use App\Common\Infrastructure\Repository\Flusher;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -21,6 +24,7 @@ abstract class AbstractApiBaseTestCase extends WebTestCase
     protected SerializerInterface $serializer;
     protected DecoderInterface $decoder;
     protected RouterInterface $router;
+    protected Flusher $flusher;
 
     protected function setUp(): void
     {
@@ -43,6 +47,9 @@ abstract class AbstractApiBaseTestCase extends WebTestCase
         $this->serializer = $this->client->getContainer()->get(SerializerInterface::class);
         $this->decoder = $this->client->getContainer()->get(DecoderInterface::class);
         $this->router = $this->client->getContainer()->get(RouterInterface::class);
+        $this->flusher = $this->client->getContainer()->get(Flusher::class);
+
+        $this->client->getContainer()->set(FilesystemInterface::class, new FilesystemForTests());
     }
 
     protected function tearDown(): void

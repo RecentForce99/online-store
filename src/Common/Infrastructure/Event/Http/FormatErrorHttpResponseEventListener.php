@@ -15,6 +15,7 @@ use App\Common\Infrastructure\Exception\ConstraintViolationException;
 use App\Order\Application\Exception\CartIsEmptyException;
 use App\Order\Application\Exception\CartIsOverflowingException;
 use App\Order\Application\Exception\InvalidDeliveryTypeException;
+use App\Order\Exception\OrderStatusNotFoundException;
 use App\Order\Infrastructure\Exception\DeliveryTypeNotFoundException;
 use App\Role\Application\Exception\RoleNotFoundException;
 use App\User\Application\Exception\EmailHasBeenTakenException;
@@ -52,6 +53,7 @@ final class FormatErrorHttpResponseEventListener
         }
 
         return match ($exception::class) {
+            OrderStatusNotFoundException::class,
             DeliveryTypeNotFoundException::class,
             ProductWasNotAddedToCartException::class => Response::HTTP_NOT_FOUND,
             InvalidEmailException::class,

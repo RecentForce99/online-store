@@ -38,4 +38,21 @@ final class ProductRepository extends ServiceEntityRepository implements Product
     {
         $this->getEntityManager()->persist($product);
     }
+
+    public function getProductsSoldInLast24Hours(): array
+    {
+        return $this->createQueryBuilder('product')
+            ->select(
+                'product.name as product_name',
+                'product.cost as price',
+                'SUM(order_products.quantity) as amount',
+                'user.id as user_id',
+            )
+            ->innerJoin('product.orderProducts', 'order_products')
+            ->innerJoin('order_products.order', 'order')
+            ->innerJoin('order.user', 'user')
+            ->groupBy('product.id, user.id')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Api\Order\Infrastructure\Controller;
+namespace App\Tests\Api\Report\Infrastructure\Controller;
 
 use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxValueException;
@@ -13,6 +13,7 @@ use App\Common\Domain\Exception\Validation\WrongLengthOfPhoneNumberException;
 use App\Common\Domain\ValueObject\Email;
 use App\Common\Domain\ValueObject\RuPhoneNumber;
 use App\Order\Domain\Entity\DeliveryType;
+use App\Order\Domain\Entity\Order;
 use App\Order\Domain\Entity\OrderStatus;
 use App\Product\Domain\Entity\Product;
 use App\Role\Domain\Entity\Role;
@@ -25,15 +26,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\UuidV4;
 
-final class CheckoutOrderTest extends AbstractApiBaseTestCase
+final class GenerateSoldProductsReportTest extends AbstractApiBaseTestCase
 {
-    private const string CONTROLLER_NAME = 'order.checkout';
+    private const string CONTROLLER_NAME = 'report.sold_products.generate';
+    private User $user;
 
     /**
      * @throws GreaterThanMaxLengthException
      * @throws InvalidEmailException
      * @throws LessThanMinLengthException
-     * @throws ProductAlreadyAddedToCartException
      * @throws WrongLengthOfPhoneNumberException
      * @throws GreaterThanMaxValueException
      * @throws LessThanMinValueException
@@ -42,7 +43,6 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
     {
         parent::setUp();
 
-
         $role = Role::create(
             'ROLE_USER',
             'Пользователь',
@@ -50,16 +50,7 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
         $this->entityManager->persist($role);
 
 
-
-        $orderStatus = OrderStatus::create(
-            'payment_required',
-            'Ожидается оплата',
-        );
-        $this->entityManager->persist($orderStatus);
-
-
-
-        $user = User::create(
+        $this->user = User::create(
             name: Name::fromString('Less Grossman'),
             email: Email::fromString('less-grossman@example.com'),
             phone: RuPhoneNumber::fromInt(1234567890),
@@ -67,12 +58,24 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
             delivery: Delivery::create('New York', '999999999999999'),
             roles: new ArrayCollection([$role]),
         );
-        $userPassword = $this->passwordHasher->hashPassword($user, 'password');
-        $user->setPassword($userPassword);
-        $this->entityManager->persist($user);
+        $userPassword = $this->passwordHasher->hashPassword($this->user, 'password');
+        $this->user->setPassword($userPassword);
+        $this->entityManager->persist($this->user);
 
 
+        $this->flusher->flush();
 
+        $this->client->loginUser($this->user);
+    }
+
+    /**
+     * @throws ProductAlreadyAddedToCartException
+     * @throws GreaterThanMaxLengthException
+     * @throws LessThanMinValueException
+     * @throws GreaterThanMaxValueException
+     */
+    public function testSuccessGenerateSoldProductsReport(): void
+    {
         $product = Product::create(
             name: 'Product 1',
             weight: 10,
@@ -87,56 +90,44 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
         $this->entityManager->persist($product);
 
 
+        $this->user->addProductToCart($product);
 
-        $user->addProductToCart($product);
+
+        $orderStatus = OrderStatus::create(
+            'payment_required',
+            'Ожидается оплата',
+        );
+        $this->entityManager->persist($orderStatus);
 
 
-        $this->flusher->flush();
-
-        $this->client->loginUser($user);
-    }
-
-    public function testSuccessCheckoutOrderForPickupDeliveryType(): void
-    {
-        $deliveryTypeSlug = 'pickup';
         $deliveryType = DeliveryType::create(
-            $deliveryTypeSlug,
+            'pickup',
             'Самовывоз',
         );
         $this->entityManager->persist($deliveryType);
+
+
+        $order = Order::create(
+            user: $this->user,
+            phone: $this->user->getPhone()->getPhone(),
+            status: $orderStatus,
+            delivery: Delivery::create('Address', '9999999999999'),
+            deliveryType: $deliveryType,
+        );
+        $this->user->checkoutOrder($order);
+
         $this->flusher->flush();
 
-        $this->sendRequestByControllerName(self::CONTROLLER_NAME, [
-            'deliveryType' => $deliveryTypeSlug,
-        ]);
+
+        $this->sendRequestByControllerName(self::CONTROLLER_NAME);
 
         $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
     }
 
-    public function testSuccessCheckoutOrderForCourierDeliveryType(): void
+    public function testFailedGenerateSoldProductsReportDueToNotFoundAnyProductsSoldInLast24Hours(): void
     {
-        $deliveryTypeSlug = 'courier';
-        $deliveryType = DeliveryType::create(
-            $deliveryTypeSlug,
-            'Самовывоз',
-        );
-        $this->entityManager->persist($deliveryType);
-        $this->flusher->flush();
-
-        $this->sendRequestByControllerName(self::CONTROLLER_NAME, [
-            'deliveryType' => $deliveryTypeSlug,
-        ]);
-
-        $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
-    }
-
-    public function testFailedCheckoutOrderDueToWrongDeliveryType(): void
-    {
-        $this->sendRequestByControllerName(self::CONTROLLER_NAME, [
-            'deliveryType' => 'wrong-type',
-        ]);
+        $this->sendRequestByControllerName(self::CONTROLLER_NAME);
 
         $responseJson = $this->client->getResponse()->getContent();
         $responseData = $this->decoder->decode($responseJson, 'json');
@@ -146,7 +137,6 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
             $this->client->getResponse()->getStatusCode(),
         );
         $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->assertEquals('fail', $responseData['result'] ?? null);
     }
 }

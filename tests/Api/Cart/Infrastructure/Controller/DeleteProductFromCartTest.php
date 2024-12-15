@@ -85,7 +85,7 @@ final class DeleteProductFromCartTest extends AbstractApiBaseTestCase
         $this->user->addProductToCart($this->product, self::INITIAL_QUANTITY);
 
 
-        $this->entityManager->flush();
+        $this->flusher->flush();
 
         $this->client->loginUser($this->user);
     }

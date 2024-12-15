@@ -29,7 +29,22 @@ framework:
                     topic_conf:
                         auto.offset.reset: 'earliest'
 
+            reports:
+                dsn: '%env(KAFKA_MESSENGER_TRANSPORT_DSN)%'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    flushTimeout: 10000
+                    flushRetries: 5
+                    topic:
+                        name: 'reports'
+                    kafka_conf:
+                        group.id: '%kafka.global.group.id%'
+                        enable.auto.offset.store: 'false'
+                    topic_conf:
+                        auto.offset.reset: 'earliest'
+
         routing:
             'App\Product\Domain\MessageBus\ProductChanges': product_changes
             'App\Common\Domain\MessageBus\Notification': notifications
             'App\Order\Domain\MessageBus\Notification\Checkout\OrderCheckedOut': notifications
+            'App\Report\Domain\MessageBus\SoldProducts\SoldProductsReport': reports

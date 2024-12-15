@@ -2,6 +2,7 @@ volumes:
   db-data:
   kafka-data:
   zookeeper-data:
+  zookeeper-logs:
 
 networks:
   online-store:
@@ -77,6 +78,7 @@ services:
     volumes:
         # Kafka won't work without zookeeper volume data
       - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-logs:/var/lib/zookeeper/log
 
     networks:
       - online-store

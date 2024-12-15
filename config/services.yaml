@@ -8,6 +8,8 @@ parameters:
     kafka.topic:
         auto.offset.reset: beginning
 
+    reports.directory: '%env(string:REPORTS_DIRECTORY)%'
+
 
 services:
     # default configuration for services in *this* file
@@ -56,3 +58,10 @@ services:
 
     App\Common\Application\Event\DomainEventBusInterface:
         class: App\Common\Infrastructure\Event\DomainEventBus
+
+    App\Report\Application\SoldProduct\SoldProductReportCommandHandler:
+        arguments:
+            $reportsDirectory: '%reports.directory%'
+
+    App\Common\Application\Filesystem\FilesystemInterface:
+        class: App\Common\Infrastructure\Filesystem\Filesystem

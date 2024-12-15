@@ -81,7 +81,7 @@ final class CartProductListTest extends AbstractApiBaseTestCase
         $user->addProductToCart($product);
 
 
-        $this->entityManager->flush();
+        $this->flusher->flush();
 
         $this->client->loginUser($user);
     }

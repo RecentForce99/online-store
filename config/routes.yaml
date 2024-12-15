@@ -22,5 +22,11 @@ order_api:
     stateless: false
     prefix: /api
 
+report_api:
+    resource: ../src/Report/Infrastructure/Controller
+    type: attribute
+    stateless: false
+    prefix: /api
+
 api_login_check:
     path: /api/auth/logIn

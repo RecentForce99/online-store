@@ -22,7 +22,7 @@ final class AuthControllerTest extends AbstractApiBaseTestCase
             'Пользователь',
         );
         $this->entityManager->persist($role);
-        $this->entityManager->flush();
+        $this->flusher->flush();
     }
 
     public function testSuccessSignUp(): void

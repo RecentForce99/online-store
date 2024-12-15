@@ -13,4 +13,6 @@ interface ProductRepositoryInterface
     public function getById(string $id): Product;
 
     public function add(Product $product): void;
+
+    public function getProductsSoldInLast24Hours(): array;
 }

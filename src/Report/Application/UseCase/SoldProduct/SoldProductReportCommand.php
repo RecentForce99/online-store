@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Report\Application\SoldProduct;
+namespace App\Report\Application\UseCase\SoldProduct;
 
 use Symfony\Component\Uid\UuidV4;
 

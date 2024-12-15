@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Report\Infrastructure\Controller;
 
 use App\Report\Application\Exception\NotFoundProductsSoldInLast24HoursException;
-use App\Report\Application\SoldProduct\SoldProductReportCommand;
+use App\Report\Application\UseCase\SoldProduct\SoldProductReportCommand;
 use App\Report\Domain\MessageBus\SoldProducts\SoldProductsErrorDetails;
 use App\Report\Domain\MessageBus\SoldProducts\SoldProductsReport;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

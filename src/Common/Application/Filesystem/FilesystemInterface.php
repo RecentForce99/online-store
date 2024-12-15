@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Common\Application\Filesystem;
 
+use Traversable;
+
 interface FilesystemInterface
 {
     public function copy(string $originFile, string $targetFile, bool $overwriteNewerFiles = false): void;
@@ -35,8 +37,8 @@ interface FilesystemInterface
     public function mirror(
         string $originDir,
         string $targetDir,
-        ?\Traversable $iterator = null,
-        array $options = []
+        ?Traversable $iterator = null,
+        array $options = [],
     ): void;
 
     public function tempnam(string $dir, string $prefix, string $suffix = ''): string;
@@ -47,4 +49,3 @@ interface FilesystemInterface
 
     public function readFile(string $filename): string;
 }
-

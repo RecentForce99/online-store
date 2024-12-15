@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Common\Infrastructure\Filesystem;
 
 use App\Common\Application\Filesystem\FilesystemInterface;
+use Traversable;
 
 final class FilesystemForTests implements FilesystemInterface
 {
@@ -66,8 +67,8 @@ final class FilesystemForTests implements FilesystemInterface
     public function mirror(
         string $originDir,
         string $targetDir,
-        ?\Traversable $iterator = null,
-        array $options = []
+        ?Traversable $iterator = null,
+        array $options = [],
     ): void {
     }
 

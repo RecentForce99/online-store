@@ -59,7 +59,7 @@ services:
     App\Common\Application\Event\DomainEventBusInterface:
         class: App\Common\Infrastructure\Event\DomainEventBus
 
-    App\Report\Application\SoldProduct\SoldProductReportCommandHandler:
+    App\Report\Application\UseCase\SoldProduct\SoldProductReportCommandHandler:
         arguments:
             $reportsDirectory: '%reports.directory%'
 

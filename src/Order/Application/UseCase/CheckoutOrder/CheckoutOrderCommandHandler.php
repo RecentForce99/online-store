@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Order\Application\UseCase\CheckoutOrder;
 
+use App\Common\Domain\Exception\Validation\GreaterThanMaxLengthException;
 use App\Common\Domain\Exception\Validation\GreaterThanMaxValueException;
 use App\Common\Domain\Exception\Validation\LessThanMinValueException;
 use App\Common\Infrastructure\Repository\Flusher;
@@ -34,10 +35,11 @@ final class CheckoutOrderCommandHandler
     /**
      * @throws CartIsEmptyException
      * @throws CartIsOverflowingException
-     * @throws InvalidDeliveryTypeException
-     * @throws UserNotFoundException
      * @throws GreaterThanMaxValueException
+     * @throws InvalidDeliveryTypeException
      * @throws LessThanMinValueException
+     * @throws UserNotFoundException
+     * @throws GreaterThanMaxLengthException
      */
     public function __invoke(CheckoutOrderCommand $checkoutOrderCommand): void
     {

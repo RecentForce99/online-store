@@ -1,5 +1,32 @@
-api_common:
-    resource: ../src/Common/Presentation/Api
+common_api:
+    resource: ../src/Common/Infrastructure/Controller
     type: attribute
     stateless: false
     prefix: /api
+
+auth_api:
+    resource: ../src/Auth/Infrastructure/Controller
+    type: attribute
+    stateless: false
+    prefix: /api
+
+cart_api:
+    resource: ../src/Cart/Infrastructure/Controller
+    type: attribute
+    stateless: false
+    prefix: /api
+
+order_api:
+    resource: ../src/Order/Infrastructure/Controller
+    type: attribute
+    stateless: false
+    prefix: /api
+
+report_api:
+    resource: ../src/Report/Infrastructure/Controller
+    type: attribute
+    stateless: false
+    prefix: /api
+
+api_login_check:
+    path: /api/auth/logIn

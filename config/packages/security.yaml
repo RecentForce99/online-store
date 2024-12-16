@@ -1,0 +1,67 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    providers:
+        app_user_provider:
+            entity:
+                class: App\User\Domain\Entity\User
+                property: email.email
+    role_hierarchy:
+        ROLE_USER: [
+            PUBLIC_ACCESS,
+        ]
+        ROLE_ADMIN: [
+            ROLE_USER,
+            PUBLIC_ACCESS,
+        ]
+    firewalls:
+        login:
+            pattern: ^/api/auth/logIn
+            stateless: true
+            json_login:
+                check_path: /api/auth/logIn
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        public_api:
+            pattern:
+                - ^/api/auth/signUp
+            stateless: true
+            security: false
+
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+
+        dev:
+            pattern:
+                - ^/_profiler/
+                - ^/_wdt/
+                - ^/css/
+                - ^/images/
+                - ^/js/
+
+        main:
+            lazy: true
+            provider: app_user_provider
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/api/auth/signUp, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/cart, roles: ROLE_USER }
+        - { path: ^/api/order, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 13

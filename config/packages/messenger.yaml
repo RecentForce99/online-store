@@ -1,7 +1,7 @@
 framework:
     messenger:
         transports:
-            product_changes:
+            product_changes_consumer:
                 dsn: '%env(KAFKA_MESSENGER_TRANSPORT_DSN)%'
                 serializer: messenger.transport.symfony_serializer
                 options:
@@ -15,7 +15,7 @@ framework:
                     topic_conf:
                         auto.offset.reset: 'earliest'
 
-            notifications:
+            notifications_producer:
                 dsn: '%env(KAFKA_MESSENGER_TRANSPORT_DSN)%'
                 serializer: messenger.transport.symfony_serializer
                 options:
@@ -23,13 +23,8 @@ framework:
                     flushRetries: 5
                     topic:
                         name: 'notifications'
-                    kafka_conf:
-                        group.id: '%kafka.global.group.id%'
-                        enable.auto.offset.store: 'false'
-                    topic_conf:
-                        auto.offset.reset: 'earliest'
 
-            reports:
+            reports_producer:
                 dsn: '%env(KAFKA_MESSENGER_TRANSPORT_DSN)%'
                 serializer: messenger.transport.symfony_serializer
                 options:
@@ -37,14 +32,9 @@ framework:
                     flushRetries: 5
                     topic:
                         name: 'reports'
-                    kafka_conf:
-                        group.id: '%kafka.global.group.id%'
-                        enable.auto.offset.store: 'false'
-                    topic_conf:
-                        auto.offset.reset: 'earliest'
 
         routing:
-            'App\Product\Domain\MessageBus\ProductChanges': product_changes
-            'App\Common\Domain\MessageBus\Notification': notifications
-            'App\Order\Domain\MessageBus\Notification\Checkout\OrderCheckedOut': notifications
-            'App\Report\Domain\MessageBus\SoldProducts\SoldProductsReport': reports
+            'App\Product\Domain\MessageBus\ProductChanges': product_changes_consumer
+            'App\Common\Domain\MessageBus\Notification': notifications_producer
+            'App\Order\Domain\MessageBus\Notification\Checkout\OrderCheckedOut': notifications_producer
+            'App\Report\Domain\MessageBus\SoldProducts\SoldProductsReport': reports_producer

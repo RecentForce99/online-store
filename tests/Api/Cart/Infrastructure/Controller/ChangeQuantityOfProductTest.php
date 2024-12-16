@@ -106,8 +106,7 @@ final class ChangeQuantityOfProductTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode();
         $this->assertEquals(
             $this->user->getCartProductByProduct($this->product)->getQuantity(),
             $quantity
@@ -130,16 +129,7 @@ final class ChangeQuantityOfProductTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $responseJson = $this->client->getResponse()->getContent();
-        $responseData = json_decode($responseJson, true);
-
-        $this->assertEquals(
-            Response::HTTP_NOT_FOUND,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_NOT_FOUND);
         $this->assertEquals(
             self::INITIAL_QUANTITY,
             $this->user->getCartProductByProduct($this->product)->getQuantity()
@@ -162,16 +152,7 @@ final class ChangeQuantityOfProductTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $responseJson = $this->client->getResponse()->getContent();
-        $responseData = json_decode($responseJson, true);
-
-        $this->assertEquals(
-            Response::HTTP_UNPROCESSABLE_ENTITY,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->assertEquals(
             self::INITIAL_QUANTITY,
             $this->user->getCartProductByProduct($this->product)->getQuantity()

@@ -121,8 +121,7 @@ final class GenerateSoldProductsReportTest extends AbstractApiBaseTestCase
 
         $this->sendRequestByControllerName(self::CONTROLLER_NAME);
 
-        $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_CREATED);
     }
 
     public function testFailedGenerateSoldProductsReportDueToNotFoundAnyProductsSoldInLast24Hours(): void
@@ -132,10 +131,7 @@ final class GenerateSoldProductsReportTest extends AbstractApiBaseTestCase
         $responseJson = $this->client->getResponse()->getContent();
         $responseData = $this->decoder->decode($responseJson, 'json');
 
-        $this->assertEquals(
-            Response::HTTP_NOT_FOUND,
-            $this->client->getResponse()->getStatusCode(),
-        );
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_NOT_FOUND);
         $this->assertJson($responseJson);
         $this->assertEquals('fail', $responseData['result'] ?? null);
     }

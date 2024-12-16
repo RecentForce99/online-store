@@ -90,8 +90,7 @@ final class AddProductToCartTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode();
     }
 
     public function testFailedAddProductToCartDueToWrongProductId(): void
@@ -103,15 +102,6 @@ final class AddProductToCartTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $responseJson = $this->client->getResponse()->getContent();
-        $responseData = json_decode($responseJson, true);
-
-        $this->assertEquals(
-            Response::HTTP_UNPROCESSABLE_ENTITY,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

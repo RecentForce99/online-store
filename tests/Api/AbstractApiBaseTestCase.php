@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
@@ -57,6 +58,17 @@ abstract class AbstractApiBaseTestCase extends WebTestCase
         parent::tearDown();
         $this->entityManager->clear();
         $this->entityManager->close();
+    }
+
+    protected function checkJsonableResponseByHttpCode(int $statusCode = Response::HTTP_OK): void
+    {
+        $responseJson = $this->client->getResponse()->getContent();
+
+        $this->assertEquals(
+            $statusCode,
+            $this->client->getResponse()->getStatusCode(),
+        );
+        $this->assertJson($responseJson);
     }
 
     protected function sendRequestByControllerName(

@@ -100,8 +100,7 @@ final class DeleteProductFromCartTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode();
         $this->expectException(ProductWasNotAddedToCartException::class);
 
         $this->user->getProductByIdFromCart($productId);
@@ -116,15 +115,6 @@ final class DeleteProductFromCartTest extends AbstractApiBaseTestCase
             ],
         );
 
-        $responseJson = $this->client->getResponse()->getContent();
-        $responseData = json_decode($responseJson, true);
-
-        $this->assertEquals(
-            Response::HTTP_NOT_FOUND,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_NOT_FOUND);
     }
 }

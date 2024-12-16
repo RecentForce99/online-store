@@ -36,8 +36,7 @@ final class AuthControllerTest extends AbstractApiBaseTestCase
             'password' => 'LKdkf291DSxz!?S',
         ]);
 
-        $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_CREATED);
     }
 
     public function testFailedSignUpDueToWrongBody(): void
@@ -49,15 +48,6 @@ final class AuthControllerTest extends AbstractApiBaseTestCase
             'password' => '',
         ]);
 
-        $responseJson = $this->client->getResponse()->getContent();
-        $responseData = $this->decoder->decode($responseJson, 'json');
-
-        $this->assertEquals(
-            Response::HTTP_UNPROCESSABLE_ENTITY,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

@@ -110,8 +110,7 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
             'deliveryType' => $deliveryTypeSlug,
         ]);
 
-        $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_CREATED);
     }
 
     public function testSuccessCheckoutOrderForCourierDeliveryType(): void
@@ -128,8 +127,7 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
             'deliveryType' => $deliveryTypeSlug,
         ]);
 
-        $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_CREATED);
     }
 
     public function testFailedCheckoutOrderDueToWrongDeliveryType(): void
@@ -138,15 +136,6 @@ final class CheckoutOrderTest extends AbstractApiBaseTestCase
             'deliveryType' => 'wrong-type',
         ]);
 
-        $responseJson = $this->client->getResponse()->getContent();
-        $responseData = $this->decoder->decode($responseJson, 'json');
-
-        $this->assertEquals(
-            Response::HTTP_NOT_FOUND,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
-        $this->assertArrayHasKey('code', $responseData);
-        $this->assertArrayHasKey('message', $responseData);
+        $this->checkJsonableResponseByHttpCode(Response::HTTP_NOT_FOUND);
     }
 }

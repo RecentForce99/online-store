@@ -20,7 +20,6 @@ use App\User\Domain\Entity\User;
 use App\User\Domain\ValueObject\Delivery;
 use App\User\Domain\ValueObject\Name;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\UuidV4;
 
 final class CartProductListTest extends AbstractApiBaseTestCase
@@ -90,7 +89,6 @@ final class CartProductListTest extends AbstractApiBaseTestCase
     {
         $this->sendRequestByControllerName(self::CONTROLLER_NAME);
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
+        $this->checkJsonableResponseByHttpCode();
     }
 }

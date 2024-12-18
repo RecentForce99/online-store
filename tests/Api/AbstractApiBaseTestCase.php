@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\Common\Application\Filesystem\FilesystemInterface;
-use App\Common\Infrastructure\Filesystem\FilesystemForTests;
 use App\Common\Infrastructure\Repository\Flusher;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -50,7 +49,7 @@ abstract class AbstractApiBaseTestCase extends WebTestCase
         $this->router = $this->client->getContainer()->get(RouterInterface::class);
         $this->flusher = $this->client->getContainer()->get(Flusher::class);
 
-        $this->client->getContainer()->set(FilesystemInterface::class, new FilesystemForTests());
+        $this->client->getContainer()->set(FilesystemInterface::class, new FilesystemMock());
     }
 
     protected function tearDown(): void
@@ -58,17 +57,6 @@ abstract class AbstractApiBaseTestCase extends WebTestCase
         parent::tearDown();
         $this->entityManager->clear();
         $this->entityManager->close();
-    }
-
-    protected function checkJsonableResponseByHttpCode(int $statusCode = Response::HTTP_OK): void
-    {
-        $responseJson = $this->client->getResponse()->getContent();
-
-        $this->assertEquals(
-            $statusCode,
-            $this->client->getResponse()->getStatusCode(),
-        );
-        $this->assertJson($responseJson);
     }
 
     protected function sendRequestByControllerName(
@@ -96,5 +84,16 @@ abstract class AbstractApiBaseTestCase extends WebTestCase
             ['CONTENT_TYPE' => 'application/json'],
             $this->serializer->serialize($body, 'json'),
         );
+    }
+
+    protected function checkJsonableResponseByHttpCode(int $statusCode = Response::HTTP_OK): void
+    {
+        $responseJson = $this->client->getResponse()->getContent();
+
+        $this->assertEquals(
+            $statusCode,
+            $this->client->getResponse()->getStatusCode(),
+        );
+        $this->assertJson($responseJson);
     }
 }
